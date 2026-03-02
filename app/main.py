@@ -35,4 +35,5 @@ async def unauthorized_redirect_handler(request: Request, exc: Exception):
 
 
 if __name__ == "__main__":
+    print("Save")
     uvicorn.run("app.main:app", host=get_settings().app_host, port=get_settings().app_port, reload=get_settings().env.lower()!="production")
