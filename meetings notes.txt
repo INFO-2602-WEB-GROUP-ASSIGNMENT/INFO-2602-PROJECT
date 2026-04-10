@@ -1,0 +1,7 @@
+5th April
+    - Selected project topic, group name, and allocated auxiliary roles to each member. 
+
+9th April
+    - Discussed implementation of workout remix models, new workout routines, model that stores user's current workouts.
+    - Discuss interaction/functionality between models
+    - Selected workout API: https://wger.de/en/software/api
