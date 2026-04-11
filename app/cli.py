@@ -21,7 +21,7 @@ def initialize():
         drop_all() 
         create_db_and_tables() 
         
-        bob = UserBase(username='bob', email='bob@mail.com', password=encrypt_password("bobpass"))
+        bob = UserBase(username='bob', email='bob@mail.com', password=encrypt_password("bobpass"), role="admin")
         bob_db = User.model_validate(bob)
 
         db.add(bob_db)
