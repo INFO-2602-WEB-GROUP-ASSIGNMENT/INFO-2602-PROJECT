@@ -1,6 +1,7 @@
 import typer
 from app.database import create_db_and_tables, get_cli_session, drop_all
 from app.models.user import *
+from app.models.routine import *
 from fastapi import Depends
 from sqlmodel import select
 from sqlalchemy.exc import IntegrityError
@@ -25,7 +26,17 @@ def initialize():
         bob_db = User.model_validate(bob)
 
         db.add(bob_db)
-        db.commit()        
+        db.commit()
+        
+        # writing some test data for the routines. Not putting from the api yet, just hardcoding it for now.
+        
+        routines: list[Routine] = []
+        for i in range(1, 6):
+            routine = Routine(name=f"Routine {i}", user_id=bob_db.id if bob_db.id else 1, description=f"This is routine {i}", difficulty="easy")
+            routines.append(routine)
+            db.add(routine)
+        
+        db.commit()
         print("Database Initialized")
     
 
