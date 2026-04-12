@@ -1,0 +1,90 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: 'Poppins', 'Quicksand', sans-serif;
+    background-image:url("../img/Background_image.jpg") ;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+}
+
+.btn_primary {
+  --button_radius: 0.75em;
+  --button_color: #e8e8e8;
+  --button_outline_color: #000000;
+
+  border: none;
+  cursor: pointer;
+  border-radius: var(--button_radius);
+  background: var(--button_outline_color);
+
+  padding: 0;
+}
+.btn_top {
+  display: block;
+  box-sizing: border-box;
+
+  border: 2px solid var(--button_outline_color);
+  border-radius: var(--button_radius);
+
+  padding: 0.75em 1.5em;
+
+  background: var(--button_color);
+  color: var(--button_outline_color);
+
+  transform: translateY(-0.2em);
+  transition: transform 0.1s ease;
+}
+
+.btn_primary:hover .btn_top {
+  transform: translateY(-0.33em);
+}
+
+.btn_primary:active .btn_top {
+  transform: translateY(0);
+}
+.icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.icon-routine {
+    background-image: url('../img/routine.svg');
+}
+.icon-cardio {
+    background-image: url('../img/cardio.svg');
+}
+.icon-home {
+    background-image: url('../img/zen2.svg');
+}
+.icon-stretch {
+    background-image: url('../img/stretch.svg');
+}
+.icon-lift {
+    background-image: url('../img/lift.svg');
+}
+.icon-settings {
+    background-image: url('../img/setting.svg');
+}
+.icon-logout {
+    background-image: url('../img/logout.svg');
+}
+.icon-profile {
+    background-image: url('../img/profile.svg');
+}
