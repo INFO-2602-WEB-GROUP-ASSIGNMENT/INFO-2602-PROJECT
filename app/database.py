@@ -35,4 +35,11 @@ def get_session():
 
 @contextmanager
 def get_cli_session():
-    yield from _session_generator()
+    with Session(engine) as session:
+        try:
+            yield session
+        except Exception as e:
+            logger.error(f"CLI session error: {e}")
+            raise
+        finally:
+            session.close()
