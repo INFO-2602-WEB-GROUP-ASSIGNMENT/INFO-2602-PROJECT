@@ -76,7 +76,6 @@
         color: var(--text-primary);
     }
 
-    /* STATS ROW */
     .stats-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -142,7 +141,6 @@
         transition: width 0.4s;
     }
 
-    /* PERIOD CHIPS */
     .period-chips {
         display: flex;
         gap: 6px;
@@ -174,7 +172,6 @@
         color: var(--accent);
     }
 
-    /* CHARTS GRID */
     .charts-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -215,7 +212,6 @@
         font-family: var(--font-mono);
     }
 
-    /* FREQUENCY BARS */
     .freq-bars {
         display: flex;
         align-items: flex-end;
@@ -253,7 +249,6 @@
         font-family: var(--font-mono);
     }
 
-    /* DONUT */
     .donut-wrap {
         display: flex;
         flex-direction: column;
@@ -290,7 +285,6 @@
         color: var(--text-primary);
     }
 
-    /* PR TABLE */
     .pr-table {
         width: 100%;
         border-collapse: collapse;
@@ -347,7 +341,6 @@
         color: #4ade80;
     }
 
-    /* RECENT */
     .recent-card {
         background: var(--bg-card);
         border: 1px solid var(--border);
@@ -427,7 +420,6 @@
         flex-shrink: 0;
     }
 
-    /* LOG */
     .day-selector {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -985,7 +977,6 @@
     </button>
 </div>
 
-<!-- ═══ OVERVIEW PANEL ═══ -->
 <div id="panel-overview">
 
     <div class="period-chips">
@@ -1095,7 +1086,6 @@
 
 </div>
 
-<!-- ═══ LOG PANEL ═══ -->
 <div id="panel-log" style="display:none">
     <div class="day-selector" id="day-selector"></div>
     <div id="routine-view"></div>
@@ -1233,7 +1223,6 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        /* ── TAB SWITCH ── */
         window.switchTab = function (tab) {
             document.getElementById('panel-overview').style.display = tab === 'overview' ? '' : 'none';
             document.getElementById('panel-log').style.display = tab === 'log' ? '' : 'none';
@@ -1241,7 +1230,6 @@
             document.getElementById('tab-log').classList.toggle('active', tab === 'log');
         };
 
-        /* ── OVERVIEW ── */
         window.setPeriod = function (period, btn) {
             activePeriod = period;
             document.querySelectorAll('.period-chip').forEach(c => c.classList.remove('active'));
@@ -1376,7 +1364,6 @@
         </div>`).join('');
         }
 
-        /* ── LOG ── */
         function getWeekDates() {
             const now = new Date(), sun = new Date(now);
             sun.setDate(now.getDate() - now.getDay());
@@ -1544,11 +1531,10 @@
             }
         };
 
-        /* INIT */
         renderOverview();
         renderDaySelector();
         renderRoutineView();
 
-    })();
+    });
 </script>
 {% endblock %}
