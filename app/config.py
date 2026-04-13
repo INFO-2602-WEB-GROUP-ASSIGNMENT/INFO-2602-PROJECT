@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 from functools import lru_cache
 
 @lru_cache
@@ -19,3 +20,9 @@ class Settings(BaseSettings):
     db_pool_recycle:int=10
     
     model_config = SettingsConfigDict(env_file=".env")
+
+@field_validator("secret_key")
+def secret_key_strength(cls, v):
+    if len(v) < 32:
+        raise ValueError("secret_key should be at least 32 characters long")
+    return v
