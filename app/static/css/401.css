@@ -1,0 +1,35 @@
+body {
+	background-color: #f8f9fa;
+}
+
+.page-container {
+	min-height: 100vh;
+}
+
+.card-custom {
+	border: none;
+	border-radius: 1rem;
+	overflow: hidden;
+}
+
+.left-section {
+	background: linear-gradient(135deg, #ffffff, #000000);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	padding: 3rem;
+}
+
+.left-section img {
+	max-width: 100%;
+	height: auto;
+}
+
+.right-section {
+	padding: 3rem;
+}
+
+.btn-primary {
+	border-radius: 0.5rem;
+}

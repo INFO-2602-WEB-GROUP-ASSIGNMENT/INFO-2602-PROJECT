@@ -1,80 +1,11 @@
 {% extends "base.html" %}
 {% block title %}ZenMotion | Register{% endblock %}
 
+{% block external_css %}
+<link href="{{ url_for('static', path='css/register.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block internal_css %}
-<style>
-    body {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        min-height: 100vh;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .login-container {
-        min-height: 100vh;
-        padding: 1rem;
-    }
-
-    .login-card {
-        border-radius: 1.5rem;
-        overflow: hidden;
-        backdrop-filter: blur(12px);
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .left-section {
-        background: linear-gradient(135deg, #22c55e, #4ade80);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        padding: 3rem;
-        text-align: center;
-    }
-
-    .left-section h1 {
-        font-weight: 700;
-    }
-
-    .left-section p {
-        opacity: 0.9;
-    }
-
-    .form-section {
-        padding: 2rem;
-        background: white;
-        border-radius: 1.5rem;
-    }
-
-    .form-control {
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .btn-primary {
-        border-radius: 0.75rem;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        border: none;
-    }
-
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-    .btn-secondary {
-        border-radius: 0.75rem;
-    }
-
-    @media (max-width: 768px) {
-        .left-section {
-            display: none;
-        }
-
-        .form-section {
-            border-radius: 1rem;
-        }
-    }
-</style>
 {% endblock %}
 
 
@@ -101,7 +32,7 @@
             <div class="col-lg-6 bg-white">
                 <div class="form-section">
 
-                    <h3 class="fw-bold mb-3">Create Account</h3>
+                    <h3 class="fw-bold mb-4">Create Account</h3>
                     <p class="text-muted mb-4">Start your fitness journey today</p>
 
                     <form id="signUpForm" method="POST">
@@ -121,22 +52,20 @@
                             <input type="password" class="form-control" name="password" required>
                         </div>
 
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                Join ZenMotion
+                       <div class="d-grid mb-3">
+                            <button type="submit" class="btn_primary">
+                                <span class="btn_top">Join ZenMotion</span>
                             </button>
                         </div>
 
                         <div class="text-center">
                             <a href="{{url_for('login_view')}}" class="text-decoration-none">
-                                Already have an account? Sign in
+                                Already have an account? Login
                             </a>
                         </div>
 
                         {% for message in get_flashed_messages(request) %}
-                        <div class="alert alert-{{ message.type }} mt-3">
-                            {{ message.message }}
-                        </div>
+                        <div class="alert alert-{{ message.type }}" role="alert">{{ message.message }}</div>
                         {% endfor %}
 
                     </form>

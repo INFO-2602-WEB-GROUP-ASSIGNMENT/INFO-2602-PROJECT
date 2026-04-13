@@ -1,82 +1,11 @@
 {% extends "base.html" %}
 {% block title %}ZenMotion | Login{% endblock %}
 
+{% block external_css %}
+<link href="{{ url_for('static', path='css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block internal_css %}
-<style>
-    body {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        min-height: 100vh;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .login-container {
-        min-height: 100vh;
-        padding: 1rem;
-    }
-
-    .login-card {
-        border-radius: 1.5rem;
-        overflow: hidden;
-        backdrop-filter: blur(12px);
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .left-section {
-        background: linear-gradient(135deg, #22c55e, #4ade80);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        padding: 3rem;
-        text-align: center;
-    }
-
-    .left-section h1 {
-        font-weight: 700;
-    }
-
-    .left-section p {
-        opacity: 0.9;
-    }
-
-    .right-section {
-        background: white;
-        padding: 2rem;
-        height: 100%;
-        border-top-right-radius: 1.5rem;
-        border-bottom-right-radius: 1.5rem;
-    }
-
-    .form-control {
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .btn-primary {
-        border-radius: 0.75rem;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        border: none;
-    }
-
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-    .btn-secondary {
-        border-radius: 0.75rem;
-    }
-
-    @media (max-width: 768px) {
-        .left-section {
-            display: none;
-        }
-
-        .right-section {
-            border-radius: 1rem;
-        }
-    }
-</style>
 {% endblock %}
 
 
@@ -118,11 +47,12 @@
                     </div>
 
                     <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            Sign In
+                        <button type="submit" class="btn btn-primary btn-lg btn_primary">
+                                <span class ="btn_top">
+                                Sign In
+                                </span> 
                         </button>
-                    </div>
-
+                        </div>
                 </form>
 
                 <div class="text-center">
