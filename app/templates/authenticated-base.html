@@ -47,7 +47,6 @@
         min-height: 100vh;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -186,7 +185,6 @@
     .user-name-text { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-plan { font-size: 11px; color: var(--text-muted); }
 
-    /* ── MAIN ── */
     #main {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -198,7 +196,6 @@
 
     #main.expanded { margin-left: 0; }
 
-    /* ── TOPBAR ── */
     #topbar {
         height: var(--topbar-h);
         background: var(--bg-sidebar);
@@ -263,14 +260,12 @@
     .topbar-btn.primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
     .topbar-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ── PAGE CONTENT ── */
     #page-content {
         flex: 1;
         padding: 1.5rem;
         background: var(--bg-base);
     }
 
-    /* ── FLASH MESSAGES ── */
     .flash-wrap { margin-bottom: 1rem; }
 
     .alert {
@@ -286,7 +281,6 @@
     .alert-warning { background: rgba(234,179,8,0.1);  border-color: rgba(234,179,8,0.25);  color: #facc15; }
     .alert-info    { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.25); color: #60a5fa; }
 
-    /* ── MOBILE OVERLAY ── */
     #sidebar-overlay {
         display: none;
         position: fixed; inset: 0;
@@ -311,7 +305,6 @@
 
 <div id="app-shell">
 
-    <!-- SIDEBAR -->
     <nav id="sidebar">
         <a class="sidebar-brand" href="/app">
             <div class="brand-logo">
@@ -372,7 +365,6 @@
 
     <div id="sidebar-overlay"></div>
 
-    <!-- MAIN -->
     <div id="main">
 
         <div id="topbar">
