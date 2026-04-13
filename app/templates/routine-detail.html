@@ -1,0 +1,511 @@
+{% extends "authenticated-base.html" %}
+
+{% block page_title %}Routine details{% endblock %}
+
+{% block topbar_actions %}
+<a href="/routines" class="topbar-btn secondary">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Back to routines
+</a>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .page-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+        font-size: 13.5px;
+        color: var(--text-muted);
+        margin-top: 3px;
+    }
+
+    .routine-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 12.5px;
+        font-family: var(--font-mono);
+    }
+
+    .routine-description {
+        font-size: 13.5px;
+        color: var(--text-muted);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .exercise-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .exercise-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .exercise-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 1.2rem;
+    }
+
+    .exercise-info {
+        min-width: 0;
+    }
+
+    .exercise-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+    }
+
+    .exercise-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+    }
+
+    .exercise-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    .exercise-card-body {
+        border-top: 1px solid var(--border);
+        padding: 1rem 1.2rem 1.2rem;
+        display: grid;
+        gap: 14px;
+    }
+
+    .exercise-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .exercise-row span {
+        color: var(--text-secondary);
+        font-size: 12.5px;
+        font-family: var(--font-mono);
+    }
+
+    .remix-btn {
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-secondary);
+        font-family: var(--font);
+        font-size: 12.5px;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .remix-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(34, 197, 94, 0.08);
+    }
+
+    .remix-panel {
+        display: none;
+        background: var(--bg-surface);
+        border-top: 1px solid var(--border);
+        padding: 1rem 1.2rem 1.2rem;
+        gap: 14px;
+    }
+
+    .remix-panel.open {
+        display: grid;
+    }
+
+    .remix-panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .remix-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+    }
+
+    .remix-description {
+        color: var(--text-muted);
+        font-size: 12.5px;
+        line-height: 1.6;
+    }
+
+    .remix-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .remix-item {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--bg-card);
+        padding: 1rem;
+        cursor: pointer;
+        transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .remix-item:hover {
+        transform: translateY(-1px);
+        border-color: var(--border-hover);
+    }
+
+    .remix-item.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15);
+    }
+
+    .remix-item-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .remix-item-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .remix-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .remix-cancel-btn,
+    .remix-confirm-btn {
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: var(--font);
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .remix-cancel-btn {
+        background: transparent;
+        color: var(--text-secondary);
+        border-color: var(--border);
+    }
+
+    .remix-confirm-btn {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+    }
+
+    .remix-confirm-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .remix-loading {
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: var(--bg-card);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        color: #4ade80;
+        font-size: 13px;
+        font-family: var(--font);
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.2s, transform 0.2s;
+        z-index: 1000;
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 720px) {
+        .exercise-row {
+            grid-template-columns: 1fr;
+        }
+
+        .routine-summary {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block subpage_content %}
+
+<div class="page-header">
+    <div class="page-title" id="page-title">Routine details</div>
+    <div class="page-subtitle" id="page-subtitle">Review and remix individual exercises without changing the whole
+        routine.</div>
+</div>
+
+<div class="routine-summary" id="routine-summary"></div>
+<div class="routine-description" id="routine-description"></div>
+
+<div id="routineData" data-routine-id="{{ routine_id }}" style="display:none;"></div>
+<div class="exercise-list" id="exerciseList"></div>
+
+<div class="toast" id="toast">Exercise swapped successfully.</div>
+
+{% endblock %}
+
+{% block subpage_scripts %}
+<script>
+    (function () {
+        const ROUTINE_ID = Number(document.getElementById('routineData').dataset.routineId || 0);
+
+    const exerciseList = document.getElementById('exerciseList');
+    const routineSummary = document.getElementById('routine-summary');
+    const routineDescription = document.getElementById('routine-description');
+    const toast = document.getElementById('toast');
+
+    let routine = null;
+    let selectedRoutineExercise = null;
+    let remixOptions = [];
+    let selectedOptionIndex = null;
+
+    async function fetchRoutineDetail() {
+        const response = await fetch(`/api/routines/${ROUTINE_ID}`);
+        if (!response.ok) throw new Error('Could not load routine details.');
+        return await response.json();
+    }
+
+    async function openRemixPanel(routineExercise) {
+        const panel = document.getElementById(`remix-panel-${routineExercise.id}`);
+        const panelHeader = panel.querySelector('.remix-title');
+        const panelDescription = panel.querySelector('.remix-description');
+        const list = panel.querySelector('.remix-list');
+        const confirmButton = panel.querySelector('.remix-confirm-btn');
+
+        selectedRoutineExercise = routineExercise;
+        selectedOptionIndex = null;
+        remixOptions = [];
+        confirmButton.disabled = true;
+
+        panelHeader.textContent = `Replace ${routineExercise.exercise_name}`;
+        panelDescription.textContent = `Loading alternatives for ${routineExercise.exercise_name}...`;
+        list.innerHTML = `<div class="remix-loading">Loading alternatives…</div>`;
+        panel.classList.add('open');
+
+        try {
+            const response = await fetch(`/api/workouts/${routineExercise.exercise_api_id}/remix`);
+            if (!response.ok) throw new Error('Could not fetch remix suggestions.');
+            const data = await response.json();
+            renderRemixOptions(data, panel);
+        } catch (error) {
+            panelDescription.textContent = error.message;
+            list.innerHTML = '';
+        }
+    }
+
+    function renderRoutineHeader() {
+        if (!routine) return;
+        routineSummary.innerHTML = `
+            <span class="summary-pill">Routine: ${routine.routine.name}</span>
+            <span class="summary-pill">Day: ${routine.routine.day_of_week}</span>
+            <span class="summary-pill">Exercises: ${routine.exercises.length}</span>
+        `;
+        routineDescription.textContent = routine.routine.description || 'No routine description provided.';
+    }
+
+    function renderExercises() {
+        exerciseList.innerHTML = routine.exercises.map(ex => `
+            <div class="exercise-card" id="exercise-card-${ex.id}">
+                <div class="exercise-card-top">
+                    <div class="exercise-info">
+                        <div class="exercise-name">${ex.exercise_name}</div>
+                        <div class="exercise-meta">
+                            <span>Planned: ${ex.sets || 0} × ${ex.reps || 0}</span>
+                            <span>ID: ${ex.id}</span>
+                        </div>
+                    </div>
+                    <button class="remix-btn" onclick="startRemix(${ex.id})">Remix</button>
+                </div>
+                <div class="remix-panel" id="remix-panel-${ex.id}">
+                    <div class="remix-panel-header">
+                        <div>
+                            <div class="remix-title">Loading options…</div>
+                            <div class="remix-description">Select a new exercise below to swap it in.</div>
+                        </div>
+                    </div>
+                    <div class="remix-list"></div>
+                    <div class="remix-actions">
+                        <button class="remix-cancel-btn" type="button" onclick="closeRemixPanel(${ex.id})">Cancel</button>
+                        <button class="remix-confirm-btn" type="button" onclick="confirmRemix(${ex.id})" disabled>Replace exercise</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderRemixOptions(data, panel) {
+        remixOptions = data.suggestions || [];
+        const list = panel.querySelector('.remix-list');
+        const panelDescription = panel.querySelector('.remix-description');
+        const confirmButton = panel.querySelector('.remix-confirm-btn');
+
+        if (!remixOptions.length) {
+            panelDescription.textContent = 'No relevant alternatives found.';
+            list.innerHTML = '';
+            return;
+        }
+
+        panelDescription.textContent = 'Choose one replacement to swap into your routine.';
+        list.innerHTML = remixOptions.map((option, index) => {
+            const name = option.exercise_name || option.name || 'Unnamed exercise';
+            const equipment = Array.isArray(option.equipment) ? option.equipment : [];
+            return `
+                <div class="remix-item" id="remix-option-${index}" onclick="selectRemixOption(${index}, ${selectedRoutineExercise.id})">
+                    <div class="remix-item-name">${name}</div>
+                    <div class="remix-item-meta">
+                        <span>Equipment: ${equipment.length ? equipment.join(', ') : 'Bodyweight'}</span>
+                        <span>${option.category || 'General'}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        confirmButton.disabled = true;
+    }
+
+    window.startRemix = function (routineExerciseId) {
+        const exercise = routine.exercises.find(ex => ex.id === routineExerciseId);
+        if (!exercise) return;
+        const panel = document.getElementById(`remix-panel-${routineExerciseId}`);
+        const alreadyOpen = panel.classList.contains('open');
+
+        document.querySelectorAll('.remix-panel.open').forEach(el => el.classList.remove('open'));
+        if (alreadyOpen) {
+            selectedRoutineExercise = null;
+            selectedOptionIndex = null;
+            return;
+        }
+
+        openRemixPanel(exercise);
+    };
+
+    window.selectRemixOption = function (index, exerciseId) {
+        selectedOptionIndex = index;
+        const panel = document.getElementById(`remix-panel-${exerciseId}`);
+        const confirmButton = panel.querySelector('.remix-confirm-btn');
+
+        panel.querySelectorAll('.remix-item').forEach((el, idx) => {
+            el.classList.toggle('selected', idx === index);
+        });
+        confirmButton.disabled = false;
+    };
+
+    async function confirmRemix(routineExerciseId) {
+        if (selectedOptionIndex === null || !selectedRoutineExercise) return;
+        const replacement = remixOptions[selectedOptionIndex];
+        const response = await fetch(`/api/routines/${ROUTINE_ID}/exercises/${routineExerciseId}/remix`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                replacement_exercise_id: replacement.exercise_api_id,
+                replacement_name: replacement.exercise_name
+            })
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            alert(error.detail || 'Could not replace exercise.');
+            return;
+        }
+
+        selectedRoutineExercise.exercise_api_id = replacement.exercise_api_id;
+        selectedRoutineExercise.exercise_name = replacement.exercise_name;
+        renderExercises();
+        closeRemixPanel(routineExerciseId);
+        showToast('Exercise replaced successfully.');
+    }
+    window.confirmRemix = confirmRemix;
+
+    window.closeRemixPanel = function (routineExerciseId) {
+        const panel = document.getElementById(`remix-panel-${routineExerciseId}`);
+        if (!panel) return;
+        panel.classList.remove('open');
+        selectedRoutineExercise = null;
+        selectedOptionIndex = null;
+    };
+
+    function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    async function initialize() {
+        try {
+            routine = await fetchRoutineDetail();
+            renderRoutineHeader();
+            renderExercises();
+        } catch (error) {
+            exerciseList.innerHTML = `<div class="empty-state">${error.message}</div>`;
+        }
+    }
+
+    initialize();
+}) ();
+</script>
+{% endblock %}

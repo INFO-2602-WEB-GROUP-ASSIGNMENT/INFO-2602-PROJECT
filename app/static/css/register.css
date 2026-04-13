@@ -1,0 +1,95 @@
+body {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(30, 41, 59, 0.55)), url("/static/img/Background_image.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+    .login-container {
+        min-height: 100vh;
+        padding: 1rem;
+    }
+
+    .login-card {
+        border-radius: 1.5rem;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .left-section {
+        background: linear-gradient(135deg, #000000, #ffffff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        padding: 3rem;
+        text-align: center;
+    }
+
+    .left-section h1 {
+        font-weight: 700;
+    }
+
+    .left-section p {
+        opacity: 0.9;
+    }
+
+    .form-section {
+        padding: 2rem;
+        background: white;
+        border-radius: 1.5rem;
+    }
+
+    .form-control {
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .btn_primary {
+        width: 100%;
+        display: inline-block;
+        border: none;
+        border-radius: 0.75rem;
+        background: #000000;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .btn_top {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        color: #000000;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .btn_primary:hover,
+    .btn_primary:focus,
+    .btn_primary:active {
+        background-color: #000000;
+        opacity: 0.9;
+        text-decoration: none;
+    }
+
+    .btn_primary:hover .btn_top,
+    .btn_primary:focus .btn_top,
+    .btn_primary:active .btn_top {
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .left-section {
+            display: none;
+        }
+
+        .form-section {
+            border-radius: 1rem;
+        }
+    }

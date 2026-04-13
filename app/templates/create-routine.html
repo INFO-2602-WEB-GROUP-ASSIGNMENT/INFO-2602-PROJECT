@@ -1,0 +1,545 @@
+{% extends "authenticated-base.html" %}
+
+{% block page_title %}Create Routine{% endblock %}
+
+{% block topbar_actions %}
+<a href="/routines" class="topbar-btn primary">
+    Back to routines
+</a>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        line-height: 1.2;
+        margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+        font-size: 13.5px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+    }
+
+    .builder-layout {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 10px;
+    }
+
+    .builder-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.1rem 1.2rem;
+    }
+
+    .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .form-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 13.5px;
+        outline: none;
+    }
+
+    .form-input,
+    .form-select {
+        height: 40px;
+        padding: 0 12px;
+    }
+
+    .form-textarea {
+        min-height: 100px;
+        padding: 12px;
+        resize: vertical;
+    }
+
+    .difficulty-options {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .difficulty-pill input {
+        display: none;
+    }
+
+    .difficulty-pill label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 92px;
+        height: 34px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .difficulty-pill input:checked + label {
+        border-color: var(--accent);
+        background: var(--accent-muted);
+        color: var(--accent);
+    }
+
+    .search-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .exercise-results,
+    .selected-exercises {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .exercise-item,
+    .selected-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-surface);
+        padding: 0.85rem;
+    }
+
+    .exercise-top,
+    .selected-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .exercise-name,
+    .selected-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .exercise-desc,
+    .selected-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+        line-height: 1.5;
+    }
+
+    .exercise-actions,
+    .selected-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        align-items: center;
+    }
+
+    .small-input {
+        width: 70px;
+        height: 32px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        padding: 0 8px;
+        font-size: 12px;
+    }
+
+    .mini-btn,
+    .save-btn,
+    .cancel-btn {
+        border: none;
+        border-radius: 9px;
+        cursor: pointer;
+        font-family: var(--font);
+    }
+
+    .mini-btn {
+        height: 32px;
+        padding: 0 12px;
+        font-size: 12px;
+        background: var(--accent);
+        color: white;
+    }
+
+    .remove-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+    }
+
+    .save-btn,
+    .cancel-btn {
+        height: 40px;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .save-btn {
+        background: var(--accent);
+        color: white;
+    }
+
+    .cancel-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+    }
+
+    .footer-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 1rem;
+    }
+
+    .empty-box {
+        border: 1px dashed var(--border-hover);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 12.5px;
+    }
+
+    @media (max-width: 900px) {
+        .builder-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block subpage_content %}
+<div class="page-header">
+    <div class="page-title">Create weekly routine</div>
+    <div class="page-subtitle">Choose a day, then search and add exercises right here.</div>
+</div>
+
+<div class="builder-layout">
+
+    <div class="builder-card">
+        <div class="card-title">Routine details</div>
+
+        <form id="createRoutineForm">
+            <div class="form-group">
+                <label class="form-label" for="day_of_week">Day of week</label>
+                <select class="form-select" id="day_of_week" required>
+                    <option value="">Select a day</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-textarea" id="description" placeholder="Optional description for this day’s routine."></textarea>
+            </div>
+
+            <div class="footer-actions">
+                <button type="submit" class="save-btn">Save routine</button>
+                <a href="/routines" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="builder-card">
+        <div class="card-title">Add exercises</div>
+
+        <div class="search-row">
+            <input class="form-input" type="text" id="exerciseSearch" placeholder="Search exercises...">
+            <button type="button" class="mini-btn" id="searchBtn">Search</button>
+        </div>
+
+        <div class="card-title" style="margin-bottom: 0.7rem;">Search results</div>
+        <div class="exercise-results" id="exerciseResults">
+            <div class="empty-box">Search for exercises to add them to this routine.</div>
+        </div>
+
+        <div class="card-title" style="margin-top: 1rem; margin-bottom: 0.7rem;">Selected exercises</div>
+        <div class="selected-exercises" id="selectedExercises">
+            <div class="empty-box">No exercises selected yet.</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block subpage_scripts %}
+<script>
+    (function () {
+        const searchBtn = document.getElementById("searchBtn");
+        const exerciseSearch = document.getElementById("exerciseSearch");
+        const exerciseResults = document.getElementById("exerciseResults");
+        const selectedExercises = document.getElementById("selectedExercises");
+        const createRoutineForm = document.getElementById("createRoutineForm");
+
+        let chosenExercises = [];
+
+        function stripHtml(html) {
+            const temp = document.createElement("div");
+            temp.innerHTML = html || "";
+            return temp.textContent || temp.innerText || "";
+        }
+
+        function truncate(text, maxLength = 90) {
+            if (!text) return "No description available.";
+            return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        }
+
+        function getExerciseName(exercise) {
+            if (exercise.name) return exercise.name;
+
+            if (Array.isArray(exercise.translations)) {
+                const english = exercise.translations.find(t => t.language === 2 && t.name);
+                if (english) return english.name;
+
+                const any = exercise.translations.find(t => t.name);
+                if (any) return any.name;
+            }
+
+            if (Array.isArray(exercise.exercises)) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.name);
+                if (english) return english.name;
+
+                const any = exercise.exercises.find(e => e.name);
+                if (any) return any.name;
+            }
+
+            return "Unnamed Exercise";
+        }
+
+        function getExerciseDescription(exercise) {
+            if (exercise.description) return exercise.description;
+
+            if (Array.isArray(exercise.translations)) {
+                const english = exercise.translations.find(t => t.language === 2 && t.description);
+                if (english) return english.description;
+
+                const any = exercise.translations.find(t => t.description);
+                if (any) return any.description;
+            }
+
+            if (Array.isArray(exercise.exercises)) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.description);
+                if (english) return english.description;
+
+                const any = exercise.exercises.find(e => e.description);
+                if (any) return any.description;
+            }
+
+            return "";
+        }
+
+        async function searchExercises(query = "") {
+            const response = await fetch(`/api/workouts/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || "Could not fetch exercises.");
+            }
+
+            return data.results || [];
+        }
+
+        function renderResults(exercises) {
+            exerciseResults.innerHTML = "";
+
+            if (!exercises.length) {
+                exerciseResults.innerHTML = `<div class="empty-box">No exercises found.</div>`;
+                return;
+            }
+
+            exerciseResults.innerHTML = exercises.map(exercise => {
+                const name = getExerciseName(exercise);
+                const description = truncate(stripHtml(getExerciseDescription(exercise)));
+                const alreadyAdded = chosenExercises.some(item => item.exercise_id === exercise.id);
+
+                return `
+                    <div class="exercise-item">
+                        <div class="exercise-top">
+                            <div>
+                                <div class="exercise-name">${name}</div>
+                                <div class="exercise-desc">${description}</div>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button type="button" class="mini-btn" ${alreadyAdded ? "disabled" : ""} onclick="window.addExerciseToSelection(${exercise.id}, '${name.replace(/'/g, "\\'")}')">
+                                ${alreadyAdded ? "Added" : "+ Add"}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function renderSelectedExercises() {
+            selectedExercises.innerHTML = "";
+
+            if (!chosenExercises.length) {
+                selectedExercises.innerHTML = `<div class="empty-box">No exercises selected yet.</div>`;
+                return;
+            }
+
+            selectedExercises.innerHTML = chosenExercises.map((exercise, index) => `
+                <div class="selected-item">
+                    <div class="selected-top">
+                        <div>
+                            <div class="selected-name">${exercise.exercise_name}</div>
+                            <div class="selected-desc">Configure sets and reps for this routine.</div>
+                        </div>
+                    </div>
+
+                    <div class="selected-actions">
+                        <label style="font-size:12px;color:var(--text-muted);">Sets</label>
+                        <input class="small-input" type="number" min="1" value="${exercise.sets}" onchange="window.updateExerciseConfig(${index}, 'sets', this.value)">
+                        <label style="font-size:12px;color:var(--text-muted);">Reps</label>
+                        <input class="small-input" type="number" min="1" value="${exercise.reps}" onchange="window.updateExerciseConfig(${index}, 'reps', this.value)">
+                        <button type="button" class="mini-btn remove-btn" onclick="window.removeExerciseFromSelection(${index})">Remove</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        window.addExerciseToSelection = function (exerciseId, exerciseName) {
+            if (chosenExercises.some(item => item.exercise_id === exerciseId)) return;
+
+            chosenExercises.push({
+                exercise_id: exerciseId,
+                exercise_name: exerciseName,
+                sets: 3,
+                reps: 10
+            });
+
+            renderSelectedExercises();
+            searchBtn.click();
+        };
+
+        window.updateExerciseConfig = function (index, field, value) {
+            chosenExercises[index][field] = Number(value) || 0;
+        };
+
+        window.removeExerciseFromSelection = function (index) {
+            chosenExercises.splice(index, 1);
+            renderSelectedExercises();
+            searchBtn.click();
+        };
+
+        async function handleSearch() {
+            try {
+                const exercises = await searchExercises(exerciseSearch.value.trim());
+                renderResults(exercises);
+            } catch (error) {
+                exerciseResults.innerHTML = `<div class="empty-box">${error.message}</div>`;
+            }
+        }
+
+        async function createRoutine(event) {
+            event.preventDefault();
+
+            const day = document.getElementById("day_of_week").value;
+            const description = document.getElementById("description").value.trim();
+            const difficulty = document.querySelector('input[name="difficulty"]:checked')?.value || "Beginner";
+
+            if (!day) {
+                alert("Please select a day of the week.");
+                return;
+            }
+
+            if (!chosenExercises.length) {
+                alert("Please add at least one exercise.");
+                return;
+            }
+
+            const payload = {
+            day_of_week: day,
+            description,
+            exercises: chosenExercises.map(item => ({
+                exercise_id: item.exercise_id,
+                sets: item.sets,
+                reps: item.reps
+            }))
+        };
+
+            try {
+                const response = await fetch("/api/routines/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.detail || "Could not create routine.");
+                    return;
+                }
+
+                alert("Routine created successfully.");
+                window.location.href = "/routines";
+            } catch (error) {
+                alert("Something went wrong while creating the routine.");
+            }
+        }
+
+        searchBtn.addEventListener("click", handleSearch);
+        exerciseSearch.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleSearch();
+            }
+        });
+
+        createRoutineForm.addEventListener("submit", createRoutine);
+    })();
+</script>
+{% endblock %}

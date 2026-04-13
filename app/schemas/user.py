@@ -5,8 +5,8 @@ from typing import Optional
 
 
 class UserUpdate(SQLModel):
-    username: Optional[str]
-    email: Optional[EmailStr]
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
  
 class AdminCreate(UserBase):
     role:str = "admin"

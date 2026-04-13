@@ -1,12 +1,9 @@
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi import Request, status
-from app.dependencies.auth import IsUserLoggedIn, get_current_user, is_admin
+from app.dependencies.auth import IsUserLoggedIn, get_current_user, is_admin, AuthDep
 from app.dependencies.session import SessionDep
-from . import router
+from . import router, templates
 
-from sqlmodel import select
-from app.models.routine import Routine
-from fastapi import Form
 
 @router.get("/", response_class=RedirectResponse)
 async def index_view(
@@ -28,22 +25,27 @@ async def index_view(
     )
     return response
 
-# writing routes here for testing, but it'll probably be moved to a different router file in the future.
-@router.get("/api/routines/{id}")
-async def get_routine(db: SessionDep, id: int):
-    routine = db.exec(select(Routine).where(Routine.id == id)).first()
-    return routine
+@router.get("/routines/new", response_class=HTMLResponse)
+async def create_routine_view(request: Request, user: AuthDep):
+    return templates.TemplateResponse(
+        request=request,
+        name="create-routine.html",
+        context={"user": user}
+    )
 
-@router.post("/api/routines/")
-async def create_routine(
-    db: SessionDep,
-    name: str = Form(...),
-    user_id: int = Form(...),
-    description: str = Form(...),
-    difficulty: str = Form(...),
-):
-    routine = Routine(name=name, user_id=user_id, description=description, difficulty=difficulty)
-    db.add(routine)
-    db.commit()
-    db.refresh(routine)
-    return routine
+@router.get("/routines", response_class=HTMLResponse)
+async def routines_view(request: Request, user: AuthDep):
+    return templates.TemplateResponse(
+        request=request,
+        name="routines.html",
+        context={"user": user}
+    )
+
+
+@router.get("/routines/{routine_id}", response_class=HTMLResponse)
+async def routine_detail_view(request: Request, user: AuthDep, routine_id: int):
+    return templates.TemplateResponse(
+        request=request,
+        name="routine-detail.html",
+        context={"user": user, "routine_id": routine_id}
+    )

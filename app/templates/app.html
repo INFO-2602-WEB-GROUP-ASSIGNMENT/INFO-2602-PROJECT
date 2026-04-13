@@ -1,30 +1,859 @@
 {% extends "authenticated-base.html" %}
 
-{% block external_js %}
-<script src="{{ url_for('static', path='js/app.js')}}"></script>
+{% block page_title %}Dashboard{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .greeting {
+        margin-bottom: 1.5rem;
+    }
+
+    .greeting-line {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        line-height: 1.2;
+    }
+
+    .greeting-sub {
+        font-size: 13.5px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 1.25rem;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.1rem;
+        transition: border-color 0.2s;
+    }
+
+    .stat-card:hover {
+        border-color: var(--border-hover);
+    }
+
+    .stat-label {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        color: var(--text-primary);
+        line-height: 1;
+        font-family: var(--font-mono);
+    }
+
+    .stat-footer {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        font-size: 11.5px;
+        color: var(--text-muted);
+    }
+
+    .stat-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
+    }
+
+    .streak-bar-wrap {
+        height: 3px;
+        background: var(--bg-surface);
+        border-radius: 2px;
+        margin-top: 10px;
+        overflow: hidden;
+    }
+
+    .streak-bar-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        width: 58%;
+    }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .dash-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.1rem 1.25rem;
+        transition: border-color 0.2s;
+    }
+
+    .dash-card:hover {
+        border-color: var(--border-hover);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+    }
+
+    .card-action {
+        font-size: 12px;
+        color: var(--accent);
+        text-decoration: none;
+        opacity: 0.85;
+        transition: opacity 0.15s;
+    }
+
+    .card-action:hover {
+        opacity: 1;
+    }
+
+    .routine-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .routine-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .routine-item:first-child {
+        padding-top: 0;
+    }
+
+    .ri-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .ri-icon svg {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .ri-green {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+    }
+
+    .ri-blue {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+    }
+
+    .ri-amber {
+        background: rgba(234, 179, 8, 0.12);
+        color: #facc15;
+    }
+
+    .ri-purple {
+        background: rgba(139, 92, 246, 0.12);
+        color: #a78bfa;
+    }
+
+    .ri-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .ri-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .ri-meta {
+        font-size: 11.5px;
+        color: var(--text-muted);
+    }
+
+    .status-badge {
+        font-size: 10.5px;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .badge-green {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+    }
+
+    .badge-blue {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+    }
+
+    .badge-amber {
+        background: rgba(234, 179, 8, 0.12);
+        color: #facc15;
+    }
+
+    .plan-tag {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .exercise-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .exercise-row:last-of-type {
+        border-bottom: none;
+    }
+
+    .exercise-row:first-of-type {
+        padding-top: 0;
+    }
+
+    .ex-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--bg-surface);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .ex-name {
+        flex: 1;
+        font-size: 13px;
+        color: var(--text-primary);
+    }
+
+    .ex-sets {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        white-space: nowrap;
+    }
+
+    .remix-icon-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        color: var(--text-muted);
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .remix-icon-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-muted);
+    }
+
+    .remix-icon-btn svg {
+        width: 12px;
+        height: 12px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .start-workout-btn {
+        display: block;
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.7rem;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius);
+        color: #fff;
+        font-size: 13.5px;
+        font-weight: 500;
+        font-family: var(--font);
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        transition: background 0.15s;
+    }
+
+    .start-workout-btn:hover {
+        background: var(--accent-dim);
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .activity-item:first-child {
+        padding-top: 0;
+    }
+
+    .act-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .act-text {
+        flex: 1;
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+
+    .act-time {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        white-space: nowrap;
+    }
+
+    .browse-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .browse-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .browse-item:first-child {
+        padding-top: 0;
+    }
+
+    .add-btn {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 4px 11px;
+        border-radius: 20px;
+        border: 1px solid var(--border-hover);
+        background: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-family: var(--font);
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+        white-space: nowrap;
+    }
+
+    .add-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-muted);
+    }
+
+    @media (max-width: 900px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .bottom-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}
 
 
 {% block subpage_content %}
 
-    <div class="container" id="content">
-        <div class="row">
-            <p>
-                This is table is rendered on the Client. JavaScript code requests the data from <a href="/api/users">/api/users</a> and writes it to this page.
-            </p>
+<div class="greeting">
+    <div class="greeting-line">Good morning, {{ user.username }} 👋</div>
+    <div class="greeting-sub">Stay consistent. Build routines. Remix your workouts.</div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Routines</div>
+        <div class="stat-value" id="stat-routines">0</div>
+        <div class="stat-footer"><span class="stat-dot"></span><span id="stat-routines-sub">No routines yet</span></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Exercises</div>
+        <div class="stat-value" id="stat-exercises">0</div>
+        <div class="stat-footer" id="stat-exercises-sub">Saved in routines</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Remixed</div>
+        <div class="stat-value" id="stat-remixed">0</div>
+        <div class="stat-footer">Suggestions ready</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Streak</div>
+        <div class="stat-value" id="stat-streak">0<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span></div>
+        <div class="streak-bar-wrap">
+            <div class="streak-bar-fill" id="dashboard-streak-bar"></div>
         </div>
-        <div class="row">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Id</th><th>Username</th>
-                  </tr>
-                </thead>
-                <tbody id="result">
-                
-                <tbody>
-            </table>
+    </div>
+</div>
+
+
+<div class="main-grid">
+
+    <div class="dash-card">
+        <div class="card-header">
+            <span class="card-title">My routines</span>
+            <a href="/routines" class="card-action">See all →</a>
+        </div>
+
+        <div id="routines-list">
+            <div class="routine-item">
+                <div class="ri-info">
+                    <div class="ri-name">Loading routines...</div>
+                    <div class="ri-meta">Please wait</div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="dash-card">
+        <div class="card-header">
+            <span class="card-title">Today's plan</span>
+            <span class="plan-tag" id="today-plan-tag">Routine preview</span>
+        </div>
+
+        <div id="today-plan-list">
+            <div class="exercise-row">
+                <div class="ex-num">1</div>
+                <div class="ex-name">Loading exercises...</div>
+                <div class="ex-sets">...</div>
+            </div>
+        </div>
+
+        <a href="/progress" class="start-workout-btn">Start workout</a>
+    </div>
+
+</div>
+
+<div class="bottom-grid">
+
+    <div class="dash-card">
+        <div class="card-header">
+            <span class="card-title">Recent activity</span>
+        </div>
+
+        <div id="activity-list">
+            <div class="activity-item">
+                <div class="act-dot" style="background: var(--accent)"></div>
+                <div class="act-text">Dashboard loaded</div>
+                <div class="act-time">Now</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="card-header">
+            <span class="card-title">Browse workouts</span>
+            <a href="/workouts" class="card-action">Explore →</a>
+        </div>
+
+        <div id="browse-list">
+            <div class="browse-item">
+                <div class="ri-info">
+                    <div class="ri-name">Loading exercises...</div>
+                    <div class="ri-meta">Please wait</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block subpage_scripts %}
+<script>
+    (function () {
+        function stripHtml(html) {
+            const temp = document.createElement("div");
+            temp.innerHTML = html || "";
+            return temp.textContent || temp.innerText || "";
+        }
+
+        function truncate(text, maxLength = 80) {
+            if (!text) return "No description available.";
+            return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        }
+
+        function getExerciseName(exercise) {
+            if (exercise.name) return exercise.name;
+
+            if (Array.isArray(exercise.translations) && exercise.translations.length) {
+                const english = exercise.translations.find(t => t.language === 2 && t.name);
+                if (english) return english.name;
+
+                const any = exercise.translations.find(t => t.name);
+                if (any) return any.name;
+            }
+
+            if (Array.isArray(exercise.exercises) && exercise.exercises.length) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.name);
+                if (english) return english.name;
+
+                const any = exercise.exercises.find(e => e.name);
+                if (any) return any.name;
+            }
+
+            return "Unnamed Exercise";
+        }
+
+        function getExerciseDescription(exercise) {
+            if (exercise.description) return exercise.description;
+
+            if (Array.isArray(exercise.translations) && exercise.translations.length) {
+                const english = exercise.translations.find(t => t.language === 2 && t.description);
+                if (english) return english.description;
+
+                const any = exercise.translations.find(t => t.description);
+                if (any) return any.description;
+            }
+
+            if (Array.isArray(exercise.exercises) && exercise.exercises.length) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.description);
+                if (english) return english.description;
+
+                const any = exercise.exercises.find(e => e.description);
+                if (any) return any.description;
+            }
+
+            return "";
+        }
+
+        async function fetchRoutines() {
+            const response = await fetch("/api/routines/");
+            if (!response.ok) throw new Error("Failed to fetch routines");
+            return await response.json();
+        }
+
+        async function fetchRoutineDetails(routineId) {
+            const response = await fetch(`/api/routines/${routineId}`);
+            if (!response.ok) throw new Error("Failed to fetch routine details");
+            return await response.json();
+        }
+
+        async function fetchBrowseExercises() {
+            const response = await fetch("/api/workouts/search?limit=3");
+            if (!response.ok) throw new Error("Failed to fetch browse exercises");
+            const data = await response.json();
+            return data.results || [];
+        }
+
+        async function addToRoutine(exerciseId) {
+            const routines = await fetchRoutines();
+            if (!routines.length) {
+                alert("Please create a routine first.");
+                return;
+            }
+
+            const routineId = routines[0].id;
+
+            const response = await fetch(`/api/routines/${routineId}/add`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    exercise_id: exerciseId,
+                    sets: 3,
+                    reps: 10
+                })
+            });
+
+            const data = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                alert(data?.detail || "Could not add exercise.");
+                return;
+            }
+
+            alert("Exercise added to routine.");
+            await loadDashboard();
+        }
+
+        function renderRoutines(routines) {
+            const container = document.getElementById("routines-list");
+
+            if (!routines.length) {
+                container.innerHTML = `
+                    <div class="routine-item">
+                        <div class="ri-info">
+                            <div class="ri-name">No routines yet</div>
+                            <div class="ri-meta">Create one to get started</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const colors = ["ri-green", "ri-blue", "ri-amber", "ri-purple"];
+
+            container.innerHTML = routines.slice(0, 3).map((routine, index) => `
+                <div class="routine-item">
+                    <div class="ri-icon ${colors[index % colors.length]}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 4v4M18 4v4M6 16v4M18 16v4M3 8h4M17 8h4M3 16h4M17 16h4M7 12h10" />
+                        </svg>
+                    </div>
+                    <div class="ri-info">
+                        <div class="ri-name">${routine.name}</div>
+                        <div class="ri-meta">${routine.description || "No description"}</div>
+                    </div>
+                    <span class="status-badge badge-green">Saved</span>
+                </div>
+            `).join("");
+        }
+
+        function renderTodayPlan(routine, exercises) {
+            const tag = document.getElementById("today-plan-tag");
+            const container = document.getElementById("today-plan-list");
+
+            tag.textContent = routine ? routine.name : "Routine preview";
+
+            if (!exercises.length) {
+                container.innerHTML = `
+                    <div class="exercise-row">
+                        <div class="ex-num">1</div>
+                        <div class="ex-name">No exercises in this routine yet</div>
+                        <div class="ex-sets">-</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = exercises.slice(0, 4).map((exercise, index) => `
+                <div class="exercise-row">
+                    <div class="ex-num">${index + 1}</div>
+                    <div class="ex-name">${exercise.exercise_name || "Exercise"}</div>
+                    <div class="ex-sets">${exercise.sets || 3} × ${exercise.reps || 10}</div>
+                    <button class="remix-icon-btn" title="Remix this exercise">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="16 3 21 3 21 8" />
+                            <line x1="4" y1="20" x2="21" y2="3" />
+                            <polyline points="21 16 21 21 16 21" />
+                            <line x1="15" y1="15" x2="21" y2="21" />
+                        </svg>
+                    </button>
+                </div>
+            `).join("");
+        }
+
+        function renderActivity(routines, exercisesCount) {
+            const container = document.getElementById("activity-list");
+
+            container.innerHTML = `
+                <div class="activity-item">
+                    <div class="act-dot" style="background: var(--accent)"></div>
+                    <div class="act-text">Loaded ${routines.length} routine${routines.length !== 1 ? "s" : ""}</div>
+                    <div class="act-time">Now</div>
+                </div>
+                <div class="activity-item">
+                    <div class="act-dot" style="background: #60a5fa"></div>
+                    <div class="act-text">${exercisesCount} saved exercise${exercisesCount !== 1 ? "s" : ""} ready</div>
+                    <div class="act-time">Now</div>
+                </div>
+                <div class="activity-item">
+                    <div class="act-dot" style="background: #facc15"></div>
+                    <div class="act-text">Use Browse workouts to add more exercises</div>
+                    <div class="act-time">Tip</div>
+                </div>
+            `;
+        }
+
+        function renderBrowse(exercises) {
+            const container = document.getElementById("browse-list");
+            const colors = ["ri-purple", "ri-green", "ri-blue"];
+
+            if (!exercises.length) {
+                container.innerHTML = `
+                    <div class="browse-item">
+                        <div class="ri-info">
+                            <div class="ri-name">No exercises found</div>
+                            <div class="ri-meta">Try again later</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = exercises.map((exercise, index) => `
+                <div class="browse-item">
+                    <div class="ri-icon ${colors[index % colors.length]}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 4v4M18 4v4M6 16v4M18 16v4M3 8h4M17 8h4" />
+                        </svg>
+                    </div>
+                    <div class="ri-info">
+                        <div class="ri-name">${getExerciseName(exercise)}</div>
+                        <div class="ri-meta">${truncate(stripHtml(getExerciseDescription(exercise)), 45)}</div>
+                    </div>
+                    <button class="add-btn" onclick="window.dashboardAddToRoutine(${exercise.id})">+ Add</button>
+                </div>
+            `).join("");
+        }
+
+        const PROGRESS_LOGS_KEY = 'zenmotion-progress-logs';
+
+        function loadProgressLogs() {
+            const stored = localStorage.getItem(PROGRESS_LOGS_KEY);
+            if (!stored) return {};
+            try {
+                return JSON.parse(stored);
+            } catch (error) {
+                console.warn('Invalid progress log data, resetting.', error);
+                return {};
+            }
+        }
+
+        function getDashboardStreak() {
+            const logs = loadProgressLogs();
+            const todayIndex = new Date().getDay();
+            let streak = 0;
+
+            for (let offset = 0; offset < 7; offset++) {
+                const day = (todayIndex - offset + 7) % 7;
+                const dayLog = logs[day];
+                if (!dayLog) break;
+
+                const completedInDay = Object.values(dayLog).some(ex => ex?.status === 'completed');
+                if (!completedInDay) break;
+
+                streak += 1;
+            }
+
+            return streak;
+        }
+
+        function renderStreak() {
+            const streak = getDashboardStreak();
+            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span>`;
+            document.getElementById('dashboard-streak-bar').style.width = `${Math.min(100, Math.round((streak / 7) * 100))}%`;
+        }
+
+        async function loadDashboard() {
+            try {
+                const routines = await fetchRoutines();
+                renderRoutines(routines);
+
+                document.getElementById("stat-routines").textContent = routines.length;
+                document.getElementById("stat-routines-sub").textContent =
+                    routines.length ? `${Math.min(routines.length, 2)} active` : "No routines yet";
+
+                let totalExercises = 0;
+                let remixedCount = 0;
+
+                if (routines.length) {
+                    const firstRoutineDetails = await fetchRoutineDetails(routines[0].id);
+                    const exercises = firstRoutineDetails.exercises || [];
+                    totalExercises = exercises.length;
+                    remixedCount = exercises.length;
+                    renderTodayPlan(firstRoutineDetails.routine, exercises);
+                } else {
+                    renderTodayPlan(null, []);
+                }
+
+                const browseExercises = await fetchBrowseExercises();
+                renderBrowse(browseExercises);
+
+                document.getElementById("stat-exercises").textContent = totalExercises;
+                document.getElementById("stat-remixed").textContent = remixedCount;
+
+                renderActivity(routines, totalExercises);
+                renderStreak();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        window.dashboardAddToRoutine = addToRoutine;
+        loadDashboard();
+    })();
+</script>
 {% endblock %}

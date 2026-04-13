@@ -1,0 +1,1134 @@
+{% extends "authenticated-base.html" %}
+
+{% block page_title %}Browse Workouts{% endblock %}
+
+
+
+{% block additional_styles %}
+<style>
+    .browse-title {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        line-height: 1.2;
+        margin-bottom: 4px;
+    }
+
+    .browse-sub {
+        font-size: 13.5px;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .browse-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+    }
+
+    .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 180px;
+        max-width: 300px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        stroke: var(--text-muted);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 13.5px;
+        height: 36px;
+        padding: 0 12px 0 34px;
+        outline: none;
+        transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .search-input:focus {
+        border-color: var(--border-hover);
+    }
+
+    .filter-chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .filter-chip {
+        height: 32px;
+        padding: 0 14px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text-secondary);
+        font-size: 12.5px;
+        font-family: var(--font);
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+        white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+    }
+
+    .filter-chip.active {
+        background: var(--accent-muted);
+        border-color: rgba(34, 197, 94, 0.3);
+        color: var(--accent);
+    }
+
+    .results-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-family: var(--font-mono);
+    }
+
+    .section-divider {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 1.5rem 0 0.85rem;
+        font-family: var(--font-mono);
+    }
+
+    .section-divider:first-of-type {
+        margin-top: 0;
+    }
+
+    .workouts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 0.5rem;
+    }
+
+    .w-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.1rem 1.2rem;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .w-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+
+    .w-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 0.85rem;
+        gap: 8px;
+    }
+
+    .w-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .w-icon svg {
+        width: 17px;
+        height: 17px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .ic-green {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+    }
+
+    .ic-blue {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+    }
+
+    .ic-amber {
+        background: rgba(234, 179, 8, 0.12);
+        color: #facc15;
+    }
+
+    .ic-purple {
+        background: rgba(139, 92, 246, 0.12);
+        color: #a78bfa;
+    }
+
+    .ic-red {
+        background: rgba(239, 68, 68, 0.12);
+        color: #f87171;
+    }
+
+    .ic-teal {
+        background: rgba(20, 184, 166, 0.12);
+        color: #2dd4bf;
+    }
+
+    .diff-badge {
+        font-size: 10.5px;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+        font-family: var(--font-mono);
+    }
+
+    .cat-all {
+        background: rgba(156, 163, 175, 0.1);
+        color: #9ca3af;
+    }
+
+    .cat-cardio {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+    }
+
+    .cat-core {
+        background: rgba(34, 197, 94, 0.1);
+        color: #4ade80;
+    }
+
+    .cat-strength {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+    }
+
+    .w-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 5px;
+        letter-spacing: -0.01em;
+    }
+
+    .w-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin-bottom: 0.9rem;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .w-desc.expanded {
+        max-height: none;
+    }
+
+    .w-desc.collapsed {
+        max-height: 3.875em;
+        /* approx 3 lines */
+        overflow: hidden;
+    }
+
+    .read-more {
+        color: var(--accent);
+        font-weight: 500;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+
+    .w-tags {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-bottom: 0.9rem;
+    }
+
+    .w-tag {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .w-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 0.9rem;
+    }
+
+    .w-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11.5px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+    }
+
+    .w-meta-item svg {
+        width: 12px;
+        height: 12px;
+        stroke: var(--text-muted);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .w-actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .add-to-btn {
+        flex: 1;
+        background: var(--accent);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: var(--font);
+        height: 32px;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .add-to-btn:hover {
+        background: var(--accent-dim);
+    }
+
+    .preview-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+        flex-shrink: 0;
+        text-decoration: none;
+    }
+
+    .preview-btn:hover {
+        border-color: var(--border-hover);
+        background: var(--bg-surface);
+    }
+
+    .preview-btn svg {
+        width: 13px;
+        height: 13px;
+        stroke: var(--text-secondary);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-btn {
+        height: 34px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-family: var(--font);
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+    }
+
+    .pagination-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .pagination-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .pagination-info {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        margin: 0 8px;
+    }
+
+    .badge-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+        .workouts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .browse-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-wrap {
+            max-width: 100%;
+        }
+
+        .pagination-controls {
+            margin-top: 1rem;
+        }
+    }
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 999;
+    }
+
+    .modal-backdrop.show {
+        display: flex;
+    }
+
+    .modal-card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.2rem;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
+    .modal-group {
+        margin-bottom: 0.9rem;
+    }
+
+    .modal-label {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .modal-input,
+    .modal-select,
+    .modal-textarea {
+        width: 100%;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 13px;
+        outline: none;
+    }
+
+    .modal-input,
+    .modal-select {
+        height: 38px;
+        padding: 0 12px;
+    }
+
+    .modal-textarea {
+        min-height: 90px;
+        padding: 10px 12px;
+        resize: vertical;
+    }
+
+    .modal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 1rem;
+    }
+
+    .modal-btn,
+    .modal-btn-secondary {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 9px;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: var(--font);
+        cursor: pointer;
+        border: none;
+    }
+
+    .modal-btn {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .modal-btn:hover {
+        background: var(--accent-dim);
+    }
+
+    .modal-btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .modal-btn-secondary:hover {
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+
+{% block subpage_content %}
+
+<div class="browse-title">Browse workouts</div>
+<div class="browse-sub">Find workouts to add to your routines</div>
+
+<div class="browse-toolbar">
+    <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input class="search-input" type="text" id="searchInput" placeholder="Search workouts..." autocomplete="off">
+    </div>
+
+    <div class="filter-chips">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="cardio">Cardio</button>
+        <button class="filter-chip" data-filter="core">Core</button>
+        <button class="filter-chip" data-filter="strength">Strength</button>
+    </div>
+</div>
+
+<div class="results-meta" id="results-meta">0 workouts</div>
+
+<div class="section-divider">Results</div>
+<div class="workouts-grid" id="workouts-grid">
+    <div class="empty-state">Start searching to load workouts.</div>
+</div>
+
+<div class="pagination-controls" id="pagination-controls" style="display: none;">
+    <button class="pagination-btn" id="prev-btn" onclick="goToPreviousPage()">← Previous</button>
+    <span class="pagination-info" id="page-info">Page 1</span>
+    <button class="pagination-btn" id="next-btn" onclick="goToNextPage()">Next →</button>
+</div>
+ <div class="modal-backdrop" id="routineModal">
+    <div class="modal-card">
+        <div class="modal-title" id="modalTitle">Add to routine</div>
+        <div class="modal-subtitle" id="modalSubtitle">Choose where to add this exercise.</div>
+
+        <div id="existingRoutineSection">
+            <div class="modal-group">
+                <label class="modal-label" for="routineSelect">Routine</label>
+                <select class="modal-select" id="routineSelect"></select>
+            </div>
+
+            <div class="modal-row">
+                <div class="modal-group">
+                    <label class="modal-label" for="setsInput">Sets</label>
+                    <input class="modal-input" type="number" id="setsInput" min="1" value="3">
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label" for="repsInput">Reps</label>
+                    <input class="modal-input" type="number" id="repsInput" min="1" value="10">
+                </div>
+            </div>
+        </div>
+
+        <div id="newRoutineSection" class="hidden">
+            <div class="modal-group">
+                <label class="modal-label" for="daySelect">Day of week</label>
+                <select class="modal-select" id="daySelect">
+                    <option value="">Select a day</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+                </select>
+            </div>
+
+            <div class="modal-group">
+                <label class="modal-label" for="routineDescription">Description</label>
+                <textarea class="modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
+            </div>
+
+            <div class="modal-row">
+                <div class="modal-group">
+                    <label class="modal-label" for="newSetsInput">Sets</label>
+                    <input class="modal-input" type="number" id="newSetsInput" min="1" value="3">
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label" for="newRepsInput">Reps</label>
+                    <input class="modal-input" type="number" id="newRepsInput" min="1" value="10">
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="modal-btn-secondary" type="button" onclick="closeRoutineModal()">Cancel</button>
+            <button class="modal-btn" type="button" id="modalSubmitBtn">Add</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block subpage_scripts %}
+<script>
+    const routineModal = document.getElementById('routineModal');
+    const existingRoutineSection = document.getElementById('existingRoutineSection');
+    const newRoutineSection = document.getElementById('newRoutineSection');
+    const routineSelect = document.getElementById('routineSelect');
+    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+
+    let selectedExerciseId = null;
+    let selectedExerciseName = "";
+    let availableRoutines = [];
+
+    (function () {
+        const chips = document.querySelectorAll('.filter-chip[data-filter]');
+        const search = document.getElementById('searchInput');
+        const meta = document.getElementById('results-meta');
+        const grid = document.getElementById('workouts-grid');
+
+        let activeFilter = 'all';
+        let searchTerm = '';
+        let allExercises = [];
+        let currentPage = 1;
+        const cardsPerPage = 6;
+
+        function stripHtml(html) {
+            const temp = document.createElement('div');
+            temp.innerHTML = html || '';
+            return temp.textContent || temp.innerText || '';
+        }
+
+        function truncate(text, maxLength = 120) {
+            if (!text) return { text: 'No description available.', isTruncated: false };
+            if (text.length <= maxLength) return { text, isTruncated: false };
+            return { text: text.slice(0, maxLength) + '...', fullText: text, isTruncated: true };
+        }
+
+        function getCategoryLabel(exercise) {
+            if (typeof exercise.category === 'string') return exercise.category;
+            if (exercise.category && typeof exercise.category === 'object') {
+                return exercise.category.name || 'Exercise';
+            }
+            return 'Exercise';
+        }
+
+        function getCategoryKey(exercise) {
+            const category = getCategoryLabel(exercise).toLowerCase();
+
+            if (category.includes('cardio')) return 'cardio';
+            if (category.includes('core') || category.includes('abs')) return 'core';
+            if (category.includes('strength') || category.includes('arms') || category.includes('legs') || category.includes('back') || category.includes('chest')) return 'strength';
+
+            return 'all';
+        }
+
+        function getIconColor(index) {
+            const colors = ['green', 'blue', 'amber', 'purple', 'red', 'teal'];
+            return colors[index % colors.length];
+        }
+
+        function getEquipmentTags(exercise) {
+            if (!Array.isArray(exercise.equipment) || !exercise.equipment.length) {
+                return ['General'];
+            }
+
+            return exercise.equipment.slice(0, 3).map(item => {
+                if (typeof item === 'string') return item;
+                if (item && typeof item === 'object') return item.name || 'Equipment';
+                return 'Equipment';
+            });
+        }
+
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        }
+
+        function getExerciseName(exercise) {
+            if (exercise.name) return exercise.name;
+
+            if (Array.isArray(exercise.translations) && exercise.translations.length) {
+                const english = exercise.translations.find(t => t.language === 2 && t.name);
+                if (english) return english.name;
+
+                const any = exercise.translations.find(t => t.name);
+                if (any) return any.name;
+            }
+
+            if (Array.isArray(exercise.exercises) && exercise.exercises.length) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.name);
+                if (english) return english.name;
+
+                const any = exercise.exercises.find(e => e.name);
+                if (any) return any.name;
+            }
+
+            return "Unnamed Exercise";
+        }
+
+        function getExerciseDescription(exercise) {
+            if (exercise.description) return exercise.description;
+
+            if (Array.isArray(exercise.translations) && exercise.translations.length) {
+                const english = exercise.translations.find(t => t.language === 2 && t.description);
+                if (english) return english.description;
+
+                const any = exercise.translations.find(t => t.description);
+                if (any) return any.description;
+            }
+
+            if (Array.isArray(exercise.exercises) && exercise.exercises.length) {
+                const english = exercise.exercises.find(e => e.language === 2 && e.description);
+                if (english) return english.description;
+
+                const any = exercise.exercises.find(e => e.description);
+                if (any) return any.description;
+            }
+
+            return "";
+        }
+
+        function createExerciseCard(exercise, index) {
+            const exerciseName = getExerciseName(exercise);
+            const displayName = toTitleCase(exerciseName);
+            const rawDescription = getExerciseDescription(exercise);
+            const descObj = truncate(stripHtml(rawDescription));
+            const description = descObj.text;
+            const isTruncated = descObj.isTruncated;
+            const fullDescription = descObj.fullText || description;
+            const categoryLabel = getCategoryLabel(exercise);
+            const categoryKey = getCategoryKey(exercise);
+            const categoryClass = 'cat-' + categoryKey;
+            const iconColor = getIconColor(index);
+            const tags = getEquipmentTags(exercise)
+                .map(tag => `<span class="w-tag">${tag}</span>`)
+                .join('');
+
+            const safeName = exerciseName.replace(/'/g, "\\'");
+
+            return `
+                <div class="w-card" data-category="${categoryKey}" data-name="${displayName.toLowerCase()}">
+                    <div class="w-card-top">
+                        <div class="w-icon ic-${iconColor}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M6 4v4M18 4v4M6 16v4M18 16v4M3 8h4M17 8h4M3 16h4M17 16h4M7 12h10" />
+                            </svg>
+                        </div>
+                        <span class="diff-badge ${categoryClass}">${categoryLabel}</span>
+                    </div>
+
+                    <div class="w-name">${displayName}</div>
+                    <div class="w-desc collapsed"
+                        data-truncated="${description.replace(/"/g, '&quot;')}"
+                        data-full="${fullDescription.replace(/"/g, '&quot;')}"
+                        ${isTruncated ? 'title="Click to expand description"' : ''}>
+                        ${description}${isTruncated ? '<span class="read-more">Read more</span>' : ''}
+                    </div>
+
+                    <div class="w-tags">
+                        ${tags}
+                    </div>
+
+
+                    <div class="w-actions">
+                        <button class="add-to-btn" onclick="openAddToRoutineModal(${exercise.id}, '${safeName}')">
+                            Add to routine
+                        </button>
+                        <a href="/api/workouts/${exercise.id}" target="_blank" class="preview-btn">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function searchWorkouts(query = '') {
+            const response = await fetch(`/api/workouts/search?q=${encodeURIComponent(query)}&limit=50`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch workouts');
+            }
+            const data = await response.json();
+            return data.results || [];
+        }
+
+        function renderCards(exercises) {
+            grid.innerHTML = '';
+            currentPage = 1;
+
+            if (!exercises.length) {
+                grid.innerHTML = `<div class="empty-state">No workouts found.</div>`;
+                meta.textContent = '0 workouts';
+                document.getElementById('pagination-controls').style.display = 'none';
+                return;
+            }
+
+            meta.textContent = `${exercises.length} workout${exercises.length !== 1 ? 's' : ''}`;
+            renderPage(exercises);
+        }
+
+        function renderPage(exercises) {
+            const filteredExercises = getVisibleExercises(exercises);
+            const totalPages = Math.ceil(filteredExercises.length / cardsPerPage);
+            const startIdx = (currentPage - 1) * cardsPerPage;
+            const endIdx = startIdx + cardsPerPage;
+            const pageExercises = filteredExercises.slice(startIdx, endIdx);
+
+            grid.innerHTML = '';
+
+            if (!pageExercises.length) {
+                grid.innerHTML = `<div class="empty-state">No workouts found.</div>`;
+                document.getElementById('pagination-controls').style.display = 'none';
+                return;
+            }
+
+            pageExercises.forEach((exercise, index) => {
+                grid.innerHTML += createExerciseCard(exercise, startIdx + index);
+            });
+
+            // Add event listeners for expandable descriptions
+            const descElements = grid.querySelectorAll('.w-desc');
+            descElements.forEach(descEl => {
+                if (descEl.querySelector('.read-more')) {
+                    descEl.addEventListener('click', function () {
+                        const isExpanded = this.classList.contains('expanded');
+                        if (isExpanded) {
+                            this.classList.remove('expanded');
+                            this.classList.add('collapsed');
+                            this.innerHTML = this.dataset.truncated + '<span class="read-more">Read more</span>';
+                        } else {
+                            this.classList.remove('collapsed');
+                            this.classList.add('expanded');
+                            this.innerHTML = this.dataset.full;
+                        }
+                    });
+                }
+            });
+
+            updatePaginationControls(totalPages);
+        }
+
+        function getVisibleExercises(exercises) {
+            return exercises.filter(exercise => {
+                const categoryKey = getCategoryKey(exercise);
+                const name = getExerciseName(exercise).toLowerCase();
+                const matchFilter = activeFilter === 'all' || categoryKey === activeFilter;
+                const matchSearch = !searchTerm || name.includes(searchTerm);
+                return matchFilter && matchSearch;
+            });
+        }
+
+        function updatePaginationControls(totalPages) {
+            const paginationDiv = document.getElementById('pagination-controls');
+            const pageInfo = document.getElementById('page-info');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            if (totalPages <= 1) {
+                paginationDiv.style.display = 'none';
+                return;
+            }
+
+            paginationDiv.style.display = 'flex';
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        window.goToPreviousPage = function () {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(allExercises);
+                grid.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        window.goToNextPage = function () {
+            const filteredExercises = getVisibleExercises(allExercises);
+            const totalPages = Math.ceil(filteredExercises.length / cardsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(allExercises);
+                grid.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        function applyFilters() {
+            currentPage = 1;
+            renderPage(allExercises);
+        }
+
+        async function handleSearch() {
+            try {
+                const workouts = await searchWorkouts(search.value.trim());
+                console.log(workouts[0]);
+                allExercises = workouts;
+                renderCards(allExercises);
+            } catch (error) {
+                grid.innerHTML = `<div class="empty-state">Error loading wokrouts.</div>`;
+                meta.textContent = '0 workouts';
+            }
+        }
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', function () {
+                chips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                activeFilter = this.dataset.filter;
+                applyFilters();
+            });
+        });
+
+        if (search) {
+            search.addEventListener('input', function () {
+                searchTerm = this.value.toLowerCase().trim();
+                applyFilters();
+            });
+
+            search.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        }
+
+        handleSearch();
+    })();
+    async function fetchRoutines() {
+        const response = await fetch('/api/routines/');
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Could not load routines.');
+        }
+
+        return data;
+    }
+
+    function openModal() {
+        routineModal.classList.add('show');
+    }
+
+    function closeRoutineModal() {
+        routineModal.classList.remove('show');
+        selectedExerciseId = null;
+        selectedExerciseName = "";
+    }
+
+    window.closeRoutineModal = closeRoutineModal;
+
+    function fillRoutineSelect(routines) {
+        routineSelect.innerHTML = routines.map(routine => `
+            <option value="${routine.id}">${routine.day_of_week || routine.name}</option>
+        `).join('');
+    }
+
+    async function openAddToRoutineModal(exerciseId, exerciseName) {
+        selectedExerciseId = exerciseId;
+        selectedExerciseName = exerciseName;
+
+        try {
+            availableRoutines = await fetchRoutines();
+        } catch (error) {
+            alert(error.message || 'Could not load routines.');
+            return;
+        }
+
+        if (availableRoutines.length) {
+            modalTitle.textContent = 'Add to routine';
+            modalSubtitle.textContent = `Add ${exerciseName} to one of your routines.`;
+            existingRoutineSection.classList.remove('hidden');
+            newRoutineSection.classList.add('hidden');
+            fillRoutineSelect(availableRoutines);
+            modalSubmitBtn.textContent = 'Add';
+            modalSubmitBtn.onclick = null;
+            modalSubmitBtn.addEventListener('click', submitAddToExistingRoutine, { once: true });
+
+        } else {
+            modalTitle.textContent = 'Create routine';
+            modalSubtitle.textContent = `You have no routines yet. Create one and add ${exerciseName}.`;
+            existingRoutineSection.classList.add('hidden');
+            newRoutineSection.classList.remove('hidden');
+            modalSubmitBtn.textContent = 'Create & Add';
+            modalSubmitBtn.onclick = null;
+            modalSubmitBtn.addEventListener('click', submitCreateRoutineAndAdd, { once: true });
+        }
+
+        openModal();
+    }
+
+    window.openAddToRoutineModal = openAddToRoutineModal;
+
+    async function submitAddToExistingRoutine() {
+        const routineSelect = document.getElementById("routineSelect");
+        const routineId = routineSelect.value;
+        const routineName = routineSelect.options[routineSelect.selectedIndex].text;
+        const sets = Number(document.getElementById('setsInput').value) || 3;
+        const reps = Number(document.getElementById('repsInput').value) || 10;
+
+        const response = await fetch(`/api/routines/${routineId}/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                exercise_id: selectedExerciseId,
+                sets,
+                reps
+            })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            alert(data?.detail || 'Could not add exercise.');
+            return;
+        }
+
+        closeRoutineModal();
+        alert(`${selectedExerciseName} added to ${routineName} routine.`);
+    }
+
+    async function submitCreateRoutineAndAdd() {
+        const day = document.getElementById('daySelect').value;
+        const description = document.getElementById('routineDescription').value.trim();
+        const sets = Number(document.getElementById('newSetsInput').value) || 3;
+        const reps = Number(document.getElementById('newRepsInput').value) || 10;
+
+        if (!day) {
+            alert('Please select a day of the week.');
+            return;
+        }
+
+        const createResponse = await fetch('/api/routines/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                day_of_week: day,
+                description,
+                exercises: [
+                    {
+                        exercise_id: selectedExerciseId,
+                        sets,
+                        reps
+                    }
+                ]
+            })
+        });
+
+        const createData = await createResponse.json().catch(() => null);
+
+        if (!createResponse.ok) {
+            alert(createData?.detail || 'Could not create routine.');
+            return;
+        }
+
+        closeRoutineModal();
+        alert(`Routine for ${day} created and ${selectedExerciseName} added.`);
+    }
+</script>
+{% endblock %}
