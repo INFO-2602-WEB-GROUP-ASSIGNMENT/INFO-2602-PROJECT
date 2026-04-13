@@ -1,0 +1,523 @@
+{% extends "authenticated-base.html" %}
+
+{% block page_title %}My Routines{% endblock %}
+
+{% block topbar_actions %}
+<a href="/routines/new" class="topbar-btn primary">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+    New routine
+</a>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        line-height: 1.2;
+        margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+        font-size: 13.5px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+    }
+
+    .routine-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 340px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        stroke: var(--text-muted);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 13.5px;
+        height: 38px;
+        padding: 0 12px 0 34px;
+        outline: none;
+        transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .search-input:focus {
+        border-color: var(--border-hover);
+    }
+
+    .results-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+    }
+
+    .routines-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 10px;
+    }
+
+    .routine-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.1rem 1.2rem;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .routine-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+
+    .routine-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 0.8rem;
+    }
+
+    .routine-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+        flex-shrink: 0;
+    }
+
+    .routine-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .diff-beginner {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+    }
+
+    .diff-intermediate {
+        background: rgba(234, 179, 8, 0.12);
+        color: #facc15;
+    }
+
+    .diff-advanced {
+        background: rgba(239, 68, 68, 0.12);
+        color: #f87171;
+    }
+
+    .routine-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 5px;
+        letter-spacing: -0.01em;
+    }
+
+    .routine-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin-bottom: 0.9rem;
+        min-height: 38px;
+    }
+
+    .routine-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .routine-meta-item {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+    }
+
+    .routine-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .routine-btn-primary,
+    .routine-btn-secondary {
+        flex: 1;
+        height: 34px;
+        border-radius: 9px;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: var(--font);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+    }
+
+    .routine-btn-primary {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+    }
+
+    .routine-btn-primary:hover {
+        background: var(--accent-dim);
+    }
+
+    .routine-btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .routine-btn-secondary:hover {
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+        background: var(--bg-surface);
+    }
+
+    .empty-state {
+        background: var(--bg-card);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-lg);
+        padding: 2rem 1.25rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .empty-title {
+        font-size: 14px;
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .empty-subtitle {
+        font-size: 12.5px;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 640px) {
+        .routines-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 999;
+    }
+
+    .modal-backdrop.show {
+        display: flex;
+    }
+
+    .modal-card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.2rem;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
+    .modal-group {
+        margin-bottom: 0.9rem;
+    }
+
+    .modal-label {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .modal-input,
+    .modal-select,
+    .modal-textarea {
+        width: 100%;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 13px;
+        outline: none;
+    }
+
+    .modal-input,
+    .modal-select {
+        height: 38px;
+        padding: 0 12px;
+    }
+
+    .modal-textarea {
+        min-height: 90px;
+        padding: 10px 12px;
+        resize: vertical;
+    }
+
+    .modal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 1rem;
+    }
+
+    .modal-btn,
+    .modal-btn-secondary {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 9px;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: var(--font);
+        cursor: pointer;
+        border: none;
+    }
+
+    .modal-btn {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .modal-btn:hover {
+        background: var(--accent-dim);
+    }
+
+    .modal-btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .modal-btn-secondary:hover {
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block subpage_content %}
+
+<div class="page-header">
+    <div class="page-title">My routines</div>
+    <div class="page-subtitle">View, manage, and update the routines you created.</div>
+</div>
+
+<div class="routine-toolbar">
+    <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input class="search-input" type="text" id="routineSearch" placeholder="Search routines..." autocomplete="off">
+    </div>
+
+    <div class="results-meta" id="resultsMeta">0 routines</div>
+</div>
+
+<div class="routines-grid" id="routinesGrid">
+    <div class="empty-state">
+        <div class="empty-title">Loading routines...</div>
+        <div class="empty-subtitle">Please wait while your routines are being fetched.</div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block subpage_scripts %}
+<script>
+    (function () {
+        const grid = document.getElementById("routinesGrid");
+        const resultsMeta = document.getElementById("resultsMeta");
+        const searchInput = document.getElementById("routineSearch");
+
+        let allRoutines = [];
+
+        function truncate(text, maxLength = 90) {
+            if (!text) return "No description provided.";
+            return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        }
+
+        function createRoutineCard(routine) {
+            const title = routine.day_of_week || "Routine";
+
+            return `
+                <div class="routine-card" data-name="${title.toLowerCase()}" data-description="${(routine.description || "").toLowerCase()}">
+                    <div class="routine-card-top">
+                        <div class="routine-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M6 4v4M18 4v4M6 16v4M18 16v4M3 8h4M17 8h4M3 16h4M17 16h4M7 12h10" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="routine-name">${title}</div>
+                    <div class="routine-desc">${truncate(routine.description)}</div>
+
+                    <div class="routine-meta">
+                        <span class="routine-meta-item">Weekly routine</span>
+                        <span class="routine-meta-item">ID ${routine.id}</span>
+                    </div>
+
+                    <div class="routine-actions">
+                        <a class="routine-btn-primary" href="/routines/${routine.id}">Open</a>
+                        <a class="routine-btn-secondary" href="/workouts">Add exercises</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRoutines(routines) {
+            grid.innerHTML = "";
+
+            if (!routines.length) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-title">No routines yet</div>
+                        <div class="empty-subtitle">Create your first routine to start building workout plans.</div>
+                        <a href="/routines/new" class="routine-btn-primary" style="max-width:180px; margin:0 auto;">Create routine</a>
+                    </div>
+                `;
+                resultsMeta.textContent = "0 routines";
+                return;
+            }
+
+            grid.innerHTML = routines.map(createRoutineCard).join("");
+            resultsMeta.textContent = `${routines.length} routine${routines.length !== 1 ? "s" : ""}`;
+        }
+
+        function filterRoutines() {
+            const query = searchInput.value.trim().toLowerCase();
+            const cards = document.querySelectorAll(".routine-card");
+            let visible = 0;
+
+            cards.forEach(card => {
+                const name = card.dataset.name || "";
+                const description = card.dataset.description || "";
+                const match = !query || name.includes(query) || description.includes(query);
+
+                card.style.display = match ? "" : "none";
+                if (match) visible++;
+            });
+
+            resultsMeta.textContent = `${visible} routine${visible !== 1 ? "s" : ""}`;
+        }
+
+        async function loadRoutines() {
+            try {
+                const response = await fetch("/api/routines/");
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Could not load routines.");
+                }
+
+                allRoutines = data;
+                renderRoutines(allRoutines);
+            } catch (error) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-title">Could not load routines</div>
+                        <div class="empty-subtitle">${error.message || "Something went wrong."}</div>
+                    </div>
+                `;
+                resultsMeta.textContent = "0 routines";
+            }
+        }
+
+        searchInput.addEventListener("input", filterRoutines);
+
+        loadRoutines();
+    })();
+</script>
+{% endblock %}
