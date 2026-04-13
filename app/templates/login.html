@@ -1,38 +1,80 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
-
-{% block external_js %}
-
-{% endblock %}
-
+{% block title %}ZenMotion | Login{% endblock %}
 
 {% block internal_css %}
 <style>
+    body {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        min-height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
     .login-container {
         min-height: 100vh;
+        padding: 1rem;
     }
 
     .login-card {
-        border: none;
-        border-radius: 1rem;
+        border-radius: 1.5rem;
         overflow: hidden;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .login-image {
-        background: linear-gradient(135deg, #000000, #ffffff);
+    .left-section {
+        background: linear-gradient(135deg, #22c55e, #4ade80);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         padding: 3rem;
+        text-align: center;
     }
 
-    .form-section {
-        padding: 3rem;
+    .left-section h1 {
+        font-weight: 700;
+    }
+
+    .left-section p {
+        opacity: 0.9;
+    }
+
+    .right-section {
+        background: white;
+        padding: 2rem;
+        height: 100%;
+        border-top-right-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
     }
 
     .form-control {
-        border-radius: 0.5rem;
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .btn-primary {
+        border-radius: 0.75rem;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-secondary {
+        border-radius: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .left-section {
+            display: none;
+        }
+
+        .right-section {
+            border-radius: 1rem;
+        }
     }
 </style>
 {% endblock %}
@@ -41,59 +83,65 @@
 {% block content %}
 
 <div class="container login-container d-flex align-items-center justify-content-center">
-    <div class="card shadow-lg login-card col-lg-10">
+    <div class="card shadow-lg login-card col-12 col-lg-10">
+
         <div class="row g-0">
-            <div class="col-lg-6 d-none d-lg-flex login-image">
-                <div class="text-center">
-                    <h2 class="mt-4 fw-bold">Welcome Back</h2>
-                    <p class="lead">Sign in to continue to the app</p>
+
+            <!-- LEFT SIDE -->
+            <div class="col-lg-6 d-none d-lg-flex left-section">
+                <div>
+                    <h1>ZenMotion</h1>
+                    <p class="lead mt-3">
+                        Welcome back.  
+                        Stay consistent.  
+                        Keep moving.
+                    </p>
                 </div>
             </div>
-            <div class="col-lg-6 bg-white">
-                <div class="form-section">
-                    <h3 class="fw-bold mb-4">Login</h3>
 
-                    <form id="loginForm" method="POST">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control form-control-md" id="username" name="username"
-                                required="required">
-                        </div>
+            <!-- RIGHT SIDE -->
+            <div class="col-lg-6 right-section">
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control form-control-md" id="password" name="password"
-                                required>
-                        </div>
+                <h3 class="fw-bold mb-3">Sign In</h3>
+                <p class="text-muted mb-4">Continue your fitness journey</p>
 
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg btn_primary">
-                                <span class ="btn_top">
-                                Sign In
-                                </span> 
-                            </button>
+                <form id="loginForm" method="POST">
 
-                    </form>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
 
-                <div class="d-grid mb-3">
-                    <a class="btn btn-secondary btn-lg btn_primary"
-                        href="{{url_for('register_view')}}"
-                        role="button">
-                            <span class="btn_top">
-                                Sign Up
-                            </span>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Sign In
+                        </button>
+                    </div>
+
+                </form>
+
+                <div class="text-center">
+                    <a href="{{url_for('register_view')}}" class="text-decoration-none">
+                        Don’t have an account? Sign up
                     </a>
                 </div>
 
-
                 {% for message in get_flashed_messages(request) %}
-                <div class="alert alert-{{ message.type }}" role="alert">{{ message.message }}</div>
+                <div class="alert alert-{{ message.type }} mt-3">
+                    {{ message.message }}
+                </div>
                 {% endfor %}
+
             </div>
+
         </div>
 
     </div>
 </div>
-</div>
+
 {% endblock %}
