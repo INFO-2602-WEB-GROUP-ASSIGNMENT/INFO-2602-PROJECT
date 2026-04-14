@@ -1,0 +1,44 @@
+/* Global background and text */
+body {
+  background-color: #ffffff;   /* clean white background */
+  color: #1b1b1b;              /* dark readable text */
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Sidebar styling */
+.sidebar {
+  background-color: #2e7d32;   /* deep green */
+  color: #ffffff;
+}
+
+.sidebar a {
+  color: #ffffff;
+}
+.sidebar a:hover {
+  background-color: #66bb6a;   /* lighter green hover */
+}
+
+/* Buttons */
+.btn {
+  background-color: #66bb6a;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+.btn:hover {
+  background-color: #2e7d32;
+}
+
+/* Workout cards */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #66bb6a;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  color: #2e7d32;
+}
+.card-text {
+  color: #1b1b1b;
+}
