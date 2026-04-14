@@ -136,6 +136,9 @@
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 1.1rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         transition: border-color 0.2s, transform 0.2s;
     }
 
@@ -252,19 +255,21 @@
     }
 
     .w-desc.collapsed {
-        max-height: 3.875em;
-        /* approx 3 lines */
+        max-height: 3.1em;
+        /* approx 2 lines */
         overflow: hidden;
     }
 
     .w-desc-toggle {
         display: none;
-        margin-bottom: 0.75rem;
+        align-items: center;
+        margin-bottom: 0.4rem;
         padding: 0;
         border: none;
         background: transparent;
         color: var(--accent);
         font-size: 12px;
+        line-height: 1;
         font-weight: 500;
         cursor: pointer;
         font-family: var(--font);
@@ -323,6 +328,7 @@
     .w-actions {
         display: flex;
         gap: 6px;
+        margin-top: auto;
     }
 
     .add-to-btn {
