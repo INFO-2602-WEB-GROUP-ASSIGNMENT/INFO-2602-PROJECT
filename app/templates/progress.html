@@ -17,25 +17,23 @@
 {% block additional_styles %}
 <style>
     .pg-title {
-        font-size: 60px;
+        font-size: 22px;
         font-weight: 600;
         letter-spacing: -0.03em;
         color: var(--text-primary);
-        line-height: 1.2;
-        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        margin-bottom: 4px;
     }
 
     .pg-sub {
-        font-size: 15px;
-        color: var(--text-secondary);
-        margin-top: 3px;
-        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        font-size: 13.5px;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
     }
 
     .page-tabs {
         display: flex;
         gap: 4px;
-        background: var(--bg-card);
+        background: blue;
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 4px;
@@ -49,7 +47,7 @@
         border-radius: 8px;
         border: none;
         background: none;
-        color: var(--text-secondary);
+        color: purple;
         font-size: 13px;
         font-family: var(--font);
         cursor: pointer;
@@ -70,12 +68,12 @@
     }
 
     .page-tab:hover {
-        color: var(--text-primary);
+        color: yellow;
     }
 
     .page-tab.active {
         background: var(--bg-surface);
-        color: var(--text-primary);
+        color: yellow;
     }
 
     .stats-row {
@@ -97,7 +95,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: var(--text-muted);
+        color: purple;
         margin-bottom: 8px;
         font-family: var(--font-mono);
     }
@@ -106,7 +104,7 @@
         font-size: 26px;
         font-weight: 600;
         letter-spacing: -0.04em;
-        color: var(--text-primary);
+        color: purple;
         font-family: var(--font-mono);
         line-height: 1;
     }
@@ -114,13 +112,13 @@
     .stat-suffix {
         font-size: 14px;
         font-weight: 400;
-        color: var(--text-muted);
+        color: purple;
         margin-left: 2px;
     }
 
     .stat-footer {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: purple;
         margin-top: 6px;
     }
 
@@ -194,7 +192,7 @@
         border-radius: 14px;
         padding: 1.1rem 1.2rem;
     }
-
+    
     .chart-head {
         display: flex;
         align-items: center;
@@ -205,12 +203,12 @@
     .chart-title {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: purple;
     }
 
     .chart-sub {
         font-size: 11px;
-        color: var(--text-muted);
+        color: purple;
         font-family: var(--font-mono);
     }
 
@@ -247,7 +245,7 @@
 
     .freq-bar-label {
         font-size: 10px;
-        color: var(--text-muted);
+        color: purple;
         font-family: var(--font-mono);
     }
 
@@ -270,7 +268,7 @@
         align-items: center;
         gap: 7px;
         font-size: 11.5px;
-        color: var(--text-secondary);
+        color: purple;
     }
 
     .legend-dot {
@@ -284,7 +282,7 @@
         margin-left: auto;
         font-family: var(--font-mono);
         font-size: 11.5px;
-        color: var(--text-primary);
+        color: purple;
     }
 
     .pr-table {
@@ -297,7 +295,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--text-muted);
+        color: purple;
         font-family: var(--font-mono);
         padding: 0 0 10px;
         text-align: left;
@@ -992,17 +990,17 @@
         <div class="stat-card">
             <div class="stat-label">Workouts</div>
             <div class="stat-value" id="stat-workouts">5</div>
-            <div class="stat-footer"><span class="stat-up">↑ 2</span> vs last period</div>
+            <div class="stat-footer"><span class="stat-up">↑ #</span> vs last period</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Total volume</div>
             <div class="stat-value" id="stat-volume">12,400<span class="stat-suffix">lbs</span></div>
-            <div class="stat-footer"><span class="stat-up">↑ 8%</span> vs last period</div>
+            <div class="stat-footer"><span class="stat-up">↑ #%</span> vs last period</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Avg session</div>
             <div class="stat-value" id="stat-avg">48<span class="stat-suffix">min</span></div>
-            <div class="stat-footer">across 5 sessions</div>
+            <div class="stat-footer">across # sessions</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Streak</div>
@@ -1017,7 +1015,7 @@
         <div class="chart-card">
             <div class="chart-head">
                 <span class="chart-title">Workout frequency</span>
-                <span class="chart-sub" id="freq-period-label">Mon – Sun</span>
+                <span class="chart-sub" id="freq-period-label">Mon – Sun</span><span class="chart-sub" id="freq-period-label">Mon – Sun</span>
             </div>
             <div class="freq-bars" id="freq-bars"></div>
         </div>
