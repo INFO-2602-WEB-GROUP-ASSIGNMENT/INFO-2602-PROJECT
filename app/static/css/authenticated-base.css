@@ -5,16 +5,17 @@
 	--topbar-h: 60px;
 	--bg-base: #0a0e1a;  
 	--bg-sidebar: #000000;
-	--bg-card: linear-gradient(135deg, #0a1f44, #1c1c1c);
-	--bg-card-hover: #1c1c1c;
-	--bg-surface: #1a2235;
+	--bg-card: rgba(17, 17, 17, 0.96);
+	--bg-card-hover:rgba(17, 17, 17, 0.96);
+	--bg-surface : rgba(17, 17, 17, 0.96);
 	--accent: #22c55e;
 	--accent-dim: #1eb355f6;
 	--accent-glow: rgba(34,197,94,0.12);
 	--accent-muted: rgba(34,197,94,0.08);
-	--text-primary: #f0f0f0;
-	--text-secondary: #303131;
-	--text-muted: #161718;
+	--text-primary: #000000;
+	--text-secondary: #000000;
+	--text-muted: #000000;
+	--text-thirdary: #ffffff;
 	--border: rgba(17, 16, 16, 0.06);
 	--border-hover: rgba(15, 15, 15, 0.1);
 	--font: 'Poppins', 'Quicksand', sans-serif;
@@ -216,17 +217,16 @@ html, body {
 .user-row:hover { background: rgba(0, 0, 0, 0.04); }
 
 .user-avatar {
-	background-image: url('../img/profile.svg');
+	background: var(--accent) url('../img/profile.svg') no-repeat center center / cover;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background: var(--accent);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 12px;
 	font-weight: 600;
-	color: #000000;
+	color: #00000000;
 	flex-shrink: 0;
 	font-family: var(--font-mono);
 }
@@ -279,7 +279,7 @@ html, body {
 	background: none;
 	border: 1px solid var(--border);
 	border-radius: 8px;
-	color: var(--text-secondary);
+	color: var(--text-thirdary);
 	width: 34px;
 	height: 34px;
 	display: flex;
@@ -307,7 +307,7 @@ html, body {
 .topbar-title {
 	font-size: 15px;
 	font-weight: 500;
-	color: var(--text-primary);
+	color: var(--text-thirdary);
 	letter-spacing: -0.01em;
 }
 
@@ -322,7 +322,7 @@ html, body {
 	background: none;
 	border: 1px solid var(--border);
 	border-radius: 8px;
-	color: var(--text-secondary);
+	color: var(--text-thirdary);
 	height: 34px;
 	padding: 0 12px;
 	font-size: 13px;

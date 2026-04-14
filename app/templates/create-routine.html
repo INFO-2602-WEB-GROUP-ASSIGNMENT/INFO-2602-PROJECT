@@ -45,7 +45,7 @@
     .card-title {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         margin-bottom: 1rem;
     }
 
@@ -58,25 +58,35 @@
 
     .form-label {
         font-size: 12px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-weight: 500;
     }
 
     .form-input,
-    .form-select,
     .form-textarea {
         width: 100%;
         background: var(--bg-surface);
         border: 1px solid var(--border);
         border-radius: 10px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font);
         font-size: 13.5px;
         outline: none;
     }
+    .form-select{
+        width: 100%;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color:grey;
+        font-family: var(--font);
+        font-size: 13.5px;
+        outline: none;
+        height: 40px;
+        padding: 0 12px;
+    }
 
-    .form-input,
-    .form-select {
+    .form-input{
         height: 40px;
         padding: 0 12px;
     }
@@ -98,7 +108,7 @@
         align-items: center;
         gap: 8px;
         margin-bottom: 0.85rem;
-        color: var(--text-muted);
+        color: grey;
         font-size: 12px;
     }
 
@@ -124,6 +134,7 @@
 
     .exercise-results,
     .selected-exercises {
+        color: grey;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -209,7 +220,7 @@
 
     .cat-all {
         background: var(--bg-card);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
     }
 
     .cat-cardio {
@@ -238,7 +249,7 @@
         border-radius: 999px;
         border: 1px solid var(--border);
         background: var(--bg-card);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
     }
 
     .badge-match {
@@ -266,14 +277,20 @@
     }
 
     .mini-btn,
-    .save-btn,
-    .cancel-btn {
+    .save-btn{
         border: none;
         border-radius: 9px;
         cursor: pointer;
         font-family: var(--font);
     }
-
+    .cancel-btn {
+        color: rgb(124, 11, 11);
+        border-color:rgb(124, 11, 11); 
+        background: transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: var(--font);
+    }
     .mini-btn {
         height: 32px;
         padding: 0 12px;
