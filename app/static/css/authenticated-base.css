@@ -5,9 +5,9 @@
 	--topbar-h: 60px;
 	--bg-base: #0a0e1a;  
 	--bg-sidebar: #000000;
-	--bg-card: rgba(17, 17, 17, 0.96);
-	--bg-card-hover:rgba(17, 17, 17, 0.96);
-	--bg-surface : rgba(17, 17, 17, 0.96);
+	--bg-card: rgb(17, 17, 17);
+	--bg-card-hover:rgb(17, 17, 17);
+	--bg-surface : rgb(17, 17, 17);
 	--accent: #22c55e;
 	--accent-dim: #1eb355f6;
 	--accent-glow: rgba(34,197,94,0.12);

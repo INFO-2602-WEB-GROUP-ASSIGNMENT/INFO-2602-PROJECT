@@ -9,17 +9,19 @@
     }
 
     .greeting-line {
-        font-size: 22px;
+        font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
         color: var(--text-primary);
         line-height: 1.2;
+        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
     .greeting-sub {
-        font-size: 13.5px;
+        font-size: 15px;
         color: var(--text-secondary);
         margin-top: 3px;
+        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
     .stats-grid {
@@ -455,8 +457,8 @@
 {% block subpage_content %}
 
 <div class="greeting">
-    <div class="greeting-line">Good morning, {{ user.username }} 👋</div>
-    <div class="greeting-sub">Stay consistent. Build routines. Remix your workouts.</div>
+    <div class="greeting-line">Welcome , {{ user.username }} </div>
+    <div class="greeting-sub">Stay consistent ! Build routines ! Remix your workouts !</div>
 </div>
 
 <div class="stats-grid">
