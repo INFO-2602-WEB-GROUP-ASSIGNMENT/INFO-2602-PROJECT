@@ -9,18 +9,18 @@
 	--bg-card-hover: #1c1c1c;
 	--bg-surface: #1a2235;
 	--accent: #22c55e;
-	--accent-dim: #16a34a;
+	--accent-dim: #1eb355f6;
 	--accent-glow: rgba(34,197,94,0.12);
 	--accent-muted: rgba(34,197,94,0.08);
 	--text-primary: #f0f0f0;
 	--text-secondary: #94a3b8;
-	--text-muted: #475569;
+	--text-muted: #465b71;
 	--border: rgba(255,255,255,0.06);
-	--border-hover: rgba(255,255,255,0.1);
+	--border-hover: rgba(255, 255, 255, 0.1);
 	--font: 'DM Sans', sans-serif;
 	--font-mono: 'DM Mono', monospace;
-	--radius: 10px;
-	--radius-lg: 14px;
+	--radius: 11px;
+	--radius-lg: 15px;
 }
 
 html, body {
@@ -42,8 +42,10 @@ html, body {
 #sidebar {
 	width: var(--sidebar-w);
 	min-height: 100vh;
-	background: var(--bg-sidebar);
-	border-right: 1px solid var(--border);
+	background: linear-gradient(135deg, #2f2a52, #08203c, #000000);/*var(--bg-sidebar);*/
+	background-size: 400% 400%;
+    animation: sidebarGradientShift 6s ease infinite;
+	border-right: 1.25px solid var(--border);
 	display: flex;
 	flex-direction: column;
 	position: fixed;
@@ -66,10 +68,18 @@ html, body {
 	text-decoration: none;
 }
 
+@keyframes sidebarGradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .brand-logo {
-	width: 34px;
-	height: 34px;
-	background: var(--accent);
+	width: 35px;
+	height: 35px;
+	background: linear-gradient(135deg,
+    #2ecc71 0%,
+    #7f8c8d 100%); /*linear-gradient(135deg, #2ecc71, #7f8c8d);var(--accent);*/
 	border-radius: 9px;
 	display: flex;
 	align-items: center;
@@ -78,9 +88,9 @@ html, body {
 }
 
 .brand-logo svg {
-	width: 18px;
-	height: 18px;
-	stroke: #fff;
+	width: 20px;
+	height: 16px;
+	stroke: #2f7aeb;
 	fill: none;
 	stroke-width: 2.2;
 	stroke-linecap: round;
@@ -159,8 +169,8 @@ html, body {
 }
 
 .nav-link svg {
-	width: 16px;
-	height: 16px;
+	width: 17px;
+	height: 15px;
 	stroke: currentColor;
 	fill: none;
 	stroke-width: 1.8;
@@ -186,7 +196,7 @@ html, body {
 .nav-link.danger { color: #f87171; }
 
 .nav-link.danger:hover {
-	background: rgba(248,113,113,0.08);
+	background: rgba(248, 113, 113, 0.1);
 	color: #ef4444;
 }
 
@@ -218,7 +228,7 @@ html, body {
 	justify-content: center;
 	font-size: 12px;
 	font-weight: 600;
-	color: #fff;
+	color: #497efa;
 	flex-shrink: 0;
 	font-family: var(--font-mono);
 }
@@ -334,7 +344,7 @@ html, body {
 .topbar-btn.primary {
 	background: var(--accent);
 	border-color: var(--accent);
-	color: #fff;
+	color: #d1d2d3;
 	font-weight: 500;
 }
 
@@ -344,8 +354,8 @@ html, body {
 }
 
 .topbar-btn svg {
-	width: 14px;
-	height: 14px;
+	width: 16px;
+	height: 15px;
 	stroke: currentColor;
 	fill: none;
 	stroke-width: 2;
@@ -365,12 +375,12 @@ html, body {
 	padding: 0.75rem 1rem;
 	border-radius: var(--radius);
 	font-size: 13.5px;
-	border: 1px solid;
+	border: 1.5px solid;
 	margin-bottom: 0.5rem;
 }
 
 .alert-success {
-	background: rgba(34,197,94,0.1);
+	background: rgba(19, 201, 86, 0.1);
 	border-color: rgba(34,197,94,0.25);
 	color: #4ade80;
 }
@@ -378,7 +388,7 @@ html, body {
 .alert-danger {
 	background: rgba(239,68,68,0.1);
 	border-color: rgba(239,68,68,0.25);
-	color: #f87171;
+	color: #eb5353;
 }
 
 .alert-warning {
