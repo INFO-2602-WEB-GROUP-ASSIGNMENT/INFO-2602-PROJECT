@@ -64,6 +64,12 @@
         font-family: var(--font-mono);
     }
 
+    .stat-suffix-streak {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
     .stat-footer {
         display: flex;
         align-items: center;
@@ -637,14 +643,33 @@
             return data.results || [];
         }
 
+        let activeRoutineId = null;
+        let activeRoutineName = "Routine preview";
+
+        function normalizeDayName(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function getCurrentDayName() {
+            return new Date().toLocaleDateString("en-US", { weekday: "long" });
+        }
+
+        function findRoutineForToday(routines) {
+            const today = normalizeDayName(getCurrentDayName());
+            return routines.find(routine => {
+                const routineDay = normalizeDayName(routine.day_of_week || routine.name);
+                return routineDay === today;
+            }) || null;
+        }
+
         async function addToRoutine(exerciseId) {
-            const routines = await fetchRoutines();
-            if (!routines.length) {
+            const routines = activeRoutineId ? [] : await fetchRoutines();
+            const routineId = activeRoutineId ?? routines[0]?.id ?? null;
+
+            if (!routineId) {
                 alert("Please create a routine first.");
                 return;
             }
-
-            const routineId = routines[0].id;
 
             const response = await fetch(`/api/routines/${routineId}/add`, {
                 method: "POST",
@@ -706,13 +731,15 @@
             const tag = document.getElementById("today-plan-tag");
             const container = document.getElementById("today-plan-list");
 
-            tag.textContent = routine ? routine.name : "Routine preview";
+            activeRoutineId = routine?.id ?? null;
+            activeRoutineName = routine?.name || "No workout today";
+            tag.textContent = activeRoutineName;
 
             if (!exercises.length) {
                 container.innerHTML = `
                     <div class="exercise-row">
                         <div class="ex-num">1</div>
-                        <div class="ex-name">No exercises in this routine yet</div>
+                        <div class="ex-name">${routine ? "No exercises in this routine yet" : "No workout scheduled for today"}</div>
                         <div class="ex-sets">-</div>
                     </div>
                 `;
@@ -724,14 +751,6 @@
                     <div class="ex-num">${index + 1}</div>
                     <div class="ex-name">${exercise.exercise_name || "Exercise"}</div>
                     <div class="ex-sets">${exercise.sets || 3} × ${exercise.reps || 10}</div>
-                    <button class="remix-icon-btn" title="Remix this exercise">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="16 3 21 3 21 8" />
-                            <line x1="4" y1="20" x2="21" y2="3" />
-                            <polyline points="21 16 21 21 16 21" />
-                            <line x1="15" y1="15" x2="21" y2="21" />
-                        </svg>
-                    </button>
                 </div>
             `).join("");
         }
@@ -785,7 +804,7 @@
                         <div class="ri-name">${getExerciseName(exercise)}</div>
                         <div class="ri-meta">${truncate(stripHtml(getExerciseDescription(exercise)), 45)}</div>
                     </div>
-                    <button class="add-btn" onclick="window.dashboardAddToRoutine(${exercise.id})">+ Add</button>
+                    <button type="button" class="add-btn" onclick="window.dashboardAddToRoutine(${exercise.id})">+ Add</button>
                 </div>
             `).join("");
         }
@@ -824,7 +843,7 @@
 
         function renderStreak() {
             const streak = getDashboardStreak();
-            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span>`;
+            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix stat-suffix-streak"> d</span>`;
             document.getElementById('dashboard-streak-bar').style.width = `${Math.min(100, Math.round((streak / 7) * 100))}%`;
         }
 
@@ -839,13 +858,14 @@
 
                 let totalExercises = 0;
                 let remixedCount = 0;
+                const todayRoutine = findRoutineForToday(routines);
 
-                if (routines.length) {
-                    const firstRoutineDetails = await fetchRoutineDetails(routines[0].id);
-                    const exercises = firstRoutineDetails.exercises || [];
+                if (todayRoutine) {
+                    const todayRoutineDetails = await fetchRoutineDetails(todayRoutine.id);
+                    const exercises = todayRoutineDetails.exercises || [];
                     totalExercises = exercises.length;
                     remixedCount = exercises.length;
-                    renderTodayPlan(firstRoutineDetails.routine, exercises);
+                    renderTodayPlan(todayRoutineDetails.routine, exercises);
                 } else {
                     renderTodayPlan(null, []);
                 }

@@ -20,13 +20,13 @@
         font-size: 22px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: var(--text-primary);
+        color: purple;
         margin-bottom: 4px;
     }
 
     .pg-sub {
-        font-size: 13.5px;
-        color: var(--text-muted);
+        font-size: 50.5px;
+        color: purple;
         margin-bottom: 1.5rem;
     }
 
@@ -36,21 +36,18 @@
         background: blue;
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 4px;
         margin-bottom: 1.5rem;
         width: fit-content;
     }
 
     .page-tab {
         height: 32px;
-        padding: 0 16px;
         border-radius: 8px;
         border: none;
         background: none;
         color: purple;
         font-size: 13px;
         font-family: var(--font);
-        cursor: pointer;
         transition: background 0.15s, color 0.15s;
         display: flex;
         align-items: center;
@@ -59,7 +56,6 @@
 
     .page-tab svg {
         width: 13px;
-        height: 13px;
         stroke: currentColor;
         fill: none;
         stroke-width: 2;
@@ -72,7 +68,6 @@
     }
 
     .page-tab.active {
-        background: var(--bg-surface);
         color: yellow;
     }
 
@@ -884,6 +879,36 @@
         font-size: 13px;
         color: var(--accent);
         text-decoration: none;
+    }
+
+    #panel-log .day-abbr,
+    #panel-log .day-num,
+    #panel-log .day-label,
+    #panel-log .routine-meta-line,
+    #panel-log .routine-name,
+    #panel-log .prog-pill,
+    #panel-log .ex-name,
+    #panel-log .ex-planned,
+    #panel-log .ex-status-badge,
+    #panel-log .sets-table th,
+    #panel-log .set-num,
+    #panel-log .time-label,
+    #panel-log .skip-note,
+    #panel-log .no-routine p,
+    #panel-log .no-routine a {
+        color: #fff;
+    }
+
+    #panel-log .day-label,
+    #panel-log .routine-meta-line,
+    #panel-log .ex-planned,
+    #panel-log .skip-note,
+    #panel-log .no-routine p {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    #panel-log .no-routine svg {
+        stroke: #fff;
     }
 
     .toast {
