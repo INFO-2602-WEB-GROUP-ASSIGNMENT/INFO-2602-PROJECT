@@ -4,10 +4,10 @@
 	--sidebar-w: 230px;
 	--topbar-h: 60px;
 	--bg-base: #0a0e1a;  
-	--bg-sidebar: #000000;
-	--bg-card: rgb(17, 17, 17);
-	--bg-card-hover:rgb(17, 17, 17);
-	--bg-surface : rgb(17, 17, 17);
+	--bg-sidebar: rgba(17, 17, 17, 0.96);
+	--bg-card:rgba(17, 17, 17, 0.96);
+	--bg-card-hover:rgba(17, 17, 17, 0.96);
+	--bg-surface : rgba(17, 17, 17, 0.96);
 	--accent: #22c55e;
 	--accent-dim: #1eb355f6;
 	--accent-glow: rgba(34,197,94,0.12);
@@ -24,15 +24,31 @@
 	--radius-lg: 15px;
 }
 
-html, body {
+html {
+	height: 100%;
+	background: var(--bg-base);
+}
+
+body {
 	height: 100%;
 	font-family: var(--font);
-	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	background: transparent;
 	color: var(--text-primary);
 	overflow-x: hidden;
 	font-size: 14px;
 	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	filter: blur(10px);
+	opacity: 0.92;
+	z-index: -1;
 }
 
 #app-shell {

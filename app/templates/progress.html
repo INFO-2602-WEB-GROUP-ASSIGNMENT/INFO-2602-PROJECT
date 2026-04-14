@@ -50,7 +50,7 @@
     .page-tabs {
         display: flex;
         gap: 4px;
-        background: blue;
+        background: rgba(17, 17, 17, 0.96);
         border: 1px solid var(--border);
         border-radius: 12px;
         margin-bottom: 1.5rem;
@@ -62,7 +62,7 @@
         border-radius: 8px;
         border: none;
         background: none;
-        color: purple;
+        color: var(--text-thirdary);
         font-size: 13px;
         font-family: var(--font);
         transition: background 0.15s, color 0.15s;
@@ -81,11 +81,12 @@
     }
 
     .page-tab:hover {
-        color: yellow;
+        color: var(--text-thirdary);
     }
 
     .page-tab.active {
-        color: yellow;
+        background: var(--bg-surface);
+        color: var(--text-thirdary);
     }
 
     .stats-row {
@@ -107,7 +108,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: purple;
+        color: var(--text-thirdary);
         margin-bottom: 8px;
         font-family: var(--font-mono);
     }
@@ -116,7 +117,7 @@
         font-size: 26px;
         font-weight: 600;
         letter-spacing: -0.04em;
-        color: purple;
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         line-height: 1;
     }
@@ -124,13 +125,13 @@
     .stat-suffix {
         font-size: 14px;
         font-weight: 400;
-        color: purple;
+        color: var(--text-thirdary);
         margin-left: 2px;
     }
 
     .stat-footer {
         font-size: 11.5px;
-        color: purple;
+        color: var(--text-thirdary);
         margin-top: 6px;
     }
 
@@ -165,7 +166,7 @@
         padding: 0 13px;
         border-radius: 20px;
         border: 1px solid var(--border);
-        background: none;
+        background: rgba(17, 17, 17, 0.486);
         color: var(--text-secondary);
         font-size: 12px;
         font-family: var(--font);
@@ -179,9 +180,9 @@
     }
 
     .period-chip.active {
-        background: var(--accent-muted);
+        background: rgba(34, 197, 94, 0.3);
         border-color: rgba(34, 197, 94, 0.3);
-        color: var(--accent);
+        color:rgb(9, 107, 6);
     }
 
     .charts-grid {
@@ -215,12 +216,12 @@
     .chart-title {
         font-size: 13px;
         font-weight: 500;
-        color: purple;
+        color: var(--text-thirdary);
     }
 
     .chart-sub {
         font-size: 11px;
-        color: purple;
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -257,7 +258,7 @@
 
     .freq-bar-label {
         font-size: 10px;
-        color: purple;
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -280,7 +281,7 @@
         align-items: center;
         gap: 7px;
         font-size: 11.5px;
-        color: purple;
+        color: rgb(58, 97, 60);
     }
 
     .legend-dot {
@@ -294,7 +295,7 @@
         margin-left: auto;
         font-family: var(--font-mono);
         font-size: 11.5px;
-        color: purple;
+        color: rgb(27, 126, 40);
     }
 
     .pr-table {
@@ -307,7 +308,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: purple;
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         padding: 0 0 10px;
         text-align: left;
@@ -440,7 +441,8 @@
     }
 
     .day-btn {
-        background: var(--bg-card);
+        color: black;
+        background:grey;
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 0.75rem 0.5rem;
@@ -451,12 +453,12 @@
     }
 
     .day-btn:hover {
-        border-color: var(--border-hover);
+        border-color: var(--accent);
         transform: translateY(-2px);
     }
 
     .day-btn.active {
-        background: var(--accent-muted);
+        background: rgba(34, 197, 94, 0.089);
         border-color: rgba(34, 197, 94, 0.4);
     }
 
@@ -465,7 +467,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-bottom: 5px;
         font-family: var(--font-mono);
     }
@@ -480,7 +482,7 @@
     }
 
     .day-btn.active .day-num {
-        color: var(--accent);
+        color: var(--text-primary)
     }
 
     .day-dot-wrap {
@@ -505,7 +507,7 @@
 
     .day-label {
         font-size: 10px;
-        color: var(--text-muted);
+        color: var(--text-primary);
         margin-top: 4px;
         white-space: nowrap;
         overflow: hidden;
@@ -626,13 +628,13 @@
     .ex-name {
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         margin-bottom: 2px;
     }
 
     .ex-planned {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -646,12 +648,12 @@
     }
 
     .badge-pending {
-        background: rgba(148, 163, 184, 0.1);
+        background: rgba(189, 200, 216, 0.1);
         color: var(--text-muted);
     }
 
     .badge-completed {
-        background: rgba(34, 197, 94, 0.12);
+        background: rgba(23, 173, 78, 0.12);
         color: #4ade80;
     }
 
@@ -699,7 +701,7 @@
         padding: 0 14px;
         border-radius: 20px;
         border: 1px solid var(--border);
-        background: none;
+        background: ;   rgba(17, 17, 17, 0.486);
         font-size: 12px;
         font-family: var(--font);
         cursor: pointer;
@@ -707,7 +709,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: var(--text-secondary);
+        color: var(--text-primary);
     }
 
     .status-tab svg {
@@ -763,7 +765,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         padding: 0 0 8px;
         text-align: left;
@@ -779,7 +781,7 @@
 
     .set-num {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         text-align: center;
         padding-top: 6px;
@@ -790,7 +792,7 @@
         background: var(--bg-surface);
         border: 1px solid var(--border);
         border-radius: 7px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         font-size: 13px;
         height: 32px;
@@ -805,7 +807,7 @@
     }
 
     .log-input::placeholder {
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-size: 11px;
     }
 
@@ -813,7 +815,7 @@
         background: none;
         border: 1px dashed var(--border);
         border-radius: 8px;
-        color: var(--text-muted);
+        color:var(--text-thirdary);
         font-size: 12px;
         font-family: var(--font);
         height: 30px;
@@ -837,7 +839,7 @@
 
     .time-label {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         white-space: nowrap;
     }
@@ -848,7 +850,7 @@
         background: var(--bg-surface);
         border: 1px solid var(--border);
         border-radius: 7px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         font-size: 13px;
         height: 32px;
@@ -863,11 +865,12 @@
 
     .skip-note {
         font-size: 12.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         padding: 0.5rem 0;
     }
 
     .no-routine {
+        color: var(--text-thirdary);
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 14px;
@@ -878,7 +881,7 @@
     .no-routine svg {
         width: 36px;
         height: 36px;
-        stroke: var(--text-muted);
+        stroke: var(--text-accent);
         fill: none;
         stroke-width: 1.5;
         stroke-linecap: round;
@@ -888,7 +891,7 @@
 
     .no-routine p {
         font-size: 14px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-bottom: 1rem;
     }
 
@@ -910,18 +913,15 @@
     #panel-log .sets-table th,
     #panel-log .set-num,
     #panel-log .time-label,
-    #panel-log .skip-note,
-    #panel-log .no-routine p,
-    #panel-log .no-routine a {
-        color: #fff;
+    #panel-log .skip-note, {
+        color: #000000;
     }
 
     #panel-log .day-label,
     #panel-log .routine-meta-line,
     #panel-log .ex-planned,
-    #panel-log .skip-note,
-    #panel-log .no-routine p {
-        color: rgba(255, 255, 255, 0.72);
+    #panel-log .skip-note, {
+        color: rgba(0, 0, 0, 0.72);
     }
 
     #panel-log .no-routine svg {
