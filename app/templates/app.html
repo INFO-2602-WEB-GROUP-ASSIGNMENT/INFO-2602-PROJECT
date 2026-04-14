@@ -459,7 +459,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-label">Streak</div>
-        <div class="stat-value" id="stat-streak">0<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-thirdaryS)"> d</span></div>
+        <div class="stat-value" id="stat-streak">0<span class="stat-suffix-streak"> d</span></div>
         <div class="streak-bar-wrap">
             <div class="streak-bar-fill" id="dashboard-streak-bar"></div>
         </div>
@@ -796,7 +796,7 @@
 
         function renderStreak() {
             const streak = getDashboardStreak();
-            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span>`;
+            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix-streak"> d</span>`;
             document.getElementById('dashboard-streak-bar').style.width = `${Math.min(100, Math.round((streak / 7) * 100))}%`;
         }
 
