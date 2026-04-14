@@ -4,7 +4,7 @@
 	--sidebar-w: 230px;
 	--topbar-h: 60px;
 	--bg-base: #0a0e1a;  
-	--bg-sidebar: #0d1120;
+	--bg-sidebar: #000000;
 	--bg-card: linear-gradient(135deg, #0a1f44, #1c1c1c);
 	--bg-card-hover: #1c1c1c;
 	--bg-surface: #1a2235;
@@ -13,12 +13,12 @@
 	--accent-glow: rgba(34,197,94,0.12);
 	--accent-muted: rgba(34,197,94,0.08);
 	--text-primary: #f0f0f0;
-	--text-secondary: #94a3b8;
-	--text-muted: #465b71;
-	--border: rgba(255,255,255,0.06);
-	--border-hover: rgba(255, 255, 255, 0.1);
-	--font: 'DM Sans', sans-serif;
-	--font-mono: 'DM Mono', monospace;
+	--text-secondary: #303131;
+	--text-muted: #161718;
+	--border: rgba(17, 16, 16, 0.06);
+	--border-hover: rgba(15, 15, 15, 0.1);
+	--font: 'Poppins', 'Quicksand', sans-serif;
+	--font-mono: 'Poppins', 'Quicksand', monospace;
 	--radius: 11px;
 	--radius-lg: 15px;
 }
@@ -26,7 +26,7 @@
 html, body {
 	height: 100%;
 	font-family: var(--font);
-	background: var(--bg-base);
+	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
 	color: var(--text-primary);
 	overflow-x: hidden;
 	font-size: 14px;
@@ -97,7 +97,7 @@ html, body {
 .brand-text {
 	font-size: 15px;
 	font-weight: 600;
-	color: var(--text-primary);
+	color: var(--text-muted);
 	letter-spacing: -0.02em;
 }
 
@@ -213,9 +213,10 @@ html, body {
 	text-decoration: none;
 }
 
-.user-row:hover { background: rgba(255,255,255,0.04); }
+.user-row:hover { background: rgba(0, 0, 0, 0.04); }
 
 .user-avatar {
+	background-image: url('../img/profile.svg');
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
@@ -225,7 +226,7 @@ html, body {
 	justify-content: center;
 	font-size: 12px;
 	font-weight: 600;
-	color: #497efa;
+	color: #000000;
 	flex-shrink: 0;
 	font-family: var(--font-mono);
 }
@@ -250,6 +251,7 @@ html, body {
 }
 
 #main {
+	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
 	margin-left: var(--sidebar-w);
 	flex: 1;
 	display: flex;
@@ -363,7 +365,7 @@ html, body {
 #page-content {
 	flex: 1;
 	padding: 1.5rem;
-	background: var(--bg-base);
+	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
 }
 
 .flash-wrap { margin-bottom: 1rem; }
