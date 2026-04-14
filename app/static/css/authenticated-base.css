@@ -216,11 +216,14 @@ html, body {
 .user-row:hover { background: rgba(0, 0, 0, 0.04); }
 
 .user-avatar {
+	background-color: var(--accent);
 	background-image: url('../img/profile.svg');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background: var(--accent);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -251,7 +254,7 @@ html, body {
 }
 
 #main {
-	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	background: transparent;
 	margin-left: var(--sidebar-w);
 	flex: 1;
 	display: flex;
@@ -365,7 +368,7 @@ html, body {
 #page-content {
 	flex: 1;
 	padding: 1.5rem;
-	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	background: transparent;
 }
 
 .flash-wrap { margin-bottom: 1rem; }
