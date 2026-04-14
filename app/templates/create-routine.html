@@ -195,7 +195,44 @@
         margin-top: 8px;
     }
 
-    .meta-badge {
+    .diff-badge {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        white-space: nowrap;
+        font-family: var(--font-mono);
+    }
+
+    .cat-all {
+        background: var(--bg-card);
+        color: var(--text-secondary);
+    }
+
+    .cat-cardio {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+    }
+
+    .cat-core {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+    }
+
+    .cat-strength {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+    }
+
+    .cat-shoulders {
+        background: rgba(234, 179, 8, 0.1);
+        color: #facc15;
+    }
+
+    .w-tag {
         font-size: 11px;
         padding: 2px 8px;
         border-radius: 999px;
@@ -204,10 +241,9 @@
         color: var(--text-secondary);
     }
 
-    .meta-badge-category {
-        background: var(--accent-muted);
-        color: var(--accent);
-        border-color: rgba(34, 197, 94, 0.25);
+    .badge-match {
+        border-color: rgba(34, 197, 94, 0.6) !important;
+        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35) inset;
     }
 
     .exercise-actions,
@@ -445,6 +481,17 @@
             return "Exercise";
         }
 
+        function getCategoryKey(exercise) {
+            const category = getCategoryLabel(exercise).toLowerCase();
+
+            if (category.includes("cardio")) return "cardio";
+            if (category.includes("core") || category.includes("abs")) return "core";
+            if (category.includes("shoulder") || category.includes("deltoid") || category.includes("trap")) return "shoulders";
+            if (category.includes("strength") || category.includes("arms") || category.includes("legs") || category.includes("back") || category.includes("chest")) return "strength";
+
+            return "all";
+        }
+
         function getEquipmentTags(exercise) {
             if (!Array.isArray(exercise.equipment) || !exercise.equipment.length) {
                 return ["General"];
@@ -479,8 +526,14 @@
                 const name = getExerciseName(exercise);
                 const description = stripHtml(getExerciseDescription(exercise)) || "No description available.";
                 const categoryLabel = getCategoryLabel(exercise);
+                const categoryKey = getCategoryKey(exercise);
+                const query = exerciseSearch.value.trim().toLowerCase();
+                const categoryMatchClass = query && categoryLabel.toLowerCase().includes(query) ? " badge-match" : "";
                 const equipmentTags = getEquipmentTags(exercise)
-                    .map(tag => `<span class="meta-badge">${tag}</span>`)
+                    .map(tag => {
+                        const tagMatchClass = query && String(tag).toLowerCase().includes(query) ? " badge-match" : "";
+                        return `<span class="w-tag${tagMatchClass}">${tag}</span>`;
+                    })
                     .join("");
                 const alreadyAdded = chosenExercises.some(item => item.exercise_id === exercise.id);
 
@@ -492,7 +545,7 @@
                                 <div class="exercise-desc collapsed" data-full="${escapeHtml(description)}">${escapeHtml(description)}</div>
                                 <button type="button" class="desc-toggle">Read more</button>
                                 <div class="exercise-meta">
-                                    <span class="meta-badge meta-badge-category">${categoryLabel}</span>
+                                    <span class="diff-badge cat-${categoryKey}${categoryMatchClass}">${categoryLabel}</span>
                                     ${equipmentTags}
                                 </div>
                             </div>
