@@ -1,12 +1,128 @@
 {% extends "authenticated-base.html" %}
 
-{% block external_js %}
-<script src="{{ url_for('static', path='js/app.js')}}"></script>
+{% block title %}ZenMotion | Admin{% endblock %}
+
+{% block page_title %}Admin Console{% endblock %}
+
+{% block topbar_actions %}
+<button type="button" class="topbar-btn primary" id="refreshAdminDataBtn">
+   <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+      <polyline points="21 3 21 9 15 9" />
+   </svg>
+   Refresh data
+</button>
+{% endblock %}
+
+{% block external_css %}
+<link href="{{ url_for('static', path='css/admin.css') }}" rel="stylesheet">
 {% endblock %}
 
 
 {% block subpage_content %}
 
-   I am the admin page
+<section class="admin-hero">
+   <div>
+      <h1 class="admin-title">Administration Workspace</h1>
+      <p class="admin-subtitle">Monitor users, review routines, and manage account access from one place.</p>
+   </div>
 
+   <div class="admin-metrics">
+      <article class="metric-card">
+         <p class="metric-label">Total users</p>
+         <p class="metric-value" id="totalUsersMetric">0</p>
+      </article>
+      <article class="metric-card">
+         <p class="metric-label">Admins</p>
+         <p class="metric-value" id="totalAdminsMetric">0</p>
+      </article>
+      <article class="metric-card">
+         <p class="metric-label">Routines (selected user)</p>
+         <p class="metric-value" id="totalRoutinesMetric">0</p>
+      </article>
+   </div>
+</section>
+
+<div id="adminStatusBanner" class="admin-status hidden" role="status" aria-live="polite"></div>
+
+<section class="admin-layout">
+   <article class="admin-panel">
+      <header class="panel-header">
+         <div>
+            <h2 class="panel-title">Users</h2>
+            <p class="panel-subtitle">Select a user to inspect their routines.</p>
+         </div>
+         <input id="userSearchInput" class="panel-search" type="text" placeholder="Search users..." autocomplete="off">
+      </header>
+
+      <div class="table-wrap">
+         <table class="admin-table" id="usersTable">
+            <thead>
+               <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+               </tr>
+            </thead>
+            <tbody id="usersTableBody">
+               <tr>
+                  <td colspan="4" class="empty-row">Loading users...</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </article>
+
+   <article class="admin-panel">
+      <header class="panel-header">
+         <div>
+            <h2 class="panel-title">Routines</h2>
+            <p class="panel-subtitle" id="selectedUserLabel">Choose a user to view their routines.</p>
+         </div>
+      </header>
+
+      <div id="routinesList" class="routines-list">
+         <div class="empty-box">No user selected yet.</div>
+      </div>
+   </article>
+</section>
+
+<div class="modal-card admin-modal-card hidden" id="editRoutineModal" aria-hidden="true">
+   <h3 class="modal-title">Edit Routine</h3>
+   <p class="modal-subtitle">Update routine details, then save changes.</p>
+
+   <form id="editRoutineForm">
+      <div class="modal-group">
+         <label class="modal-label" for="editRoutineDay">Day of week</label>
+         <select id="editRoutineDay" class="modal-input" required>
+            <option value="">Select a day</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+         </select>
+      </div>
+
+      <div class="modal-group">
+         <label class="modal-label" for="editRoutineDescription">Description</label>
+         <textarea id="editRoutineDescription" class="modal-textarea" placeholder="Routine notes"></textarea>
+      </div>
+
+      <div class="modal-actions">
+         <button type="button" class="modal-btn-secondary" id="cancelEditRoutineBtn">Cancel</button>
+         <button type="submit" class="modal-btn">Save changes</button>
+      </div>
+   </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block subpage_scripts %}
+<script src="{{ url_for('static', path='js/admin.js') }}"></script>
 {% endblock %}

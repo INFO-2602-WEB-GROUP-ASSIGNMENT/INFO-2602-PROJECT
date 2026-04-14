@@ -383,19 +383,19 @@ async def progress_view(request: Request, user: AuthDep, db: SessionDep):
     period_stats = {
         "week": compute_period_stats(all_progress_entries, week_start, today),
         "month": compute_period_stats(all_progress_entries, today - timedelta(days=29), today),
-        "3months": compute_period_stats(all_progress_entries, today - timedelta(days=89), today),
+        "6months": compute_period_stats(all_progress_entries, today - timedelta(days=179), today),
         "year": compute_period_stats(all_progress_entries, today - timedelta(days=364), today),
     }
 
     week_freq = build_week_labels_and_values(all_progress_entries, week_start, today)
     month_labels, month_vals = build_period_buckets(all_progress_entries, 5)
-    three_month_labels, three_month_vals = build_monthly_data(all_progress_entries, 3)
+    six_month_labels, six_month_vals = build_monthly_data(all_progress_entries, 6)
     year_labels, year_vals = build_monthly_data(all_progress_entries, 12)
 
     freq_data = {
         "week": week_freq,
         "month": [{"l": label, "v": value} for label, value in zip(month_labels, month_vals)],
-        "3months": [{"l": label, "v": value} for label, value in zip(three_month_labels, three_month_vals)],
+        "6months": [{"l": label, "v": value} for label, value in zip(six_month_labels, six_month_vals)],
         "year": [{"l": label[0], "v": value} for label, value in zip(year_labels, year_vals)],
     }
 
@@ -409,7 +409,7 @@ async def progress_view(request: Request, user: AuthDep, db: SessionDep):
             for i in range(7)
         ],
         "month": month_vals,
-        "3months": three_month_vals,
+        "6months": six_month_vals,
         "year": year_vals,
     }
 

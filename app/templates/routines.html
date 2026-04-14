@@ -196,7 +196,8 @@
     }
 
     .routine-btn-primary,
-    .routine-btn-secondary {
+    .routine-btn-secondary,
+    .routine-btn-danger {
         flex: 1;
         height: 34px;
         border-radius: 9px;
@@ -212,13 +213,14 @@
     }
 
     .routine-btn-primary {
-        background: var(--accent);
-        color: #fff;
-        border: none;
+        background: transparent;
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.35);
     }
 
     .routine-btn-primary:hover {
-        background: var(--accent-dim);
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.6);
     }
 
     .routine-btn-secondary {
@@ -231,6 +233,18 @@
         border-color: var(--border-hover);
         color: var(--text-primary);
         background: var(--bg-surface);
+    }
+
+    .routine-btn-danger {
+        background: transparent;
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .routine-btn-danger:hover {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.55);
+        color: #fca5a5;
     }
 
     .empty-state {
@@ -450,8 +464,9 @@
                     </div>
 
                     <div class="routine-actions">
-                        <a class="routine-btn-primary" href="/routines/${routine.id}">Open</a>
+                        <a class="routine-btn-primary" href="/routines/${routine.id}">Remix</a>
                         <a class="routine-btn-secondary" href="/workouts">Add exercises</a>
+                        <button class="routine-btn-danger" type="button" data-delete-routine="${routine.id}">Delete</button>
                     </div>
                 </div>
             `;
@@ -515,7 +530,44 @@
             }
         }
 
+        async function deleteRoutine(routineId) {
+            const response = await fetch(`/api/routines/${routineId}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json().catch(() => null);
+            if (!response.ok) {
+                throw new Error(data?.detail || "Could not delete routine.");
+            }
+        }
+
         searchInput.addEventListener("input", filterRoutines);
+
+        grid.addEventListener("click", async function (event) {
+            const deleteButton = event.target.closest("[data-delete-routine]");
+            if (!deleteButton) return;
+
+            const routineId = Number(deleteButton.getAttribute("data-delete-routine"));
+            if (!routineId) return;
+
+            const confirmed = window.confirm("Delete this routine and its exercises?");
+            if (!confirmed) return;
+
+            deleteButton.disabled = true;
+            const originalText = deleteButton.textContent;
+            deleteButton.textContent = "Deleting...";
+
+            try {
+                await deleteRoutine(routineId);
+                allRoutines = allRoutines.filter(r => r.id !== routineId);
+                renderRoutines(allRoutines);
+                filterRoutines();
+            } catch (error) {
+                alert(error.message || "Could not delete routine.");
+                deleteButton.disabled = false;
+                deleteButton.textContent = originalText;
+            }
+        });
 
         loadRoutines();
     })();

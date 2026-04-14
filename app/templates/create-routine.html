@@ -87,41 +87,39 @@
         resize: vertical;
     }
 
-    .difficulty-options {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .difficulty-pill input {
-        display: none;
-    }
-
-    .difficulty-pill label {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 92px;
-        height: 34px;
-        padding: 0 14px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: var(--bg-surface);
-        color: var(--text-secondary);
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    .difficulty-pill input:checked + label {
-        border-color: var(--accent);
-        background: var(--accent-muted);
-        color: var(--accent);
-    }
-
     .search-row {
         display: flex;
         gap: 8px;
         margin-bottom: 1rem;
+    }
+
+    .search-loading {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 0.85rem;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .search-loading.show {
+        display: inline-flex;
+    }
+
+    .loading-spinner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(73, 69, 69, 0.35);
+        border-top-color: #ffffff;
+        animation: spin 0.8s linear infinite;
+        flex-shrink: 0;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .exercise-results,
@@ -162,6 +160,90 @@
         color: var(--text-muted);
         margin-top: 4px;
         line-height: 1.5;
+    }
+
+    .exercise-desc.collapsed {
+        max-height: 3.9em;
+        overflow: hidden;
+    }
+
+    .exercise-desc.expanded {
+        max-height: none;
+    }
+
+    .desc-toggle {
+        display: none;
+        margin-top: 6px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: var(--font);
+    }
+
+    .desc-toggle.show {
+        display: inline-flex;
+    }
+
+    .exercise-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+    .diff-badge {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        white-space: nowrap;
+        font-family: var(--font-mono);
+    }
+
+    .cat-all {
+        background: var(--bg-card);
+        color: var(--text-secondary);
+    }
+
+    .cat-cardio {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+    }
+
+    .cat-core {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+    }
+
+    .cat-strength {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+    }
+
+    .cat-shoulders {
+        background: rgba(234, 179, 8, 0.1);
+        color: #facc15;
+    }
+
+    .w-tag {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+    }
+
+    .badge-match {
+        border-color: rgba(34, 197, 94, 0.6) !important;
+        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35) inset;
     }
 
     .exercise-actions,
@@ -219,8 +301,14 @@
     }
 
     .save-btn {
-        background: var(--accent);
-        color: white;
+        background: transparent;
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+
+    .save-btn:hover {
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.6);
     }
 
     .cancel-btn {
@@ -298,6 +386,11 @@
             <button type="button" class="mini-btn" id="searchBtn">Search</button>
         </div>
 
+        <div class="search-loading" id="searchLoading" aria-live="polite" aria-hidden="true">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span>Fetching exercises...</span>
+        </div>
+
         <div class="card-title" style="margin-bottom: 0.7rem;">Search results</div>
         <div class="exercise-results" id="exerciseResults">
             <div class="empty-box">Search for Exercises to add them to this routine.</div>
@@ -320,8 +413,12 @@
         const exerciseResults = document.getElementById("exerciseResults");
         const selectedExercises = document.getElementById("selectedExercises");
         const createRoutineForm = document.getElementById("createRoutineForm");
+        const searchLoading = document.getElementById("searchLoading");
+        const searchLoadingText = searchLoading.querySelector("span:last-child");
+        const searchLoadingSpinner = searchLoading.querySelector(".loading-spinner");
 
         let chosenExercises = [];
+        let searchRequestId = 0;
 
         function stripHtml(html) {
             const temp = document.createElement("div");
@@ -329,9 +426,13 @@
             return temp.textContent || temp.innerText || "";
         }
 
-        function truncate(text, maxLength = 90) {
-            if (!text) return "No description available.";
-            return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        function escapeHtml(text) {
+            return String(text || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
 
         function getExerciseName(exercise) {
@@ -378,8 +479,39 @@
             return "";
         }
 
+        function getCategoryLabel(exercise) {
+            if (typeof exercise.category === "string") return exercise.category;
+            if (exercise.category && typeof exercise.category === "object") {
+                return exercise.category.name || "Exercise";
+            }
+            return "Exercise";
+        }
+
+        function getCategoryKey(exercise) {
+            const category = getCategoryLabel(exercise).toLowerCase();
+
+            if (category.includes("cardio")) return "cardio";
+            if (category.includes("core") || category.includes("abs")) return "core";
+            if (category.includes("shoulder") || category.includes("deltoid") || category.includes("trap")) return "shoulders";
+            if (category.includes("strength") || category.includes("arms") || category.includes("legs") || category.includes("back") || category.includes("chest")) return "strength";
+
+            return "all";
+        }
+
+        function getEquipmentTags(exercise) {
+            if (!Array.isArray(exercise.equipment) || !exercise.equipment.length) {
+                return ["General"];
+            }
+
+            return exercise.equipment.slice(0, 3).map(item => {
+                if (typeof item === "string") return item;
+                if (item && typeof item === "object") return item.name || "Equipment";
+                return "Equipment";
+            });
+        }
+
         async function searchExercises(query = "") {
-            const response = await fetch(`/api/workouts/search?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`/api/workouts/search?q=${encodeURIComponent(query)}&limit=50`);
             const data = await response.json();
 
             if (!response.ok) {
@@ -393,13 +525,22 @@
             exerciseResults.innerHTML = "";
 
             if (!exercises.length) {
-                exerciseResults.innerHTML = `<div class="empty-box">No exercises found.</div>`;
                 return;
             }
 
             exerciseResults.innerHTML = exercises.map(exercise => {
                 const name = getExerciseName(exercise);
-                const description = truncate(stripHtml(getExerciseDescription(exercise)));
+                const description = stripHtml(getExerciseDescription(exercise)) || "No description available.";
+                const categoryLabel = getCategoryLabel(exercise);
+                const categoryKey = getCategoryKey(exercise);
+                const query = exerciseSearch.value.trim().toLowerCase();
+                const categoryMatchClass = query && categoryLabel.toLowerCase().includes(query) ? " badge-match" : "";
+                const equipmentTags = getEquipmentTags(exercise)
+                    .map(tag => {
+                        const tagMatchClass = query && String(tag).toLowerCase().includes(query) ? " badge-match" : "";
+                        return `<span class="w-tag${tagMatchClass}">${tag}</span>`;
+                    })
+                    .join("");
                 const alreadyAdded = chosenExercises.some(item => item.exercise_id === exercise.id);
 
                 return `
@@ -407,7 +548,12 @@
                         <div class="exercise-top">
                             <div>
                                 <div class="exercise-name">${name}</div>
-                                <div class="exercise-desc">${description}</div>
+                                <div class="exercise-desc collapsed" data-full="${escapeHtml(description)}">${escapeHtml(description)}</div>
+                                <button type="button" class="desc-toggle">Read more</button>
+                                <div class="exercise-meta">
+                                    <span class="diff-badge cat-${categoryKey}${categoryMatchClass}">${categoryLabel}</span>
+                                    ${equipmentTags}
+                                </div>
                             </div>
                         </div>
                         <div class="exercise-actions">
@@ -418,6 +564,33 @@
                     </div>
                 `;
             }).join("");
+
+            const exerciseItems = exerciseResults.querySelectorAll(".exercise-item");
+            exerciseItems.forEach(item => {
+                const descEl = item.querySelector(".exercise-desc");
+                const toggleBtn = item.querySelector(".desc-toggle");
+                if (!descEl || !toggleBtn) return;
+
+                if (descEl.scrollHeight <= descEl.clientHeight + 1) {
+                    descEl.classList.remove("collapsed");
+                    toggleBtn.classList.remove("show");
+                    return;
+                }
+
+                toggleBtn.classList.add("show");
+                toggleBtn.addEventListener("click", function () {
+                    const expanded = descEl.classList.contains("expanded");
+                    if (expanded) {
+                        descEl.classList.remove("expanded");
+                        descEl.classList.add("collapsed");
+                        toggleBtn.textContent = "Read more";
+                    } else {
+                        descEl.classList.remove("collapsed");
+                        descEl.classList.add("expanded");
+                        toggleBtn.textContent = "Show less";
+                    }
+                });
+            });
         }
 
         function renderSelectedExercises() {
@@ -473,11 +646,39 @@
         };
 
         async function handleSearch() {
+            const requestId = ++searchRequestId;
+            searchBtn.disabled = true;
+            searchLoading.classList.add("show");
+            searchLoading.setAttribute("aria-hidden", "false");
+            searchLoadingText.textContent = "Fetching exercises...";
+            searchLoadingSpinner.style.display = "inline-block";
+
             try {
-                const exercises = await searchExercises(exerciseSearch.value.trim());
+                const query = exerciseSearch.value.trim();
+                const exercises = await searchExercises(query);
+                if (requestId !== searchRequestId) return;
+                if (!exercises.length) {
+                    searchLoadingText.textContent = "Exercise not found. Try a different search term.";
+                    searchLoadingSpinner.style.display = "none";
+                    exerciseResults.innerHTML = "";
+                    return;
+                }
+
                 renderResults(exercises);
             } catch (error) {
-                exerciseResults.innerHTML = `<div class="empty-box">${error.message}</div>`;
+                if (requestId !== searchRequestId) return;
+                searchLoadingText.textContent = error.message || "Exercise not found. Try a different search term.";
+                searchLoadingSpinner.style.display = "none";
+                exerciseResults.innerHTML = "";
+            } finally {
+                if (requestId === searchRequestId) {
+                    searchBtn.disabled = false;
+                    searchLoading.setAttribute("aria-hidden", "true");
+
+                    if (searchLoadingText.textContent === "Fetching exercises...") {
+                        searchLoading.classList.remove("show");
+                    }
+                }
             }
         }
 
@@ -531,7 +732,20 @@
             }
         }
 
-        searchBtn.addEventListener("click", handleSearch);
+        searchBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            handleSearch();
+        });
+
+        exerciseSearch.addEventListener("input", function () {
+            if (!this.value.trim()) {
+                exerciseResults.innerHTML = `<div class="empty-box">Search for exercises to add them to this routine.</div>`;
+                return;
+            }
+
+            handleSearch();
+        });
+
         exerciseSearch.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
                 e.preventDefault();

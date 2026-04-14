@@ -104,6 +104,36 @@
         color: royalblue;
     }
 
+    .filter-chip[data-filter="all"].active {
+        background: rgba(156, 163, 175, 0.1);
+        border-color: rgba(156, 163, 175, 0.35);
+        color: #9ca3af;
+    }
+
+    .filter-chip[data-filter="cardio"].active {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.35);
+        color: #f87171;
+    }
+
+    .filter-chip[data-filter="core"].active {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #60a5fa;
+    }
+
+    .filter-chip[data-filter="strength"].active {
+        background: rgba(139, 92, 246, 0.1);
+        border-color: rgba(139, 92, 246, 0.35);
+        color: #a78bfa;
+    }
+
+    .filter-chip[data-filter="shoulders"].active {
+        background: rgba(234, 179, 8, 0.1);
+        border-color: rgba(234, 179, 8, 0.35);
+        color: #facc15;
+    }
+
     .results-meta {
         font-size: 12px;
         color: var(--text-muted);
@@ -137,6 +167,9 @@
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 1.1rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         transition: border-color 0.2s, transform 0.2s;
     }
 
@@ -223,13 +256,18 @@
     }
 
     .cat-core {
-        background: rgba(34, 197, 94, 0.1);
-        color: #4ade80;
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
     }
 
     .cat-strength {
         background: rgba(139, 92, 246, 0.1);
         color: #a78bfa;
+    }
+
+    .cat-shoulders {
+        background: rgba(234, 179, 8, 0.1);
+        color: #facc15;
     }
 
     .w-name {
@@ -244,8 +282,7 @@
         font-size: 12.5px;
         color: var(--text-muted);
         line-height: 1.55;
-        margin-bottom: 0.9rem;
-        cursor: pointer;
+        margin-bottom: 0.35rem;
         position: relative;
     }
 
@@ -254,19 +291,31 @@
     }
 
     .w-desc.collapsed {
-        max-height: 3.875em;
-        /* approx 3 lines */
+        max-height: 3.1em;
+        /* approx 2 lines */
         overflow: hidden;
     }
 
-    .read-more {
+    .w-desc-toggle {
+        display: none;
+        align-items: center;
+        margin-bottom: 0.4rem;
+        padding: 0;
+        border: none;
+        background: transparent;
         color: var(--accent);
+        font-size: 12px;
+        line-height: 1;
         font-weight: 500;
         cursor: pointer;
-        margin-left: 4px;
+        font-family: var(--font);
     }
 
-    .read-more:hover {
+    .w-desc-toggle.show {
+        display: inline-flex;
+    }
+
+    .w-desc-toggle:hover {
         text-decoration: underline;
     }
 
@@ -315,24 +364,26 @@
     .w-actions {
         display: flex;
         gap: 6px;
+        margin-top: auto;
     }
 
     .add-to-btn {
         flex: 1;
-        background: var(--accent);
-        border: none;
+        background: transparent;
+        border: 1px solid rgba(34, 197, 94, 0.35);
         border-radius: 8px;
-        color: rgb(229, 232, 255);
+        color: #4ade80;
         font-size: 12.5px;
         font-weight: 500;
         font-family: var(--font);
         height: 32px;
         cursor: pointer;
-        transition: background 0.15s;
+        transition: background 0.15s, border-color 0.15s;
     }
 
     .add-to-btn:hover {
-        background: var(--accent-dim);
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.6);
     }
 
     .preview-btn {
@@ -443,22 +494,22 @@
             margin-top: 1rem;
         }
     }
-    .modal-backdrop {
+   .routine-modal-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.55);
+        background: rgba(0, 0, 0, 0.4);
         display: none;
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        z-index: 999;
+        z-index: 999999;
     }
 
-    .modal-backdrop.show {
+    .routine-modal-backdrop.show {
         display: flex;
     }
 
-    .modal-card {
+    .routine-modal-card {
         width: 100%;
         max-width: 470px;
         background: var(--bg-card);
@@ -466,27 +517,34 @@
         border-radius: 16px;
         padding: 1.2rem;
         box-shadow: 0 20px 50px rgba(9, 9, 9, 0.35);
+        max-width: 460px;
+        background: #111827;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.2rem;
+        position: relative;
+        z-index: 100000;
     }
 
-    .modal-title {
+    .routine-modal-title {
         font-size: 16px;
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 4px;
     }
 
-    .modal-subtitle {
+    .routine-modal-subtitle {
         font-size: 12.5px;
         color: var(--text-muted);
         margin-bottom: 1rem;
         line-height: 1.5;
     }
 
-    .modal-group {
+    .routine-modal-group {
         margin-bottom: 0.9rem;
     }
 
-    .modal-label {
+    .routine-modal-label {
         display: block;
         font-size: 12px;
         color: var(--text-muted);
@@ -494,9 +552,9 @@
         font-weight: 500;
     }
 
-    .modal-input,
-    .modal-select,
-    .modal-textarea {
+    .routine-modal-input,
+    .routine-modal-select,
+    .routine-modal-textarea {
         width: 100%;
         background: var(--bg-surface);
         border: 1px solid var(--border);
@@ -507,33 +565,33 @@
         outline: none;
     }
 
-    .modal-input,
-    .modal-select {
+    .routine-modal-input,
+    .routine-modal-select {
         height: 38px;
         padding: 0 12px;
     }
 
-    .modal-textarea {
+    .routine-modal-textarea {
         min-height: 90px;
         padding: 10px 12px;
         resize: vertical;
     }
 
-    .modal-row {
+    .routine-modal-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
-    .modal-actions {
+    .routine-modal-actions {
         display: flex;
         justify-content: flex-end;
         gap: 8px;
         margin-top: 1rem;
     }
 
-    .modal-btn,
-    .modal-btn-secondary {
+    .routine-modal-btn,
+    .routine-modal-btn-secondary {
         height: 36px;
         padding: 0 14px;
         border-radius: 9px;
@@ -547,23 +605,27 @@
     .modal-btn {
         background: var(--accent);
         color: #fbd2d2;
+    .routine-modal-btn {
+        background: transparent;
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.35);
     }
 
-    .modal-btn:hover {
-        background: var(--accent-dim);
+    .routine-modal-btn:hover {
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.6);
     }
 
-    .modal-btn-secondary {
+    .routine-modal-btn-secondary {
         background: transparent;
         color: var(--text-secondary);
         border: 1px solid var(--border);
     }
 
-    .modal-btn-secondary:hover {
+    .routine-modal-btn-secondary:hover {
         border-color: var(--border-hover);
         color: var(--text-primary);
-    }
-
+    } 
     .hidden {
         display: none;
     }
@@ -590,6 +652,7 @@
         <button class="filter-chip" data-filter="cardio">Cardio</button>
         <button class="filter-chip" data-filter="core">Core</button>
         <button class="filter-chip" data-filter="strength">Strength</button>
+        <button class="filter-chip" data-filter="shoulders">Shoulders</button>
     </div>
 </div>
 
@@ -605,33 +668,33 @@
     <span class="pagination-info" id="page-info">Page 1</span>
     <button class="pagination-btn" id="next-btn" onclick="goToNextPage()">Next →</button>
 </div>
- <div class="modal-backdrop" id="routineModal">
-    <div class="modal-card">
-        <div class="modal-title" id="modalTitle">Add to routine</div>
-        <div class="modal-subtitle" id="modalSubtitle">Choose where to add this exercise.</div>
+<div class="routine-modal-backdrop" id="routineModal">
+    <div class="routine-modal-card">
+        <div class="routine-modal-title" id="routine-modalTitle">Add to routine</div>
+        <div class="routine-modal-subtitle" id="routine-modalSubtitle">Choose where to add this exercise.</div>
 
         <div id="existingRoutineSection">
-            <div class="modal-group">
-                <label class="modal-label" for="routineSelect">Routine</label>
-                <select class="modal-select" id="routineSelect"></select>
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="routineSelect">Routine</label>
+                <select class="routine-modal-select" id="routineSelect"></select>
             </div>
 
-            <div class="modal-row">
-                <div class="modal-group">
-                    <label class="modal-label" for="setsInput">Sets</label>
-                    <input class="modal-input" type="number" id="setsInput" min="1" value="3">
+            <div class="routine-modal-row">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="setsInput">Sets</label>
+                    <input class="routine-modal-input" type="number" id="setsInput" min="1" value="3">
                 </div>
-                <div class="modal-group">
-                    <label class="modal-label" for="repsInput">Reps</label>
-                    <input class="modal-input" type="number" id="repsInput" min="1" value="10">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="repsInput">Reps</label>
+                    <input class="routine-modal-input" type="number" id="repsInput" min="1" value="10">
                 </div>
             </div>
         </div>
 
         <div id="newRoutineSection" class="hidden">
-            <div class="modal-group">
-                <label class="modal-label" for="daySelect">Day of week</label>
-                <select class="modal-select" id="daySelect">
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="daySelect">Day of week</label>
+                <select class="routine-modal-select" id="daySelect">
                     <option value="">Select a day</option>
                     <option>Sunday</option>
                     <option>Monday</option>
@@ -643,26 +706,26 @@
                 </select>
             </div>
 
-            <div class="modal-group">
-                <label class="modal-label" for="routineDescription">Description</label>
-                <textarea class="modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="routineDescription">Description</label>
+                <textarea class="routine-modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
             </div>
 
-            <div class="modal-row">
-                <div class="modal-group">
-                    <label class="modal-label" for="newSetsInput">Sets</label>
-                    <input class="modal-input" type="number" id="newSetsInput" min="1" value="3">
+            <div class="routine-modal-row">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="newSetsInput">Sets</label>
+                    <input class="routine-modal-input" type="number" id="newSetsInput" min="1" value="3">
                 </div>
-                <div class="modal-group">
-                    <label class="modal-label" for="newRepsInput">Reps</label>
-                    <input class="modal-input" type="number" id="newRepsInput" min="1" value="10">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="newRepsInput">Reps</label>
+                    <input class="routine-modal-input" type="number" id="newRepsInput" min="1" value="10">
                 </div>
             </div>
         </div>
 
-        <div class="modal-actions">
-            <button class="modal-btn-secondary" type="button" onclick="closeRoutineModal()">Cancel</button>
-            <button class="modal-btn" type="button" id="modalSubmitBtn">Add</button>
+        <div class="routine-modal-actions">
+            <button class="routine-modal-btn-secondary" type="button" onclick="closeRoutineModal()">Cancel</button>
+            <button class="routine-modal-btn" type="button" id="routine-modalSubmitBtn">Add</button>
         </div>
     </div>
 </div>
@@ -674,13 +737,31 @@
     const existingRoutineSection = document.getElementById('existingRoutineSection');
     const newRoutineSection = document.getElementById('newRoutineSection');
     const routineSelect = document.getElementById('routineSelect');
-    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalSubmitBtn = document.getElementById('routine-modalSubmitBtn');
+    const modalCancelBtn = routineModal.querySelector('.routine-modal-btn-secondary');
+    const modalTitle = document.getElementById('routine-modalTitle');
+    const modalSubtitle = document.getElementById('routine-modalSubtitle');
+
+    routineModal.addEventListener('click', function (e) {
+        if (e.target === routineModal) {
+            closeRoutineModal();
+        }
+    });
 
     let selectedExerciseId = null;
     let selectedExerciseName = "";
     let availableRoutines = [];
+    let isSubmittingRoutine = false;
+    const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    function setRoutineModalBusy(isBusy, busyLabel, idleLabel) {
+        isSubmittingRoutine = isBusy;
+        modalSubmitBtn.disabled = isBusy;
+        if (modalCancelBtn) {
+            modalCancelBtn.disabled = isBusy;
+        }
+        modalSubmitBtn.textContent = isBusy ? busyLabel : idleLabel;
+    }
 
     (function () {
         const chips = document.querySelectorAll('.filter-chip[data-filter]');
@@ -700,10 +781,13 @@
             return temp.textContent || temp.innerText || '';
         }
 
-        function truncate(text, maxLength = 120) {
-            if (!text) return { text: 'No description available.', isTruncated: false };
-            if (text.length <= maxLength) return { text, isTruncated: false };
-            return { text: text.slice(0, maxLength) + '...', fullText: text, isTruncated: true };
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         function getCategoryLabel(exercise) {
@@ -719,6 +803,7 @@
 
             if (category.includes('cardio')) return 'cardio';
             if (category.includes('core') || category.includes('abs')) return 'core';
+            if (category.includes('shoulder') || category.includes('deltoid') || category.includes('trap')) return 'shoulders';
             if (category.includes('strength') || category.includes('arms') || category.includes('legs') || category.includes('back') || category.includes('chest')) return 'strength';
 
             return 'all';
@@ -792,11 +877,7 @@
         function createExerciseCard(exercise, index) {
             const exerciseName = getExerciseName(exercise);
             const displayName = toTitleCase(exerciseName);
-            const rawDescription = getExerciseDescription(exercise);
-            const descObj = truncate(stripHtml(rawDescription));
-            const description = descObj.text;
-            const isTruncated = descObj.isTruncated;
-            const fullDescription = descObj.fullText || description;
+            const fullDescription = stripHtml(getExerciseDescription(exercise)) || 'No description available.';
             const categoryLabel = getCategoryLabel(exercise);
             const categoryKey = getCategoryKey(exercise);
             const categoryClass = 'cat-' + categoryKey;
@@ -820,11 +901,10 @@
 
                     <div class="w-name">${displayName}</div>
                     <div class="w-desc collapsed"
-                        data-truncated="${description.replace(/"/g, '&quot;')}"
-                        data-full="${fullDescription.replace(/"/g, '&quot;')}"
-                        ${isTruncated ? 'title="Click to expand description"' : ''}>
-                        ${description}${isTruncated ? '<span class="read-more">Read more</span>' : ''}
+                        data-full="${escapeHtml(fullDescription)}">
+                        ${escapeHtml(fullDescription)}
                     </div>
+                    <button type="button" class="w-desc-toggle">Read more</button>
 
                     <div class="w-tags">
                         ${tags}
@@ -890,22 +970,31 @@
             });
 
             // Add event listeners for expandable descriptions
-            const descElements = grid.querySelectorAll('.w-desc');
-            descElements.forEach(descEl => {
-                if (descEl.querySelector('.read-more')) {
-                    descEl.addEventListener('click', function () {
-                        const isExpanded = this.classList.contains('expanded');
-                        if (isExpanded) {
-                            this.classList.remove('expanded');
-                            this.classList.add('collapsed');
-                            this.innerHTML = this.dataset.truncated + '<span class="read-more">Read more</span>';
-                        } else {
-                            this.classList.remove('collapsed');
-                            this.classList.add('expanded');
-                            this.innerHTML = this.dataset.full;
-                        }
-                    });
+            const cards = grid.querySelectorAll('.w-card');
+            cards.forEach(card => {
+                const descEl = card.querySelector('.w-desc');
+                const toggleBtn = card.querySelector('.w-desc-toggle');
+                if (!descEl || !toggleBtn) return;
+
+                if (descEl.scrollHeight <= descEl.clientHeight + 1) {
+                    descEl.classList.remove('collapsed');
+                    toggleBtn.classList.remove('show');
+                    return;
                 }
+
+                toggleBtn.classList.add('show');
+                toggleBtn.addEventListener('click', function () {
+                    const isExpanded = descEl.classList.contains('expanded');
+                    if (isExpanded) {
+                        descEl.classList.remove('expanded');
+                        descEl.classList.add('collapsed');
+                        toggleBtn.textContent = 'Read more';
+                    } else {
+                        descEl.classList.remove('collapsed');
+                        descEl.classList.add('expanded');
+                        toggleBtn.textContent = 'Show less';
+                    }
+                });
             });
 
             updatePaginationControls(totalPages);
@@ -1010,20 +1099,63 @@
 
     function openModal() {
         routineModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
     }
 
     function closeRoutineModal() {
         routineModal.classList.remove('show');
+        document.body.style.overflow = '';
         selectedExerciseId = null;
         selectedExerciseName = "";
     }
 
     window.closeRoutineModal = closeRoutineModal;
 
+    function normalizeDayName(value) {
+        const token = String(value || '').trim().toLowerCase();
+        const found = DAYS_OF_WEEK.find(day => day.toLowerCase() === token);
+        return found || '';
+    }
+
     function fillRoutineSelect(routines) {
-        routineSelect.innerHTML = routines.map(routine => `
-            <option value="${routine.id}">${routine.day_of_week || routine.name}</option>
-        `).join('');
+        const existingOptions = routines.map(routine => {
+            const label = routine.day_of_week || routine.name;
+            return `<option value="${routine.id}">${label}</option>`;
+        });
+
+        const usedDays = new Set(
+            routines
+                .map(routine => normalizeDayName(routine.day_of_week || routine.name))
+                .filter(Boolean)
+        );
+
+        const createOptions = DAYS_OF_WEEK
+            .filter(day => !usedDays.has(day))
+            .map(day => `<option value="new:${day}">+ Create new routine for ${day}</option>`);
+
+        routineSelect.innerHTML = [...existingOptions, ...createOptions].join('');
+    }
+
+    function updateRoutineSelectionMode() {
+        const selectedValue = String(routineSelect.value || '');
+        const isCreateOption = selectedValue.startsWith('new:');
+
+        if (isCreateOption) {
+            const selectedDay = selectedValue.slice(4);
+            modalTitle.textContent = 'Create routine';
+            modalSubtitle.textContent = `Create a routine for ${selectedDay} and add ${selectedExerciseName}.`;
+            newRoutineSection.classList.remove('hidden');
+            document.getElementById('daySelect').value = selectedDay;
+            modalSubmitBtn.textContent = 'Create & Add';
+            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
+            return;
+        }
+
+        modalTitle.textContent = 'Add to routine';
+        modalSubtitle.textContent = `Add ${selectedExerciseName} to one of your routines.`;
+        newRoutineSection.classList.add('hidden');
+        modalSubmitBtn.textContent = 'Add';
+        modalSubmitBtn.onclick = submitAddToExistingRoutine;
     }
 
     async function openAddToRoutineModal(exerciseId, exerciseName) {
@@ -1043,9 +1175,8 @@
             existingRoutineSection.classList.remove('hidden');
             newRoutineSection.classList.add('hidden');
             fillRoutineSelect(availableRoutines);
-            modalSubmitBtn.textContent = 'Add';
-            modalSubmitBtn.onclick = null;
-            modalSubmitBtn.addEventListener('click', submitAddToExistingRoutine, { once: true });
+            routineSelect.onchange = updateRoutineSelectionMode;
+            updateRoutineSelectionMode();
 
         } else {
             modalTitle.textContent = 'Create routine';
@@ -1053,8 +1184,7 @@
             existingRoutineSection.classList.add('hidden');
             newRoutineSection.classList.remove('hidden');
             modalSubmitBtn.textContent = 'Create & Add';
-            modalSubmitBtn.onclick = null;
-            modalSubmitBtn.addEventListener('click', submitCreateRoutineAndAdd, { once: true });
+            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
         }
 
         openModal();
@@ -1063,38 +1193,53 @@
     window.openAddToRoutineModal = openAddToRoutineModal;
 
     async function submitAddToExistingRoutine() {
+        if (isSubmittingRoutine) return;
+
         const routineSelect = document.getElementById("routineSelect");
         const routineId = routineSelect.value;
+        if (String(routineId).startsWith('new:')) {
+            await submitCreateRoutineAndAdd();
+            return;
+        }
         const routineName = routineSelect.options[routineSelect.selectedIndex].text;
+        const exerciseName = selectedExerciseName;
         const sets = Number(document.getElementById('setsInput').value) || 3;
         const reps = Number(document.getElementById('repsInput').value) || 10;
 
-        const response = await fetch(`/api/routines/${routineId}/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                exercise_id: selectedExerciseId,
-                sets,
-                reps
-            })
-        });
+        setRoutineModalBusy(true, 'Adding...', 'Add');
+        try {
+            const response = await fetch(`/api/routines/${routineId}/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    exercise_id: selectedExerciseId,
+                    sets,
+                    reps
+                })
+            });
 
-        const data = await response.json().catch(() => null);
+            const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            alert(data?.detail || 'Could not add exercise.');
-            return;
+            if (!response.ok) {
+                alert(data?.detail || 'Could not add exercise.');
+                return;
+            }
+
+            closeRoutineModal();
+            alert(`${exerciseName} added to ${routineName} routine.`);
+        } finally {
+            setRoutineModalBusy(false, 'Adding...', 'Add');
         }
-
-        closeRoutineModal();
-        alert(`${selectedExerciseName} added to ${routineName} routine.`);
     }
 
     async function submitCreateRoutineAndAdd() {
+        if (isSubmittingRoutine) return;
+
         const day = document.getElementById('daySelect').value;
         const description = document.getElementById('routineDescription').value.trim();
+        const exerciseName = selectedExerciseName;
         const sets = Number(document.getElementById('newSetsInput').value) || 3;
         const reps = Number(document.getElementById('newRepsInput').value) || 10;
 
@@ -1103,33 +1248,38 @@
             return;
         }
 
-        const createResponse = await fetch('/api/routines/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                day_of_week: day,
-                description,
-                exercises: [
-                    {
-                        exercise_id: selectedExerciseId,
-                        sets,
-                        reps
-                    }
-                ]
-            })
-        });
+        setRoutineModalBusy(true, 'Creating...', 'Create & Add');
+        try {
+            const createResponse = await fetch('/api/routines/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    day_of_week: day,
+                    description,
+                    exercises: [
+                        {
+                            exercise_id: selectedExerciseId,
+                            sets,
+                            reps
+                        }
+                    ]
+                })
+            });
 
-        const createData = await createResponse.json().catch(() => null);
+            const createData = await createResponse.json().catch(() => null);
 
-        if (!createResponse.ok) {
-            alert(createData?.detail || 'Could not create routine.');
-            return;
+            if (!createResponse.ok) {
+                alert(createData?.detail || 'Could not create routine.');
+                return;
+            }
+
+            closeRoutineModal();
+            alert(`Routine for ${day} created and ${exerciseName} added.`);
+        } finally {
+            setRoutineModalBusy(false, 'Creating...', 'Create & Add');
         }
-
-        closeRoutineModal();
-        alert(`Routine for ${day} created and ${selectedExerciseName} added.`);
     }
 </script>
 {% endblock %}

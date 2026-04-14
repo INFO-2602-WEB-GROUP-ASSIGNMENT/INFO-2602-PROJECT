@@ -5,7 +5,7 @@
 {% block topbar_actions %}
 <button class="topbar-btn primary" onclick="saveProgress()">
     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
+        stroke-linecap="round" s    troke-linejoin="round">
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
         <polyline points="17 21 17 13 7 13 7 21" />
         <polyline points="7 3 7 8 15 8" />
@@ -982,7 +982,7 @@
     <div class="period-chips">
         <button class="period-chip active" onclick="setPeriod('week',this)">This week</button>
         <button class="period-chip" onclick="setPeriod('month',this)">This month</button>
-        <button class="period-chip" onclick="setPeriod('3months',this)">6 months</button>
+        <button class="period-chip" onclick="setPeriod('6months',this)">6 months</button>
         <button class="period-chip" onclick="setPeriod('year',this)">This year</button>
     </div>
 
@@ -1535,6 +1535,7 @@
         renderDaySelector();
         renderRoutineView();
 
-    });
+        // Invoke immediately so all page handlers are bound on load.
+    })();
 </script>
 {% endblock %}
