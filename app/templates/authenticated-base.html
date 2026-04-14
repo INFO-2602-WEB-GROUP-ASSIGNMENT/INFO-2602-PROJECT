@@ -41,6 +41,12 @@
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                         New Routine
                     </a>
+                    {% if user.role == 'admin' %}
+                    <a class="nav-link {{ 'active' if request.path == '/admin' }}" href="/admin">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                        Admin
+                    </a>
+                    {% endif %}
                 </div>
             </div>
 

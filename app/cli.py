@@ -1,9 +1,6 @@
 import typer
 from app.database import create_db_and_tables, get_cli_session, drop_all
 from app.models.user import *
-from fastapi import Depends
-from sqlmodel import select
-from sqlalchemy.exc import IntegrityError
 from app.models.user import User
 from app.utilities.security import encrypt_password
 
@@ -21,7 +18,7 @@ def initialize():
         drop_all() 
         create_db_and_tables() 
         
-        bob = UserBase(username='bob', email='bob@mail.com', password=encrypt_password("bobpass"))
+        bob = UserBase(username='bob', email='bob@mail.com', password=encrypt_password("bobpass"), role="admin")
         bob_db = User.model_validate(bob)
 
         db.add(bob_db)

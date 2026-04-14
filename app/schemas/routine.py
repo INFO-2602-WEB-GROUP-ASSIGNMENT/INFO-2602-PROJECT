@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 from typing import Optional, List
 
 
@@ -11,7 +11,7 @@ class RoutineExerciseCreate(SQLModel):
 class RoutineCreate(SQLModel):
     day_of_week: str
     description: Optional[str] = None
-    exercises: List[RoutineExerciseCreate] = []
+    exercises: List[RoutineExerciseCreate] = Field(default_factory=list)
 
 
 class RoutineUpdate(SQLModel):
