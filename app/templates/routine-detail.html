@@ -249,6 +249,23 @@
         border-color: var(--accent);
     }
 
+    .remix-delete-btn {
+        background: transparent;
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: var(--font);
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .remix-delete-btn:hover {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.6);
+    }
+
     .remix-confirm-btn:disabled {
         opacity: 0.55;
         cursor: not-allowed;
@@ -392,6 +409,7 @@
                     </div>
                     <div class="remix-list"></div>
                     <div class="remix-actions">
+                        <button class="remix-delete-btn" type="button" onclick="deleteRoutineExercise(${ex.id})">Delete exercise</button>
                         <button class="remix-cancel-btn" type="button" onclick="closeRemixPanel(${ex.id})">Cancel</button>
                         <button class="remix-confirm-btn" type="button" onclick="confirmRemix(${ex.id})" disabled>Replace exercise</button>
                     </div>
@@ -480,6 +498,27 @@
         showToast('Exercise replaced successfully.');
     }
     window.confirmRemix = confirmRemix;
+
+    async function deleteRoutineExercise(routineExerciseId) {
+        const confirmed = window.confirm('Delete this exercise from the routine?');
+        if (!confirmed) return;
+
+        const response = await fetch(`/api/routines/${ROUTINE_ID}/exercises/${routineExerciseId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            alert(error.detail || 'Could not delete exercise.');
+            return;
+        }
+
+        routine.exercises = routine.exercises.filter(ex => ex.id !== routineExerciseId);
+        renderRoutineHeader();
+        renderExercises();
+        showToast('Exercise deleted from routine.');
+    }
+    window.deleteRoutineExercise = deleteRoutineExercise;
 
     window.closeRemixPanel = function (routineExerciseId) {
         const panel = document.getElementById(`remix-panel-${routineExerciseId}`);

@@ -726,6 +726,7 @@
     const newRoutineSection = document.getElementById('newRoutineSection');
     const routineSelect = document.getElementById('routineSelect');
     const modalSubmitBtn = document.getElementById('routine-modalSubmitBtn');
+    const modalCancelBtn = routineModal.querySelector('.routine-modal-btn-secondary');
     const modalTitle = document.getElementById('routine-modalTitle');
     const modalSubtitle = document.getElementById('routine-modalSubtitle');
 
@@ -738,6 +739,17 @@
     let selectedExerciseId = null;
     let selectedExerciseName = "";
     let availableRoutines = [];
+    let isSubmittingRoutine = false;
+    const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    function setRoutineModalBusy(isBusy, busyLabel, idleLabel) {
+        isSubmittingRoutine = isBusy;
+        modalSubmitBtn.disabled = isBusy;
+        if (modalCancelBtn) {
+            modalCancelBtn.disabled = isBusy;
+        }
+        modalSubmitBtn.textContent = isBusy ? busyLabel : idleLabel;
+    }
 
     (function () {
         const chips = document.querySelectorAll('.filter-chip[data-filter]');
@@ -1087,10 +1099,51 @@
 
     window.closeRoutineModal = closeRoutineModal;
 
+    function normalizeDayName(value) {
+        const token = String(value || '').trim().toLowerCase();
+        const found = DAYS_OF_WEEK.find(day => day.toLowerCase() === token);
+        return found || '';
+    }
+
     function fillRoutineSelect(routines) {
-        routineSelect.innerHTML = routines.map(routine => `
-            <option value="${routine.id}">${routine.day_of_week || routine.name}</option>
-        `).join('');
+        const existingOptions = routines.map(routine => {
+            const label = routine.day_of_week || routine.name;
+            return `<option value="${routine.id}">${label}</option>`;
+        });
+
+        const usedDays = new Set(
+            routines
+                .map(routine => normalizeDayName(routine.day_of_week || routine.name))
+                .filter(Boolean)
+        );
+
+        const createOptions = DAYS_OF_WEEK
+            .filter(day => !usedDays.has(day))
+            .map(day => `<option value="new:${day}">+ Create new routine for ${day}</option>`);
+
+        routineSelect.innerHTML = [...existingOptions, ...createOptions].join('');
+    }
+
+    function updateRoutineSelectionMode() {
+        const selectedValue = String(routineSelect.value || '');
+        const isCreateOption = selectedValue.startsWith('new:');
+
+        if (isCreateOption) {
+            const selectedDay = selectedValue.slice(4);
+            modalTitle.textContent = 'Create routine';
+            modalSubtitle.textContent = `Create a routine for ${selectedDay} and add ${selectedExerciseName}.`;
+            newRoutineSection.classList.remove('hidden');
+            document.getElementById('daySelect').value = selectedDay;
+            modalSubmitBtn.textContent = 'Create & Add';
+            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
+            return;
+        }
+
+        modalTitle.textContent = 'Add to routine';
+        modalSubtitle.textContent = `Add ${selectedExerciseName} to one of your routines.`;
+        newRoutineSection.classList.add('hidden');
+        modalSubmitBtn.textContent = 'Add';
+        modalSubmitBtn.onclick = submitAddToExistingRoutine;
     }
 
     async function openAddToRoutineModal(exerciseId, exerciseName) {
@@ -1110,9 +1163,8 @@
             existingRoutineSection.classList.remove('hidden');
             newRoutineSection.classList.add('hidden');
             fillRoutineSelect(availableRoutines);
-            modalSubmitBtn.textContent = 'Add';
-            modalSubmitBtn.onclick = null;
-            modalSubmitBtn.addEventListener('click', submitAddToExistingRoutine, { once: true });
+            routineSelect.onchange = updateRoutineSelectionMode;
+            updateRoutineSelectionMode();
 
         } else {
             modalTitle.textContent = 'Create routine';
@@ -1120,8 +1172,7 @@
             existingRoutineSection.classList.add('hidden');
             newRoutineSection.classList.remove('hidden');
             modalSubmitBtn.textContent = 'Create & Add';
-            modalSubmitBtn.onclick = null;
-            modalSubmitBtn.addEventListener('click', submitCreateRoutineAndAdd, { once: true });
+            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
         }
 
         openModal();
@@ -1130,38 +1181,53 @@
     window.openAddToRoutineModal = openAddToRoutineModal;
 
     async function submitAddToExistingRoutine() {
+        if (isSubmittingRoutine) return;
+
         const routineSelect = document.getElementById("routineSelect");
         const routineId = routineSelect.value;
+        if (String(routineId).startsWith('new:')) {
+            await submitCreateRoutineAndAdd();
+            return;
+        }
         const routineName = routineSelect.options[routineSelect.selectedIndex].text;
+        const exerciseName = selectedExerciseName;
         const sets = Number(document.getElementById('setsInput').value) || 3;
         const reps = Number(document.getElementById('repsInput').value) || 10;
 
-        const response = await fetch(`/api/routines/${routineId}/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                exercise_id: selectedExerciseId,
-                sets,
-                reps
-            })
-        });
+        setRoutineModalBusy(true, 'Adding...', 'Add');
+        try {
+            const response = await fetch(`/api/routines/${routineId}/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    exercise_id: selectedExerciseId,
+                    sets,
+                    reps
+                })
+            });
 
-        const data = await response.json().catch(() => null);
+            const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            alert(data?.detail || 'Could not add exercise.');
-            return;
+            if (!response.ok) {
+                alert(data?.detail || 'Could not add exercise.');
+                return;
+            }
+
+            closeRoutineModal();
+            alert(`${exerciseName} added to ${routineName} routine.`);
+        } finally {
+            setRoutineModalBusy(false, 'Adding...', 'Add');
         }
-
-        closeRoutineModal();
-        alert(`${selectedExerciseName} added to ${routineName} routine.`);
     }
 
     async function submitCreateRoutineAndAdd() {
+        if (isSubmittingRoutine) return;
+
         const day = document.getElementById('daySelect').value;
         const description = document.getElementById('routineDescription').value.trim();
+        const exerciseName = selectedExerciseName;
         const sets = Number(document.getElementById('newSetsInput').value) || 3;
         const reps = Number(document.getElementById('newRepsInput').value) || 10;
 
@@ -1170,33 +1236,38 @@
             return;
         }
 
-        const createResponse = await fetch('/api/routines/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                day_of_week: day,
-                description,
-                exercises: [
-                    {
-                        exercise_id: selectedExerciseId,
-                        sets,
-                        reps
-                    }
-                ]
-            })
-        });
+        setRoutineModalBusy(true, 'Creating...', 'Create & Add');
+        try {
+            const createResponse = await fetch('/api/routines/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    day_of_week: day,
+                    description,
+                    exercises: [
+                        {
+                            exercise_id: selectedExerciseId,
+                            sets,
+                            reps
+                        }
+                    ]
+                })
+            });
 
-        const createData = await createResponse.json().catch(() => null);
+            const createData = await createResponse.json().catch(() => null);
 
-        if (!createResponse.ok) {
-            alert(createData?.detail || 'Could not create routine.');
-            return;
+            if (!createResponse.ok) {
+                alert(createData?.detail || 'Could not create routine.');
+                return;
+            }
+
+            closeRoutineModal();
+            alert(`Routine for ${day} created and ${exerciseName} added.`);
+        } finally {
+            setRoutineModalBusy(false, 'Creating...', 'Create & Add');
         }
-
-        closeRoutineModal();
-        alert(`Routine for ${day} created and ${selectedExerciseName} added.`);
     }
 </script>
 {% endblock %}

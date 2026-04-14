@@ -1,8 +1,11 @@
+from datetime import datetime
+import json
+
 from fastapi import HTTPException
 from app.dependencies import SessionDep, AuthDep
 from sqlmodel import select
 from sqlalchemy.exc import IntegrityError
-from app.models import Routine, RoutineExercise
+from app.models import ProgressLog, Routine, RoutineExercise, RoutineWorkout
 from app.services.wger_service import WgerService
 from app.schemas.routine import RoutineCreate, RoutineExerciseCreate, RoutineUpdate, RoutineExerciseRemix
 from . import api_router
@@ -171,6 +174,37 @@ def get_routine_detail(routine_id: int, db: SessionDep, current_user: AuthDep):
     }
 
 
+@api_router.delete("/routines/{routine_id}")
+def delete_routine(routine_id: int, db: SessionDep, current_user: AuthDep):
+    routine = db.get(Routine, routine_id)
+    if not routine or routine.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Routine not found")
+
+    routine_exercises = db.exec(
+        select(RoutineExercise).where(RoutineExercise.routine_id == routine_id)
+    ).all()
+    progress_logs = db.exec(
+        select(ProgressLog).where(ProgressLog.routine_id == routine_id)
+    ).all()
+    workout_links = db.exec(
+        select(RoutineWorkout).where(RoutineWorkout.routine_id == routine_id)
+    ).all()
+
+    for routine_exercise in routine_exercises:
+        db.delete(routine_exercise)
+
+    for progress_log in progress_logs:
+        db.delete(progress_log)
+
+    for workout_link in workout_links:
+        db.delete(workout_link)
+
+    db.delete(routine)
+    db.commit()
+
+    return {"message": "Routine deleted successfully"}
+
+
 @api_router.patch("/routines/{routine_id}/exercises/{routine_exercise_id}/remix")
 def remix_routine_exercise(
     routine_id: int,
@@ -199,6 +233,52 @@ def remix_routine_exercise(
         "message": "Exercise swapped successfully",
         "routine_exercise": routine_exercise.model_dump()
     }
+
+
+@api_router.delete("/routines/{routine_id}/exercises/{routine_exercise_id}")
+def delete_routine_exercise(
+    routine_id: int,
+    routine_exercise_id: int,
+    db: SessionDep,
+    current_user: AuthDep,
+):
+    routine = db.exec(
+        select(Routine).where(Routine.id == routine_id, Routine.user_id == current_user.id)
+    ).first()
+    if not routine:
+        raise HTTPException(status_code=404, detail="Routine not found")
+
+    routine_exercise = db.get(RoutineExercise, routine_exercise_id)
+    if not routine_exercise or routine_exercise.routine_id != routine_id:
+        raise HTTPException(status_code=404, detail="Routine exercise not found")
+
+    progress_logs = db.exec(
+        select(ProgressLog).where(
+            ProgressLog.user_id == current_user.id,
+            ProgressLog.routine_id == routine_id,
+        )
+    ).all()
+
+    exercise_key = str(routine_exercise_id)
+    for log in progress_logs:
+        if not log.payload:
+            continue
+
+        try:
+            payload = json.loads(log.payload)
+        except Exception:
+            continue
+
+        if isinstance(payload, dict) and exercise_key in payload:
+            payload.pop(exercise_key, None)
+            log.payload = json.dumps(payload)
+            log.updated_at = datetime.utcnow()
+            db.add(log)
+
+    db.delete(routine_exercise)
+    db.commit()
+
+    return {"message": "Exercise deleted successfully"}
 
 @api_router.post("/routines/{routine_id}/add")
 async def add_exercise_to_routine(
