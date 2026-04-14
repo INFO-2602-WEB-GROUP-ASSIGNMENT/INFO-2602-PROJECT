@@ -22,6 +22,7 @@
         margin-top: 3px;
     }
 
+    /* ── STATS ── */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -91,6 +92,7 @@
         width: 58%;
     }
 
+    /* ── MAIN GRID ── */
     .main-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -104,6 +106,7 @@
         gap: 10px;
     }
 
+    /* ── CARD ── */
     .dash-card {
         background: var(--bg-card);
         border: 1px solid var(--border);
@@ -142,6 +145,7 @@
         opacity: 1;
     }
 
+    /* ── ROUTINES LIST ── */
     .routine-item {
         display: flex;
         align-items: center;
@@ -180,23 +184,23 @@
     }
 
     .ri-green {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
     }
 
     .ri-blue {
-        background: rgba(59, 130, 246, 0.12);
-        color: #60a5fa;
+        background: rgba(255,255,255,0.08);
+        color: #d9d9d9;
     }
 
     .ri-amber {
-        background: rgba(234, 179, 8, 0.12);
-        color: #facc15;
+        background: rgba(255,255,255,0.07);
+        color: #bfbfbf;
     }
 
     .ri-purple {
-        background: rgba(139, 92, 246, 0.12);
-        color: #a78bfa;
+        background: rgba(255,255,255,0.08);
+        color: #cfcfcf;
     }
 
     .ri-info {
@@ -224,27 +228,28 @@
     }
 
     .badge-green {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
     }
 
     .badge-blue {
-        background: rgba(59, 130, 246, 0.12);
-        color: #60a5fa;
+        background: rgba(255,255,255,0.08);
+        color: #d9d9d9;
     }
 
     .badge-amber {
-        background: rgba(234, 179, 8, 0.12);
-        color: #facc15;
+        background: rgba(255,255,255,0.07);
+        color: #bfbfbf;
     }
 
+    /* ── TODAY'S PLAN ── */
     .plan-tag {
         font-size: 11px;
         font-weight: 500;
         padding: 3px 10px;
         border-radius: 20px;
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
         border: 1px solid rgba(34, 197, 94, 0.2);
     }
 
@@ -346,6 +351,7 @@
         background: var(--accent-dim);
     }
 
+    /* ── ACTIVITY ── */
     .activity-item {
         display: flex;
         align-items: center;
@@ -383,6 +389,7 @@
         white-space: nowrap;
     }
 
+    /* ── BROWSE CARD ── */
     .browse-item {
         display: flex;
         align-items: center;
@@ -420,6 +427,7 @@
         background: var(--accent-muted);
     }
 
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
         .stats-grid {
             grid-template-columns: 1fr 1fr;
@@ -450,6 +458,7 @@
     <div class="greeting-sub">Stay consistent. Build routines. Remix your workouts.</div>
 </div>
 
+<!-- STATS -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-label">Routines</div>
@@ -475,9 +484,10 @@
     </div>
 </div>
 
-
+<!-- ROW 1 -->
 <div class="main-grid">
 
+    <!-- ROUTINES -->
     <div class="dash-card">
         <div class="card-header">
             <span class="card-title">My routines</span>
@@ -494,6 +504,7 @@
         </div>
     </div>
 
+    <!-- TODAY'S PLAN -->
     <div class="dash-card">
         <div class="card-header">
             <span class="card-title">Today's plan</span>
@@ -513,8 +524,10 @@
 
 </div>
 
+<!-- ROW 2 -->
 <div class="bottom-grid">
 
+    <!-- ACTIVITY -->
     <div class="dash-card">
         <div class="card-header">
             <span class="card-title">Recent activity</span>
@@ -529,6 +542,7 @@
         </div>
     </div>
 
+    <!-- BROWSE -->
     <div class="dash-card">
         <div class="card-header">
             <span class="card-title">Browse workouts</span>
@@ -735,12 +749,12 @@
                     <div class="act-time">Now</div>
                 </div>
                 <div class="activity-item">
-                    <div class="act-dot" style="background: #60a5fa"></div>
+                    <div class="act-dot" style="background: #d9d9d9"></div>
                     <div class="act-text">${exercisesCount} saved exercise${exercisesCount !== 1 ? "s" : ""} ready</div>
                     <div class="act-time">Now</div>
                 </div>
                 <div class="activity-item">
-                    <div class="act-dot" style="background: #facc15"></div>
+                    <div class="act-dot" style="background: #bfbfbf"></div>
                     <div class="act-text">Use Browse workouts to add more exercises</div>
                     <div class="act-time">Tip</div>
                 </div>

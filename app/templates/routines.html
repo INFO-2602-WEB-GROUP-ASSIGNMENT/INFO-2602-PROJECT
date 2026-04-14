@@ -126,8 +126,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
         flex-shrink: 0;
     }
 
@@ -142,18 +142,18 @@
     }
 
     .diff-beginner {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: rgba(255,255,255,0.10);
+        color: #ffffff;
     }
 
     .diff-intermediate {
-        background: rgba(234, 179, 8, 0.12);
-        color: #facc15;
+        background: rgba(255,255,255,0.07);
+        color: #bfbfbf;
     }
 
     .diff-advanced {
-        background: rgba(239, 68, 68, 0.12);
-        color: #f87171;
+        background: rgba(255,255,255,0.08);
+        color: #d0d0d0;
     }
 
     .routine-name {
@@ -196,8 +196,7 @@
     }
 
     .routine-btn-primary,
-    .routine-btn-secondary,
-    .routine-btn-danger {
+    .routine-btn-secondary {
         flex: 1;
         height: 34px;
         border-radius: 9px;
@@ -213,16 +212,17 @@
     }
 
     .routine-btn-primary {
-        background: transparent;
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.35);
+        background: #f5f5f5;
+        color: #111111;
+        border: 1px solid #f5f5f5;
+        font-weight: 600;
     }
 
     .routine-btn-primary:hover {
-        background: rgba(34, 197, 94, 0.08);
-        border-color: rgba(34, 197, 94, 0.6);
+        background: #d4d4d4;
+        border-color: #d4d4d4;
+        color: #111111;
     }
-
     .routine-btn-secondary {
         background: transparent;
         color: var(--text-secondary);
@@ -233,18 +233,6 @@
         border-color: var(--border-hover);
         color: var(--text-primary);
         background: var(--bg-surface);
-    }
-
-    .routine-btn-danger {
-        background: transparent;
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.35);
-    }
-
-    .routine-btn-danger:hover {
-        background: rgba(239, 68, 68, 0.12);
-        border-color: rgba(239, 68, 68, 0.55);
-        color: #fca5a5;
     }
 
     .empty-state {
@@ -375,12 +363,16 @@
     }
 
     .modal-btn {
-        background: var(--accent);
-        color: #fff;
+        background: #f5f5f5;
+        color: #111111;
+        border: 1px solid #f5f5f5;
+        font-weight: 600;
     }
 
     .modal-btn:hover {
-        background: var(--accent-dim);
+        background: #d4d4d4;
+        border-color: #d4d4d4;
+        color: #111111;
     }
 
     .modal-btn-secondary {
@@ -464,9 +456,8 @@
                     </div>
 
                     <div class="routine-actions">
-                        <a class="routine-btn-primary" href="/routines/${routine.id}">Remix</a>
+                        <a class="routine-btn-primary" href="/routines/${routine.id}">Open</a>
                         <a class="routine-btn-secondary" href="/workouts">Add exercises</a>
-                        <button class="routine-btn-danger" type="button" data-delete-routine="${routine.id}">Delete</button>
                     </div>
                 </div>
             `;
@@ -530,44 +521,7 @@
             }
         }
 
-        async function deleteRoutine(routineId) {
-            const response = await fetch(`/api/routines/${routineId}`, {
-                method: "DELETE"
-            });
-
-            const data = await response.json().catch(() => null);
-            if (!response.ok) {
-                throw new Error(data?.detail || "Could not delete routine.");
-            }
-        }
-
         searchInput.addEventListener("input", filterRoutines);
-
-        grid.addEventListener("click", async function (event) {
-            const deleteButton = event.target.closest("[data-delete-routine]");
-            if (!deleteButton) return;
-
-            const routineId = Number(deleteButton.getAttribute("data-delete-routine"));
-            if (!routineId) return;
-
-            const confirmed = window.confirm("Delete this routine and its exercises?");
-            if (!confirmed) return;
-
-            deleteButton.disabled = true;
-            const originalText = deleteButton.textContent;
-            deleteButton.textContent = "Deleting...";
-
-            try {
-                await deleteRoutine(routineId);
-                allRoutines = allRoutines.filter(r => r.id !== routineId);
-                renderRoutines(allRoutines);
-                filterRoutines();
-            } catch (error) {
-                alert(error.message || "Could not delete routine.");
-                deleteButton.disabled = false;
-                deleteButton.textContent = originalText;
-            }
-        });
 
         loadRoutines();
     })();

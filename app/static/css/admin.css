@@ -71,22 +71,12 @@ body {
 	border: 1px solid transparent;
 }
 
-.admin-status.info {
-	background: rgba(56, 189, 248, 0.1);
-	color: #7dd3fc;
-	border-color: rgba(56, 189, 248, 0.3);
-}
-
-.admin-status.success {
-	background: rgba(34, 197, 94, 0.1);
-	color: #86efac;
-	border-color: rgba(34, 197, 94, 0.3);
-}
-
+.admin-status.info,
+.admin-status.success,
 .admin-status.error {
-	background: rgba(248, 113, 113, 0.1);
-	color: #fca5a5;
-	border-color: rgba(248, 113, 113, 0.3);
+	background: rgba(255, 255, 255, 0.05);
+	color: #e5e5e5;
+	border-color: rgba(255, 255, 255, 0.2);
 }
 
 .hidden {
@@ -208,25 +198,17 @@ body {
 }
 
 .user-dot {
-	width: 10px;
-	height: 10px;
-	border-radius: 999px;
-	background: #22c55e;
+	background: #9ca3af; /* neutral grey */
 }
 
 .user-chip.selected .user-dot {
-	background: #38bdf8;
+	background: #ffffff;
 }
 
 .user-chip.selected {
-	background: rgba(34, 197, 94, 0.18);
-	border-color: rgba(34, 197, 94, 0.7);
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.4);
 	color: #ffffff;
-	font-weight: 700;
-}
-
-.user-chip.selected .user-dot {
-	background: #22c55e;
 }
 
 .role-tag {
@@ -273,8 +255,8 @@ body {
 
 .small-select:focus,
 .small-input:focus {
-	border-color: rgba(34, 197, 94, 0.8);
-	box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
+	border-color: #ffffff;
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
 }
 
 .table-actions,
@@ -297,23 +279,23 @@ body {
 }
 
 .small-btn {
-	background: #111111;
-	color: #ffffff;
+	background: #ffffff;
+	color: #111111;
+	border: 1px solid #ffffff;
 }
 
 .small-btn:hover {
-	opacity: 0.9;
+	background: #d4d4d4;
 }
 
 .danger-btn {
-	background: rgba(255, 255, 255, 0.06);
-	color: #ffffff;
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	background: transparent;
+	color: #e5e5e5;
+	border: 1px solid rgba(255,255,255,0.25);
 }
 
 .danger-btn:hover {
-	background: #111111;
-	color: #ffffff;
+	background: rgba(255,255,255,0.08);
 }
 
 .ghost-btn {
@@ -397,8 +379,8 @@ body {
 .admin-modal-card {
 	width: 100%;
 	max-width: 460px;
-	background: #a3a3a3 !important;
-	background-color: #f5f4f4 !important;
+	background: #f5f5f5 !important;
+	border: 1px solid #d4d4d4;
 	border-radius: 2rem;
 	padding: 1rem;
 	border: 2px solid #0f172a;

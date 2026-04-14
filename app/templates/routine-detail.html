@@ -127,9 +127,9 @@
     }
 
     .remix-btn {
-        border: 1px solid rgba(34, 197, 94, 0.35);
+        border: 1px solid var(--border);
         background: transparent;
-        color: #4ade80;
+        color: var(--text-secondary);
         font-family: var(--font);
         font-size: 12.5px;
         border-radius: 10px;
@@ -139,9 +139,9 @@
     }
 
     .remix-btn:hover {
-        border-color: rgba(34, 197, 94, 0.6);
-        color: #4ade80;
-        background: rgba(34, 197, 94, 0.08);
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(255,255,255,0.08);
     }
 
     .remix-panel {
@@ -245,33 +245,8 @@
 
     .remix-confirm-btn {
         background: var(--accent);
-        color: #cbddf5;
+        color: #fff;
         border-color: var(--accent);
-        background: transparent;
-        color: #4ade80;
-        border-color: rgba(34, 197, 94, 0.35);
-    }
-
-    .remix-confirm-btn:hover {
-        background: rgba(34, 197, 94, 0.08);
-        border-color: rgba(34, 197, 94, 0.6);
-    }
-
-    .remix-delete-btn {
-        background: transparent;
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.35);
-        border-radius: 10px;
-        font-size: 13px;
-        font-family: var(--font);
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        transition: background 0.15s, border-color 0.15s;
-    }
-
-    .remix-delete-btn:hover {
-        background: rgba(239, 68, 68, 0.12);
-        border-color: rgba(239, 68, 68, 0.6);
     }
 
     .remix-confirm-btn:disabled {
@@ -289,10 +264,10 @@
         bottom: 1.5rem;
         right: 1.5rem;
         background: var(--bg-card);
-        border: 1px solid rgba(34, 197, 94, 0.3);
+        border: 1px solid rgba(255,255,255,0.18);
         border-radius: 10px;
         padding: 0.8rem 1rem;
-        color: #4ade80;
+        color: #ffffff;
         font-size: 13px;
         font-family: var(--font);
         opacity: 0;
@@ -417,7 +392,6 @@
                     </div>
                     <div class="remix-list"></div>
                     <div class="remix-actions">
-                        <button class="remix-delete-btn" type="button" onclick="deleteRoutineExercise(${ex.id})">Delete exercise</button>
                         <button class="remix-cancel-btn" type="button" onclick="closeRemixPanel(${ex.id})">Cancel</button>
                         <button class="remix-confirm-btn" type="button" onclick="confirmRemix(${ex.id})" disabled>Replace exercise</button>
                     </div>
@@ -506,27 +480,6 @@
         showToast('Exercise replaced successfully.');
     }
     window.confirmRemix = confirmRemix;
-
-    async function deleteRoutineExercise(routineExerciseId) {
-        const confirmed = window.confirm('Delete this exercise from the routine?');
-        if (!confirmed) return;
-
-        const response = await fetch(`/api/routines/${ROUTINE_ID}/exercises/${routineExerciseId}`, {
-            method: 'DELETE'
-        });
-
-        if (!response.ok) {
-            const error = await response.json().catch(() => ({}));
-            alert(error.detail || 'Could not delete exercise.');
-            return;
-        }
-
-        routine.exercises = routine.exercises.filter(ex => ex.id !== routineExerciseId);
-        renderRoutineHeader();
-        renderExercises();
-        showToast('Exercise deleted from routine.');
-    }
-    window.deleteRoutineExercise = deleteRoutineExercise;
 
     window.closeRemixPanel = function (routineExerciseId) {
         const panel = document.getElementById(`remix-panel-${routineExerciseId}`);
