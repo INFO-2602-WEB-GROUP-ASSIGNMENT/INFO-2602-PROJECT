@@ -7,6 +7,54 @@ from. import api_router, router, templates
 
 wger_service = WgerService()
 
+
+def normalize_text(value: str) -> str:
+    return str(value or "").lower().strip()
+
+
+def rank_exercise(exercise: dict, query: str) -> int:
+    if not query:
+        return 0
+
+    name = normalize_text(extract_exercise_name(exercise))
+    description = normalize_text(exercise.get("description") or "")
+    category = normalize_text((exercise.get("category") or {}).get("name") or "")
+
+    if name == query:
+        return 100
+    if name.startswith(query):
+        return 80
+    if query in name:
+        return 60
+    if query in category:
+        return 40
+    if query in description:
+        return 30
+    return -1
+
+
+def filter_and_sort_exercises(exercises: list[dict], query: str) -> list[dict]:
+    normalized_query = normalize_text(query)
+
+    ranked_exercises = [
+        {
+            "exercise": exercise,
+            "rank": rank_exercise(exercise, normalized_query),
+        }
+        for exercise in exercises
+    ]
+
+    if normalized_query:
+        ranked_exercises = [item for item in ranked_exercises if item["rank"] >= 0]
+
+    ranked_exercises.sort(
+        key=lambda item: (
+            -item["rank"],
+            normalize_text(extract_exercise_name(item["exercise"])),
+        )
+    )
+    return [item["exercise"] for item in ranked_exercises]
+
 @router.get("/workouts", response_class=HTMLResponse)
 async def workouts_view(request: Request, user: AuthDep, db: SessionDep):
     return templates.TemplateResponse(
@@ -20,8 +68,17 @@ async def workouts_view(request: Request, user: AuthDep, db: SessionDep):
 @api_router.get("/workouts/search")
 async def search_exercises(q: str | None = Query(default=None), limit: int = Query(default=50, ge=1, le=50), offset: int = Query(default=0, ge=0)):
     try:
-        results = await wger_service.search_exercises(query = q, limit = limit, offset = offset)
-        return results
+        results = await wger_service.search_exercises(query=q, limit=limit, offset=offset)
+        exercise_results = results.get("results", []) if isinstance(results, dict) else []
+        filtered_results = filter_and_sort_exercises(exercise_results, q or "")
+
+        if q and not filtered_results:
+            raise HTTPException(status_code=404, detail="Exercise not found.")
+
+        return {
+            **results,
+            "results": filtered_results,
+        }
     except Exception:
         raise HTTPException(
             status_code = 500,

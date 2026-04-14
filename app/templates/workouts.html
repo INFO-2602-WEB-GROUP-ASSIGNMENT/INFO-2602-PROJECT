@@ -243,8 +243,7 @@
         font-size: 12.5px;
         color: var(--text-muted);
         line-height: 1.55;
-        margin-bottom: 0.9rem;
-        cursor: pointer;
+        margin-bottom: 0.35rem;
         position: relative;
     }
 
@@ -258,14 +257,24 @@
         overflow: hidden;
     }
 
-    .read-more {
+    .w-desc-toggle {
+        display: none;
+        margin-bottom: 0.75rem;
+        padding: 0;
+        border: none;
+        background: transparent;
         color: var(--accent);
+        font-size: 12px;
         font-weight: 500;
         cursor: pointer;
-        margin-left: 4px;
+        font-family: var(--font);
     }
 
-    .read-more:hover {
+    .w-desc-toggle.show {
+        display: inline-flex;
+    }
+
+    .w-desc-toggle:hover {
         text-decoration: underline;
     }
 
@@ -699,10 +708,13 @@
             return temp.textContent || temp.innerText || '';
         }
 
-        function truncate(text, maxLength = 120) {
-            if (!text) return { text: 'No description available.', isTruncated: false };
-            if (text.length <= maxLength) return { text, isTruncated: false };
-            return { text: text.slice(0, maxLength) + '...', fullText: text, isTruncated: true };
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         function getCategoryLabel(exercise) {
@@ -791,11 +803,7 @@
         function createExerciseCard(exercise, index) {
             const exerciseName = getExerciseName(exercise);
             const displayName = toTitleCase(exerciseName);
-            const rawDescription = getExerciseDescription(exercise);
-            const descObj = truncate(stripHtml(rawDescription));
-            const description = descObj.text;
-            const isTruncated = descObj.isTruncated;
-            const fullDescription = descObj.fullText || description;
+            const fullDescription = stripHtml(getExerciseDescription(exercise)) || 'No description available.';
             const categoryLabel = getCategoryLabel(exercise);
             const categoryKey = getCategoryKey(exercise);
             const categoryClass = 'cat-' + categoryKey;
@@ -819,11 +827,10 @@
 
                     <div class="w-name">${displayName}</div>
                     <div class="w-desc collapsed"
-                        data-truncated="${description.replace(/"/g, '&quot;')}"
-                        data-full="${fullDescription.replace(/"/g, '&quot;')}"
-                        ${isTruncated ? 'title="Click to expand description"' : ''}>
-                        ${description}${isTruncated ? '<span class="read-more">Read more</span>' : ''}
+                        data-full="${escapeHtml(fullDescription)}">
+                        ${escapeHtml(fullDescription)}
                     </div>
+                    <button type="button" class="w-desc-toggle">Read more</button>
 
                     <div class="w-tags">
                         ${tags}
@@ -889,22 +896,31 @@
             });
 
             // Add event listeners for expandable descriptions
-            const descElements = grid.querySelectorAll('.w-desc');
-            descElements.forEach(descEl => {
-                if (descEl.querySelector('.read-more')) {
-                    descEl.addEventListener('click', function () {
-                        const isExpanded = this.classList.contains('expanded');
-                        if (isExpanded) {
-                            this.classList.remove('expanded');
-                            this.classList.add('collapsed');
-                            this.innerHTML = this.dataset.truncated + '<span class="read-more">Read more</span>';
-                        } else {
-                            this.classList.remove('collapsed');
-                            this.classList.add('expanded');
-                            this.innerHTML = this.dataset.full;
-                        }
-                    });
+            const cards = grid.querySelectorAll('.w-card');
+            cards.forEach(card => {
+                const descEl = card.querySelector('.w-desc');
+                const toggleBtn = card.querySelector('.w-desc-toggle');
+                if (!descEl || !toggleBtn) return;
+
+                if (descEl.scrollHeight <= descEl.clientHeight + 1) {
+                    descEl.classList.remove('collapsed');
+                    toggleBtn.classList.remove('show');
+                    return;
                 }
+
+                toggleBtn.classList.add('show');
+                toggleBtn.addEventListener('click', function () {
+                    const isExpanded = descEl.classList.contains('expanded');
+                    if (isExpanded) {
+                        descEl.classList.remove('expanded');
+                        descEl.classList.add('collapsed');
+                        toggleBtn.textContent = 'Read more';
+                    } else {
+                        descEl.classList.remove('collapsed');
+                        descEl.classList.add('expanded');
+                        toggleBtn.textContent = 'Show less';
+                    }
+                });
             });
 
             updatePaginationControls(totalPages);
