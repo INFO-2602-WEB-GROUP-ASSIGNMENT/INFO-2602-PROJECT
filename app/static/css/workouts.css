@@ -1,7 +1,7 @@
-/* Global background and text */
+
 body {
-  background-color: #ffffff;   /* clean white background */
-  color: #1b1b1b;              /* dark readable text */
+  background-color: #ffffff;   
+  color: #1b1b1b;              
   font-family: 'Roboto', sans-serif;
 }
 
@@ -15,7 +15,7 @@ body {
   color: #ffffff;
 }
 .sidebar a:hover {
-  background-color: #66bb6a;   /* lighter green hover */
+  background-color: #66bb6a;   
 }
 
 /* Buttons */
