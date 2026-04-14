@@ -3,7 +3,12 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 from sqlalchemy import UniqueConstraint
 
+
 class ProgressLog(SQLModel, table=True):
+    # daily workout log stored for each user
+    # updated when the user saves progress for a day
+    # the payload stores user entered workout completion data
+
     __table_args__ = (
         UniqueConstraint("user_id", "log_date", name="uq_user_log_date"),
     )

@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.dependencies.session import SessionDep
 from app.dependencies.auth import AdminDep
-from app.models import ProgressLog, Routine, RoutineExercise, User, Workout, WorkoutRoutine
+from app.models import ProgressLog, Routine, RoutineExercise, User, Workout, RoutineWorkout
 from . import router, templates
 
 
@@ -133,7 +133,7 @@ def delete_admin_user(user_id: int, db: SessionDep, current_user: AdminDep):
         for routine_id in routine_ids:
             routine_exercises = db.exec(select(RoutineExercise).where(RoutineExercise.routine_id == routine_id)).all()
             progress_logs = db.exec(select(ProgressLog).where(ProgressLog.routine_id == routine_id)).all()
-            workout_links = db.exec(select(WorkoutRoutine).where(WorkoutRoutine.routine_id == routine_id)).all()
+            workout_links = db.exec(select(RoutineWorkout).where(RoutineWorkout.routine_id == routine_id)).all()
 
             for routine_exercise in routine_exercises:
                 db.delete(routine_exercise)
@@ -150,7 +150,7 @@ def delete_admin_user(user_id: int, db: SessionDep, current_user: AdminDep):
 
     if workout_ids:
         for workout_id in workout_ids:
-            workout_links = db.exec(select(WorkoutRoutine).where(WorkoutRoutine.workout_id == workout_id)).all()
+            workout_links = db.exec(select(RoutineWorkout).where(RoutineWorkout.workout_id == workout_id)).all()
             for workout_link in workout_links:
                 db.delete(workout_link)
 
@@ -216,7 +216,7 @@ def delete_admin_routine(routine_id: int, db: SessionDep, current_user: AdminDep
 
     routine_exercises = db.exec(select(RoutineExercise).where(RoutineExercise.routine_id == routine_id)).all()
     progress_logs = db.exec(select(ProgressLog).where(ProgressLog.routine_id == routine_id)).all()
-    workout_links = db.exec(select(WorkoutRoutine).where(WorkoutRoutine.routine_id == routine_id)).all()
+    workout_links = db.exec(select(RoutineWorkout).where(RoutineWorkout.routine_id == routine_id)).all()
 
     for routine_exercise in routine_exercises:
         db.delete(routine_exercise)
