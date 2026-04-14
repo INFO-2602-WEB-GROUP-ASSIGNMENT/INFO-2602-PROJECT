@@ -251,7 +251,7 @@ html, body {
 }
 
 #main {
-	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	background: transparent;
 	margin-left: var(--sidebar-w);
 	flex: 1;
 	display: flex;
@@ -365,7 +365,7 @@ html, body {
 #page-content {
 	flex: 1;
 	padding: 1.5rem;
-	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	background: transparent;
 }
 
 .flash-wrap { margin-bottom: 1rem; }
