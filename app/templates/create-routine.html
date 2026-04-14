@@ -14,6 +14,17 @@
         margin-bottom: 1.5rem;
     }
 
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
     .page-title {
         font-size: 30px;
         font-weight: 600;
@@ -372,8 +383,8 @@
 {% endblock %}
 
 {% block subpage_content %}
-<div class="page-header">
-    <div class="page-title">Create weekly routines!</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Create Weekly Routines!</div>
     <div class="page-subtitle">Choose a day, then search and add exercises right here.</div>
 </div>
 

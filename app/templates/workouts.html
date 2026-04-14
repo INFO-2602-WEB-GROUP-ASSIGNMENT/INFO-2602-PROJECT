@@ -7,8 +7,23 @@
 {% block additional_styles %}
 <style>
 
-    .browse-title {
-        font-size: 60px;
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
+    .page-title {
+        font-size: 24px;
         font-weight: 600;
         letter-spacing: -0.03em;
         color: var(--text-primary);
@@ -16,7 +31,7 @@
         text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
-    .browse-sub {
+    .page-subtitle {
         font-size: 15px;
         color: var(--text-secondary);
         margin-top: 3px;
@@ -72,20 +87,22 @@
     }
 
     .filter-chips {
-        background-color: #4ade8042;
+        background-color: var(--bg-card);
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
-        border-radius: 12px
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 6px;
     }
 
     .filter-chip {
         height: 32px;
         padding: 0 14px;
         border-radius: 20px;
-        border: 1.5px solid var(--border);
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
         background: none;
-        color: var(--text-secondary);
+        color: #fff;
         font-size: 12.5px;
         font-family: var(--font);
         cursor: pointer;
@@ -96,6 +113,36 @@
     .filter-chip:hover {
         border-color: var(--border-hover);
         color: var(--text-primary);
+    }
+
+    .filter-chip[data-filter="all"]:hover {
+        background: rgba(156, 163, 175, 0.14);
+        border-color: rgba(156, 163, 175, 0.45);
+        color: #d1d5db;
+    }
+
+    .filter-chip[data-filter="cardio"]:hover {
+        background: rgba(239, 68, 68, 0.14);
+        border-color: rgba(239, 68, 68, 0.45);
+        color: #fca5a5;
+    }
+
+    .filter-chip[data-filter="core"]:hover {
+        background: rgba(59, 130, 246, 0.14);
+        border-color: rgba(59, 130, 246, 0.45);
+        color: #93c5fd;
+    }
+
+    .filter-chip[data-filter="strength"]:hover {
+        background: rgba(139, 92, 246, 0.14);
+        border-color: rgba(139, 92, 246, 0.45);
+        color: #c4b5fd;
+    }
+
+    .filter-chip[data-filter="shoulders"]:hover {
+        background: rgba(234, 179, 8, 0.14);
+        border-color: rgba(234, 179, 8, 0.45);
+        color: #fde68a;
     }
 
     .filter-chip.active {
@@ -636,8 +683,10 @@
 
 {% block subpage_content %}
 
-<div class="browse-title">Browse workouts</div>
-<div class="browse-sub">Find workouts to add to your routines</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Browse Workouts</div>
+    <div class="page-subtitle">Find workouts to add to your routines</div>
+</div>
 
 <div class="browse-toolbar">
     <div class="search-wrap">

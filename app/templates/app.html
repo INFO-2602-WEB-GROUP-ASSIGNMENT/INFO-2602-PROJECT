@@ -4,11 +4,22 @@
 
 {% block additional_styles %}
 <style>
-    .greeting {
+    .page-header {
         margin-bottom: 1.5rem;
     }
 
-    .greeting-line {
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
+    .page-title {
         font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
@@ -17,7 +28,7 @@
         text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
-    .greeting-sub {
+    .page-subtitle {
         font-size: 15px;
         color: var(--text-secondary);
         margin-top: 3px;
@@ -62,12 +73,6 @@
         color: var(--text-thirdary);
         line-height: 1;
         font-family: var(--font-mono);
-    }
-
-    .stat-suffix-streak {
-        color: #fff;
-        font-size: 16px;
-        font-weight: 400;
     }
 
     .stat-footer {
@@ -309,37 +314,6 @@
         white-space: nowrap;
     }
 
-    .remix-icon-btn {
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
-        border: 1px solid var(--border);
-        background: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        flex-shrink: 0;
-        color: var(--text-muted);
-        transition: border-color 0.15s, color 0.15s, background 0.15s;
-    }
-
-    .remix-icon-btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: var(--accent-muted);
-    }
-
-    .remix-icon-btn svg {
-        width: 12px;
-        height: 12px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
     .start-workout-btn {
         display: block;
         width: 100%;
@@ -462,9 +436,9 @@
 
 {% block subpage_content %}
 
-<div class="greeting">
-    <div class="greeting-line">Welcome , {{ user.username }} </div>
-    <div class="greeting-sub">Stay consistent ! Build routines ! Remix your workouts !</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Welcome , {{ user.username }}</div>
+    <div class="page-subtitle">Stay consistent ! Build routines ! Remix your workouts !</div>
 </div>
 
 <div class="stats-grid">
@@ -643,33 +617,14 @@
             return data.results || [];
         }
 
-        let activeRoutineId = null;
-        let activeRoutineName = "Routine preview";
-
-        function normalizeDayName(value) {
-            return String(value || "").trim().toLowerCase();
-        }
-
-        function getCurrentDayName() {
-            return new Date().toLocaleDateString("en-US", { weekday: "long" });
-        }
-
-        function findRoutineForToday(routines) {
-            const today = normalizeDayName(getCurrentDayName());
-            return routines.find(routine => {
-                const routineDay = normalizeDayName(routine.day_of_week || routine.name);
-                return routineDay === today;
-            }) || null;
-        }
-
         async function addToRoutine(exerciseId) {
-            const routines = activeRoutineId ? [] : await fetchRoutines();
-            const routineId = activeRoutineId ?? routines[0]?.id ?? null;
-
-            if (!routineId) {
+            const routines = await fetchRoutines();
+            if (!routines.length) {
                 alert("Please create a routine first.");
                 return;
             }
+
+            const routineId = routines[0].id;
 
             const response = await fetch(`/api/routines/${routineId}/add`, {
                 method: "POST",
@@ -731,15 +686,13 @@
             const tag = document.getElementById("today-plan-tag");
             const container = document.getElementById("today-plan-list");
 
-            activeRoutineId = routine?.id ?? null;
-            activeRoutineName = routine?.name || "No workout today";
-            tag.textContent = activeRoutineName;
+            tag.textContent = routine ? routine.name : "Routine preview";
 
             if (!exercises.length) {
                 container.innerHTML = `
                     <div class="exercise-row">
                         <div class="ex-num">1</div>
-                        <div class="ex-name">${routine ? "No exercises in this routine yet" : "No workout scheduled for today"}</div>
+                        <div class="ex-name">No exercises in this routine yet</div>
                         <div class="ex-sets">-</div>
                     </div>
                 `;
@@ -804,7 +757,7 @@
                         <div class="ri-name">${getExerciseName(exercise)}</div>
                         <div class="ri-meta">${truncate(stripHtml(getExerciseDescription(exercise)), 45)}</div>
                     </div>
-                    <button type="button" class="add-btn" onclick="window.dashboardAddToRoutine(${exercise.id})">+ Add</button>
+                    <button class="add-btn" onclick="window.dashboardAddToRoutine(${exercise.id})">+ Add</button>
                 </div>
             `).join("");
         }
@@ -843,7 +796,7 @@
 
         function renderStreak() {
             const streak = getDashboardStreak();
-            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix stat-suffix-streak"> d</span>`;
+            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span>`;
             document.getElementById('dashboard-streak-bar').style.width = `${Math.min(100, Math.round((streak / 7) * 100))}%`;
         }
 
@@ -858,14 +811,13 @@
 
                 let totalExercises = 0;
                 let remixedCount = 0;
-                const todayRoutine = findRoutineForToday(routines);
 
-                if (todayRoutine) {
-                    const todayRoutineDetails = await fetchRoutineDetails(todayRoutine.id);
-                    const exercises = todayRoutineDetails.exercises || [];
+                if (routines.length) {
+                    const firstRoutineDetails = await fetchRoutineDetails(routines[0].id);
+                    const exercises = firstRoutineDetails.exercises || [];
                     totalExercises = exercises.length;
                     remixedCount = exercises.length;
-                    renderTodayPlan(todayRoutineDetails.routine, exercises);
+                    renderTodayPlan(firstRoutineDetails.routine, exercises);
                 } else {
                     renderTodayPlan(null, []);
                 }

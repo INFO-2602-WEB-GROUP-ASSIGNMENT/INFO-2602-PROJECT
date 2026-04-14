@@ -15,6 +15,17 @@
 {% block additional_styles %}
 <style>
     .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
         margin-bottom: 1.25rem;
     }
 
@@ -320,10 +331,10 @@
 
 {% block subpage_content %}
 
-<div class="page-header">
+
+<div class="page-header page-header-card">
     <div class="page-title" id="page-title">Routine details</div>
-    <div class="page-subtitle" id="page-subtitle">Review and remix individual exercises without changing the whole
-        routine.</div>
+    <div class="page-subtitle" id="page-subtitle">Review and remix individual exercises without changing the whole routine.</div>
 </div>
 
 <div class="routine-summary" id="routine-summary"></div>
