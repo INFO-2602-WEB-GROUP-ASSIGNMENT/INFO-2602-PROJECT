@@ -42,7 +42,7 @@ html, body {
 #sidebar {
 	width: var(--sidebar-w);
 	min-height: 100vh;
-	background: linear-gradient(135deg, #2f2a52, #08203c, #000000);/*var(--bg-sidebar);*/
+	background: linear-gradient(135deg, #ffffff, #edf5ff, #000000);/*var(--bg-sidebar);*/
 	background-size: 400% 400%;
     animation: sidebarGradientShift 6s ease infinite;
 	border-right: 1.25px solid var(--border);
@@ -74,28 +74,17 @@ html, body {
   100% { background-position: 0% 50%; }
 }
 
-.brand-logo {
-	width: 35px;
-	height: 35px;
-	background: linear-gradient(135deg,
-    #2ecc71 0%,
-    #7f8c8d 100%); /*linear-gradient(135deg, #2ecc71, #7f8c8d);var(--accent);*/
-	border-radius: 9px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
+
+.brand-logo-img {
+border: 2px solid var(--accent);
+border-radius: 30px;
+border-color: #000000;
+width: 35px;
+height: 35px;
+object-fit: cover; /* or contain, depending on your image */
+align-items: center;
 }
 
-.brand-logo svg {
-	width: 20px;
-	height: 16px;
-	stroke: #2f7aeb;
-	fill: none;
-	stroke-width: 2.2;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-}
 
 .brand-text {
 	font-size: 15px;
