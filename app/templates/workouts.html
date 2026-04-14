@@ -458,50 +458,51 @@
             margin-top: 1rem;
         }
     }
-    .modal-backdrop {
+   .routine-modal-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.55);
+        background: rgba(0, 0, 0, 0.4);
         display: none;
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        z-index: 999;
+        z-index: 999999;
     }
 
-    .modal-backdrop.show {
+    .routine-modal-backdrop.show {
         display: flex;
     }
 
-    .modal-card {
+    .routine-modal-card {
         width: 100%;
         max-width: 460px;
-        background: var(--bg-card);
+        background: #111827;
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 1.2rem;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        position: relative;
+        z-index: 100000;
     }
 
-    .modal-title {
+    .routine-modal-title {
         font-size: 16px;
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 4px;
     }
 
-    .modal-subtitle {
+    .routine-modal-subtitle {
         font-size: 12.5px;
         color: var(--text-muted);
         margin-bottom: 1rem;
         line-height: 1.5;
     }
 
-    .modal-group {
+    .routine-modal-group {
         margin-bottom: 0.9rem;
     }
 
-    .modal-label {
+    .routine-modal-label {
         display: block;
         font-size: 12px;
         color: var(--text-muted);
@@ -509,9 +510,9 @@
         font-weight: 500;
     }
 
-    .modal-input,
-    .modal-select,
-    .modal-textarea {
+    .routine-modal-input,
+    .routine-modal-select,
+    .routine-modal-textarea {
         width: 100%;
         background: var(--bg-surface);
         border: 1px solid var(--border);
@@ -522,33 +523,33 @@
         outline: none;
     }
 
-    .modal-input,
-    .modal-select {
+    .routine-modal-input,
+    .routine-modal-select {
         height: 38px;
         padding: 0 12px;
     }
 
-    .modal-textarea {
+    .routine-modal-textarea {
         min-height: 90px;
         padding: 10px 12px;
         resize: vertical;
     }
 
-    .modal-row {
+    .routine-modal-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
-    .modal-actions {
+    .routine-modal-actions {
         display: flex;
         justify-content: flex-end;
         gap: 8px;
         margin-top: 1rem;
     }
 
-    .modal-btn,
-    .modal-btn-secondary {
+    .routine-modal-btn,
+    .routine-modal-btn-secondary {
         height: 36px;
         padding: 0 14px;
         border-radius: 9px;
@@ -559,26 +560,25 @@
         border: none;
     }
 
-    .modal-btn {
+    .routine-modal-btn {
         background: var(--accent);
         color: #fff;
     }
 
-    .modal-btn:hover {
+    .routine-modal-btn:hover {
         background: var(--accent-dim);
     }
 
-    .modal-btn-secondary {
+    .routine-modal-btn-secondary {
         background: transparent;
         color: var(--text-secondary);
         border: 1px solid var(--border);
     }
 
-    .modal-btn-secondary:hover {
+    .routine-modal-btn-secondary:hover {
         border-color: var(--border-hover);
         color: var(--text-primary);
-    }
-
+    } 
     .hidden {
         display: none;
     }
@@ -620,33 +620,33 @@
     <span class="pagination-info" id="page-info">Page 1</span>
     <button class="pagination-btn" id="next-btn" onclick="goToNextPage()">Next →</button>
 </div>
- <div class="modal-backdrop" id="routineModal">
-    <div class="modal-card">
-        <div class="modal-title" id="modalTitle">Add to routine</div>
-        <div class="modal-subtitle" id="modalSubtitle">Choose where to add this exercise.</div>
+<div class="routine-modal-backdrop" id="routineModal">
+    <div class="routine-modal-card">
+        <div class="routine-modal-title" id="routine-modalTitle">Add to routine</div>
+        <div class="routine-modal-subtitle" id="routine-modalSubtitle">Choose where to add this exercise.</div>
 
         <div id="existingRoutineSection">
-            <div class="modal-group">
-                <label class="modal-label" for="routineSelect">Routine</label>
-                <select class="modal-select" id="routineSelect"></select>
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="routineSelect">Routine</label>
+                <select class="routine-modal-select" id="routineSelect"></select>
             </div>
 
-            <div class="modal-row">
-                <div class="modal-group">
-                    <label class="modal-label" for="setsInput">Sets</label>
-                    <input class="modal-input" type="number" id="setsInput" min="1" value="3">
+            <div class="routine-modal-row">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="setsInput">Sets</label>
+                    <input class="routine-modal-input" type="number" id="setsInput" min="1" value="3">
                 </div>
-                <div class="modal-group">
-                    <label class="modal-label" for="repsInput">Reps</label>
-                    <input class="modal-input" type="number" id="repsInput" min="1" value="10">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="repsInput">Reps</label>
+                    <input class="routine-modal-input" type="number" id="repsInput" min="1" value="10">
                 </div>
             </div>
         </div>
 
         <div id="newRoutineSection" class="hidden">
-            <div class="modal-group">
-                <label class="modal-label" for="daySelect">Day of week</label>
-                <select class="modal-select" id="daySelect">
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="daySelect">Day of week</label>
+                <select class="routine-modal-select" id="daySelect">
                     <option value="">Select a day</option>
                     <option>Monday</option>
                     <option>Tuesday</option>
@@ -658,26 +658,26 @@
                 </select>
             </div>
 
-            <div class="modal-group">
-                <label class="modal-label" for="routineDescription">Description</label>
-                <textarea class="modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
+            <div class="routine-modal-group">
+                <label class="routine-modal-label" for="routineDescription">Description</label>
+                <textarea class="routine-modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
             </div>
 
-            <div class="modal-row">
-                <div class="modal-group">
-                    <label class="modal-label" for="newSetsInput">Sets</label>
-                    <input class="modal-input" type="number" id="newSetsInput" min="1" value="3">
+            <div class="routine-modal-row">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="newSetsInput">Sets</label>
+                    <input class="routine-modal-input" type="number" id="newSetsInput" min="1" value="3">
                 </div>
-                <div class="modal-group">
-                    <label class="modal-label" for="newRepsInput">Reps</label>
-                    <input class="modal-input" type="number" id="newRepsInput" min="1" value="10">
+                <div class="routine-modal-group">
+                    <label class="routine-modal-label" for="newRepsInput">Reps</label>
+                    <input class="routine-modal-input" type="number" id="newRepsInput" min="1" value="10">
                 </div>
             </div>
         </div>
 
-        <div class="modal-actions">
-            <button class="modal-btn-secondary" type="button" onclick="closeRoutineModal()">Cancel</button>
-            <button class="modal-btn" type="button" id="modalSubmitBtn">Add</button>
+        <div class="routine-modal-actions">
+            <button class="routine-modal-btn-secondary" type="button" onclick="closeRoutineModal()">Cancel</button>
+            <button class="routine-modal-btn" type="button" id="routine-modalSubmitBtn">Add</button>
         </div>
     </div>
 </div>
@@ -689,9 +689,15 @@
     const existingRoutineSection = document.getElementById('existingRoutineSection');
     const newRoutineSection = document.getElementById('newRoutineSection');
     const routineSelect = document.getElementById('routineSelect');
-    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalSubmitBtn = document.getElementById('routine-modalSubmitBtn');
+    const modalTitle = document.getElementById('routine-modalTitle');
+    const modalSubtitle = document.getElementById('routine-modalSubtitle');
+
+    routineModal.addEventListener('click', function (e) {
+        if (e.target === routineModal) {
+            closeRoutineModal();
+        }
+    });
 
     let selectedExerciseId = null;
     let selectedExerciseName = "";
@@ -1032,10 +1038,12 @@
 
     function openModal() {
         routineModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
     }
 
     function closeRoutineModal() {
         routineModal.classList.remove('show');
+        document.body.style.overflow = '';
         selectedExerciseId = null;
         selectedExerciseName = "";
     }
