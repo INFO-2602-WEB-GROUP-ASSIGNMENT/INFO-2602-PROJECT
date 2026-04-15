@@ -286,7 +286,7 @@
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 8px;
-        color: var(--text-primary);
+        color: #ffffff;
         padding: 0 8px;
         font-size: 12px;
     }
@@ -317,7 +317,7 @@
     .remove-btn {
         background: transparent;
         border: 1px solid var(--border);
-        color: var(--text-secondary);
+        color: #ffffff;
     }
 
     .save-btn,
@@ -638,7 +638,7 @@
             selectedExercises.innerHTML = "";
 
             if (!chosenExercises.length) {
-                selectedExercises.innerHTML = `<div class="empty-box">No exercises selected yet.</div>`;
+                selectedExercises.innerHTML = `<div class="empty-box" style="color:#ffffff;">No exercises selected yet.</div>`;
                 return;
             }
 
@@ -652,9 +652,9 @@
                     </div>
 
                     <div class="selected-actions">
-                        <label style="font-size:12px;color:var(--text-muted);">Sets</label>
+                        <label style="font-size:12px;color:#ffffff;">Sets</label>
                         <input class="small-input" type="number" min="1" value="${exercise.sets}" onchange="window.updateExerciseConfig(${index}, 'sets', this.value)">
-                        <label style="font-size:12px;color:var(--text-muted);">Reps</label>
+                        <label style="font-size:12px;color:#ffffff;">Reps</label>
                         <input class="small-input" type="number" min="1" value="${exercise.reps}" onchange="window.updateExerciseConfig(${index}, 'reps', this.value)">
                         <button type="button" class="mini-btn remove-btn" onclick="window.removeExerciseFromSelection(${index})">Remove</button>
                     </div>
