@@ -3,7 +3,7 @@
 :root {
 	--sidebar-w: 230px;
 	--topbar-h: 60px;
-	--bg-base: #0d0e1118;  
+	--bg-base: rgba(17, 17, 17, 0.96);  
 	--bg-sidebar: rgba(17, 17, 17, 0.96);
 	--bg-card:rgba(17, 17, 17, 0.96);
 	--bg-card-hover:rgba(17, 17, 17, 0.96);

@@ -735,8 +735,8 @@
                 </select>
             </div>
 
-            <div class="routine-modal-group">
-                <label class="routine-modal-label" for="routineDescription">Description</label>
+            <div class="routine-modal-group" id="desc-group">
+                <label class="routine-modal-label" for="routineDescription" id="desc-label">Description</label>
                 <textarea class="routine-modal-textarea" id="routineDescription" placeholder="Optional description"></textarea>
             </div>
 
@@ -1150,6 +1150,7 @@
 
     // updateRoutineSelectionMode removed since Routine select is no longer needed for creation
 
+
     async function openAddToRoutineModal(exerciseId, exerciseName) {
         selectedExerciseId = exerciseId;
         selectedExerciseName = exerciseName;
@@ -1161,7 +1162,45 @@
             return;
         }
 
-        // Always show create routine modal (no Routine select)
+        // Reset description field
+        const descGroup = document.getElementById('desc-group');
+        const descLabel = document.getElementById('desc-label');
+        const descTextarea = document.getElementById('routineDescription');
+        if (descTextarea) {
+            descTextarea.value = '';
+            descTextarea.disabled = false;
+            descTextarea.placeholder = 'Optional description';
+        }
+        if (descLabel) descLabel.textContent = 'Description';
+
+        // Add listener to daySelect to hide/show/disable description field based on routine existence
+        const daySelect = document.getElementById('daySelect');
+        if (daySelect) {
+            daySelect.value = ''; // Reset day selection so state is always fresh on open
+            daySelect.onchange = function() {
+                const selectedDay = daySelect.value;
+                const normalizedDay = normalizeDayName(selectedDay);
+                const exists = normalizedDay
+                    ? availableRoutines.find(r => normalizeDayName(r.day_of_week) === normalizedDay)
+                    : null;
+                if (descTextarea && descLabel) {
+                    if (exists) {
+                        descLabel.textContent = 'Routine already exists';
+                        descTextarea.value = '';
+                        descTextarea.disabled = true;
+                        descTextarea.placeholder = 'Exercise will be added to the existing routine';
+                        modalSubmitBtn.textContent = 'Add';
+                    } else {
+                        descLabel.textContent = 'Description';
+                        descTextarea.disabled = false;
+                        descTextarea.placeholder = 'Optional description';
+                        modalSubmitBtn.textContent = normalizedDay ? 'Create & Add' : 'Create & Add';
+                    }
+                }
+            };
+            daySelect.onchange(); // Sync state immediately (day is reset to '' so desc stays hidden)
+        }
+
         modalTitle.textContent = 'Create routine';
         modalSubtitle.textContent = `Create a routine for a day and add ${exerciseName}.`;
         existingRoutineSection.classList.add('hidden');
@@ -1180,7 +1219,10 @@
         if (isSubmittingRoutine) return;
 
         const day = document.getElementById('daySelect').value;
-        const description = document.getElementById('routineDescription').value.trim();
+        const descriptionInput = document.getElementById('routineDescription');
+        const descLabel = document.getElementById('desc-label');
+        const descGroup = document.getElementById('desc-group');
+        const description = descriptionInput ? descriptionInput.value.trim() : '';
         const exerciseName = selectedExerciseName;
         const sets = Number(document.getElementById('newSetsInput').value) || 3;
         const reps = Number(document.getElementById('newRepsInput').value) || 10;
@@ -1189,6 +1231,50 @@
             alert('Please select a day of the week.');
             return;
         }
+
+        // Check if a routine already exists for this day
+        const existing = availableRoutines.find(r => normalizeDayName(r.day_of_week) === normalizeDayName(day));
+        if (existing) {
+            // Hide and disable description field
+            if (descGroup) descGroup.classList.add('hidden');
+            if (descriptionInput) {
+                descriptionInput.value = '';
+                descriptionInput.disabled = true;
+                descriptionInput.setAttribute('tabindex', '-1');
+            }
+            if (descLabel) descLabel.classList.add('hidden');
+            setRoutineModalBusy(true, 'Adding...', 'Add');
+            try {
+                const response = await fetch(`/api/routines/${existing.id}/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        exercise_id: selectedExerciseId,
+                        sets,
+                        reps
+                    })
+                });
+                const data = await response.json().catch(() => null);
+                if (!response.ok) {
+                    alert(data?.detail || 'Could not add exercise.');
+                    return;
+                }
+                closeRoutineModal();
+                alert(`${exerciseName} added to ${existing.day_of_week} routine.`);
+            } finally {
+                setRoutineModalBusy(false, 'Adding...', 'Add');
+            }
+            return;
+        }
+        // Only show and enable description field if creating a new routine
+        if (descGroup) descGroup.classList.remove('hidden');
+        if (descriptionInput) {
+            descriptionInput.disabled = false;
+            descriptionInput.setAttribute('tabindex', '0');
+        }
+        if (descLabel) descLabel.classList.remove('hidden');
 
         setRoutineModalBusy(true, 'Creating...', 'Create & Add');
         try {
