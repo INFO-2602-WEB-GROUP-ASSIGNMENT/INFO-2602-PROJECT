@@ -35,21 +35,19 @@
         font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: var(--text-primary);
+        color: #fff;
         line-height: 1.2;
-        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
     .page-subtitle {
         font-size: 15px;
-        color: var(--text-secondary);
+        color: white;
         margin-top: 3px;
-        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
 
     .page-tabs {
         display: flex;
-        gap: 4px;
+        gap: 16px;
         background: rgba(17, 17, 17, 0.96);
         border: 1px solid var(--border);
         border-radius: 12px;
@@ -80,13 +78,9 @@
         stroke-linejoin: round;
     }
 
-    .page-tab:hover {
-        color: var(--text-thirdary);
-    }
-
     .page-tab.active {
-        background: var(--bg-surface);
-        color: var(--text-thirdary);
+        background: rgba(34,197,94,0.12);
+        color: #22c55e;
     }
 
     .stats-row {
@@ -281,7 +275,7 @@
         align-items: center;
         gap: 7px;
         font-size: 11.5px;
-        color: rgb(58, 97, 60);
+        color: #29ca64;
     }
 
     .legend-dot {
@@ -553,17 +547,17 @@
     }
 
     .prog-pill.done {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: #4ade80c2;
+        color: #fff;
     }
 
     .prog-pill.skip {
-        background: rgba(239, 68, 68, 0.1);
-        color: #f87171;
+        background: #475569;
+        color: #fff;
     }
 
     .prog-pill.pend {
-        background: rgba(148, 163, 184, 0.1);
+        background: rgba(148, 163, 184, 0.575);
         color: var(--text-muted);
     }
 
@@ -649,7 +643,7 @@
 
     .badge-pending {
         background: rgba(189, 200, 216, 0.1);
-        color: var(--text-muted);
+        color: white;
     }
 
     .badge-completed {
@@ -701,7 +695,6 @@
         padding: 0 14px;
         border-radius: 20px;
         border: 1px solid var(--border);
-        background: ;   rgba(17, 17, 17, 0.486);
         font-size: 12px;
         font-family: var(--font);
         cursor: pointer;
@@ -709,7 +702,6 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: var(--text-primary);
     }
 
     .status-tab svg {
@@ -742,7 +734,7 @@
     .status-tab.tab-skipped.active {
         background: rgba(148, 163, 184, 0.08);
         border-color: rgba(148, 163, 184, 0.2);
-        color: var(--text-secondary);
+        color: white;
     }
 
     .log-fields {
@@ -789,10 +781,10 @@
 
     .log-input {
         width: 100%;
-        background: var(--bg-surface);
+        background: white;
         border: 1px solid var(--border);
         border-radius: 7px;
-        color: var(--text-thirdary);
+        color: black;
         font-family: var(--font-mono);
         font-size: 13px;
         height: 32px;
@@ -803,7 +795,8 @@
     }
 
     .log-input:focus {
-        border-color: rgba(34, 197, 94, 0.4);
+        border-color: rgba(34, 197, 94, 0.678);
+        border-width: 2.5px;
     }
 
     .log-input::placeholder {
@@ -901,27 +894,27 @@
         text-decoration: none;
     }
 
+
     #panel-log .day-abbr,
     #panel-log .day-num,
     #panel-log .day-label,
     #panel-log .routine-meta-line,
     #panel-log .routine-name,
-    #panel-log .prog-pill,
     #panel-log .ex-name,
     #panel-log .ex-planned,
     #panel-log .ex-status-badge,
     #panel-log .sets-table th,
     #panel-log .set-num,
     #panel-log .time-label,
-    #panel-log .skip-note, {
-        color: #000000;
+    #panel-log .skip-note {
+        color: white;
     }
 
     #panel-log .day-label,
     #panel-log .routine-meta-line,
     #panel-log .ex-planned,
-    #panel-log .skip-note, {
-        color: rgba(0, 0, 0, 0.72);
+    #panel-log .skip-note {
+        color: white;
     }
 
     #panel-log .no-routine svg {
