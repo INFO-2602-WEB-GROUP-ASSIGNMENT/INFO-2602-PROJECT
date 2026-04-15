@@ -15,20 +15,31 @@
 {% block additional_styles %}
 <style>
     .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
         margin-bottom: 1.25rem;
     }
 
     .page-title {
-        font-size: 22px;
+        font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: var(--text-primary);
-        margin-bottom: 6px;
+        color: #fff;
+        line-height: 1.2;
     }
 
     .page-subtitle {
-        font-size: 13.5px;
-        color: var(--text-muted);
+        font-size: 15px;
+        color: white;
         margin-top: 3px;
     }
 
@@ -47,16 +58,18 @@
         border-radius: 999px;
         background: var(--bg-card);
         border: 1px solid var(--border);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
         font-size: 12.5px;
         font-family: var(--font-mono);
     }
 
     .routine-description {
+        background-color: black;
         font-size: 13.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         line-height: 1.7;
         margin-bottom: 1.5rem;
+        border-radius: 4px;
     }
 
     .exercise-list {
@@ -86,7 +99,7 @@
     .exercise-name {
         font-size: 15px;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         margin-bottom: 6px;
     }
 
@@ -95,7 +108,7 @@
         flex-wrap: wrap;
         gap: 8px;
         font-size: 12px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -104,7 +117,7 @@
         align-items: center;
         gap: 8px;
         font-size: 12px;
-        color: var(--text-secondary);
+        color:pink;
     }
 
     .exercise-card-body {
@@ -167,12 +180,12 @@
     .remix-title {
         font-size: 14px;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         margin-bottom: 6px;
     }
 
     .remix-description {
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-size: 12.5px;
         line-height: 1.6;
     }
@@ -204,12 +217,12 @@
     .remix-item-name {
         font-size: 14px;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
     }
 
     .remix-item-meta {
         font-size: 12px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         display: flex;
         flex-wrap: wrap;
@@ -238,9 +251,12 @@
     }
 
     .remix-cancel-btn {
+        background: #de4a4a ;
+        color: #cbddf5;
+        border-color: #de4a4a;
         background: transparent;
-        color: var(--text-secondary);
-        border-color: var(--border);
+        color: #de4a4a;
+        border-color: rgba(197, 34, 34, 0.35);
     }
 
     .remix-confirm-btn {
@@ -320,10 +336,10 @@
 
 {% block subpage_content %}
 
-<div class="page-header">
+
+<div class="page-header page-header-card">
     <div class="page-title" id="page-title">Routine details</div>
-    <div class="page-subtitle" id="page-subtitle">Review and remix individual exercises without changing the whole
-        routine.</div>
+    <div class="page-subtitle" id="page-subtitle">Review and remix individual exercises without changing the whole routine.</div>
 </div>
 
 <div class="routine-summary" id="routine-summary"></div>

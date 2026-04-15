@@ -4,21 +4,32 @@
 
 {% block additional_styles %}
 <style>
-    .greeting {
+    .page-header {
         margin-bottom: 1.5rem;
     }
 
-    .greeting-line {
-        font-size: 22px;
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
+    .page-title {
+        font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: var(--text-primary);
+        color: #fff;
         line-height: 1.2;
     }
 
-    .greeting-sub {
-        font-size: 13.5px;
-        color: var(--text-secondary);
+    .page-subtitle {
+        font-size: 15px;
+        color: white;
         margin-top: 3px;
     }
 
@@ -30,6 +41,7 @@
     }
 
     .stat-card {
+        color: var(--text-thirdary);  
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: var(--radius-lg);
@@ -42,8 +54,9 @@
     }
 
     .stat-label {
+
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         font-weight: 500;
@@ -51,10 +64,11 @@
     }
 
     .stat-value {
+        color: #fff;
         font-size: 28px;
         font-weight: 600;
         letter-spacing: -0.04em;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         line-height: 1;
         font-family: var(--font-mono);
     }
@@ -65,10 +79,11 @@
         gap: 6px;
         margin-top: 8px;
         font-size: 11.5px;
-        color: var(--text-muted);
+        color:aliceblue;
     }
 
     .stat-dot {
+        color: aliceblue;
         width: 6px;
         height: 6px;
         border-radius: 50%;
@@ -77,6 +92,7 @@
     }
 
     .streak-bar-wrap {
+        color: #fff;
         height: 3px;
         background: var(--bg-surface);
         border-radius: 2px;
@@ -105,6 +121,7 @@
     }
 
     .dash-card {
+        color: #fff;
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: var(--radius-lg);
@@ -117,6 +134,7 @@
     }
 
     .card-header {
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -124,9 +142,9 @@
     }
 
     .card-title {
+        color:#fff;
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
         letter-spacing: -0.01em;
     }
 
@@ -207,13 +225,15 @@
     .ri-name {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
     }
+
 
     .ri-meta {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
     }
+
 
     .status-badge {
         font-size: 10.5px;
@@ -271,7 +291,7 @@
         background: var(--bg-surface);
         font-size: 11px;
         font-weight: 500;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         display: flex;
         align-items: center;
@@ -282,45 +302,14 @@
     .ex-name {
         flex: 1;
         font-size: 13px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
     }
 
     .ex-sets {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         white-space: nowrap;
-    }
-
-    .remix-icon-btn {
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
-        border: 1px solid var(--border);
-        background: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        flex-shrink: 0;
-        color: var(--text-muted);
-        transition: border-color 0.15s, color 0.15s, background 0.15s;
-    }
-
-    .remix-icon-btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: var(--accent-muted);
-    }
-
-    .remix-icon-btn svg {
-        width: 12px;
-        height: 12px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
     }
 
     .start-workout-btn {
@@ -373,12 +362,12 @@
     .act-text {
         flex: 1;
         font-size: 13px;
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
     }
 
     .act-time {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--accent);
         font-family: var(--font-mono);
         white-space: nowrap;
     }
@@ -407,7 +396,7 @@
         border-radius: 20px;
         border: 1px solid var(--border-hover);
         background: none;
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
         cursor: pointer;
         font-family: var(--font);
         transition: border-color 0.15s, color 0.15s, background 0.15s;
@@ -445,9 +434,9 @@
 
 {% block subpage_content %}
 
-<div class="greeting">
-    <div class="greeting-line">Good morning, {{ user.username }} 👋</div>
-    <div class="greeting-sub">Stay consistent. Build routines. Remix your workouts.</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Welcome , {{ user.username }}</div>
+    <div class="page-subtitle">Stay consistent ! Build routines ! Remix your workouts !</div>
 </div>
 
 <div class="stats-grid">
@@ -468,7 +457,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-label">Streak</div>
-        <div class="stat-value" id="stat-streak">0<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span></div>
+        <div class="stat-value" id="stat-streak">0<span class="stat-suffix-streak"> d</span></div>
         <div class="streak-bar-wrap">
             <div class="streak-bar-fill" id="dashboard-streak-bar"></div>
         </div>
@@ -713,14 +702,6 @@
                     <div class="ex-num">${index + 1}</div>
                     <div class="ex-name">${exercise.exercise_name || "Exercise"}</div>
                     <div class="ex-sets">${exercise.sets || 3} × ${exercise.reps || 10}</div>
-                    <button class="remix-icon-btn" title="Remix this exercise">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="16 3 21 3 21 8" />
-                            <line x1="4" y1="20" x2="21" y2="3" />
-                            <polyline points="21 16 21 21 16 21" />
-                            <line x1="15" y1="15" x2="21" y2="21" />
-                        </svg>
-                    </button>
                 </div>
             `).join("");
         }
@@ -813,7 +794,7 @@
 
         function renderStreak() {
             const streak = getDashboardStreak();
-            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix" style="font-size:16px;font-weight:400;color:var(--text-muted)"> d</span>`;
+            document.getElementById('stat-streak').innerHTML = `${streak}<span class="stat-suffix-streak"> d</span>`;
             document.getElementById('dashboard-streak-bar').style.width = `${Math.min(100, Math.round((streak / 7) * 100))}%`;
         }
 

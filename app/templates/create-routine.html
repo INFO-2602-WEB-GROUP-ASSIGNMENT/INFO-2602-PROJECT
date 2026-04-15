@@ -14,18 +14,28 @@
         margin-bottom: 1.5rem;
     }
 
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
     .page-title {
-        font-size: 22px;
+        font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: var(--text-primary);
+        color: #fff;
         line-height: 1.2;
-        margin-bottom: 4px;
     }
 
     .page-subtitle {
-        font-size: 13.5px;
-        color: var(--text-secondary);
+        font-size: 15px;
+        color: white;
         margin-top: 3px;
     }
 
@@ -45,8 +55,11 @@
     .card-title {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
         margin-bottom: 1rem;
+    }
+
+    .routine-label {
+        color: var(--accent)
     }
 
     .form-group {
@@ -58,30 +71,41 @@
 
     .form-label {
         font-size: 12px;
-        color: var(--text-muted);
         font-weight: 500;
     }
 
     .form-input,
-    .form-select,
     .form-textarea {
         width: 100%;
         background: var(--bg-surface);
         border: 1px solid var(--border);
         border-radius: 10px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font);
         font-size: 13.5px;
         outline: none;
     }
+    .form-select{
+        width: 100%;
+        background-color: rgb(29, 29, 29);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color:grey;
+        font-family: var(--font);
+        font-size: 13.5px;
+        outline: none;
+        height: 40px;
+        padding: 0 12px;
+    }
 
-    .form-input,
-    .form-select {
+    .form-input{
+        background-color: rgb(29, 29, 29);
         height: 40px;
         padding: 0 12px;
     }
 
     .form-textarea {
+        background-color: rgb(29, 29, 29);
         min-height: 100px;
         padding: 12px;
         resize: vertical;
@@ -98,7 +122,7 @@
         align-items: center;
         gap: 8px;
         margin-bottom: 0.85rem;
-        color: var(--text-muted);
+        color: grey;
         font-size: 12px;
     }
 
@@ -124,6 +148,7 @@
 
     .exercise-results,
     .selected-exercises {
+        color: grey;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -151,13 +176,14 @@
     .selected-name {
         font-size: 13px;
         font-weight: 600;
-        color: var(--text-primary);
+        color: linear-gradient(90deg, #09ff00, #000000);
+    
     }
 
     .exercise-desc,
     .selected-desc {
         font-size: 12px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-top: 4px;
         line-height: 1.5;
     }
@@ -209,7 +235,7 @@
 
     .cat-all {
         background: var(--bg-card);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
     }
 
     .cat-cardio {
@@ -238,7 +264,7 @@
         border-radius: 999px;
         border: 1px solid var(--border);
         background: var(--bg-card);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
     }
 
     .badge-match {
@@ -266,14 +292,20 @@
     }
 
     .mini-btn,
-    .save-btn,
-    .cancel-btn {
+    .save-btn{
         border: none;
         border-radius: 9px;
         cursor: pointer;
         font-family: var(--font);
     }
-
+    .cancel-btn {
+        color: rgb(124, 11, 11);
+        border-color:rgb(124, 11, 11); 
+        background: transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: var(--font);
+    }
     .mini-btn {
         height: 32px;
         padding: 0 12px;
@@ -313,8 +345,13 @@
 
     .cancel-btn {
         background: transparent;
-        border: 1px solid var(--border);
-        color: var(--text-secondary);
+        border: 1px solid rgb(255, 0, 0);
+        color: #ff0000;
+    }
+
+    .cancel-btn:hover {
+        background: rgba(250, 139, 167, 0.08);
+        border-color: rgba(255, 0, 85, 0.6);
     }
 
     .footer-actions {
@@ -332,6 +369,10 @@
         font-size: 12.5px;
     }
 
+    .empty-box.routine-label {
+        color: #ffffff;
+    }
+
     @media (max-width: 900px) {
         .builder-layout {
             grid-template-columns: 1fr;
@@ -341,19 +382,19 @@
 {% endblock %}
 
 {% block subpage_content %}
-<div class="page-header">
-    <div class="page-title">Create weekly routines!</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Create Weekly Routines!</div>
     <div class="page-subtitle">Choose a day, then search and add exercises right here.</div>
 </div>
 
 <div class="builder-layout">
 
     <div class="builder-card">
-        <div class="card-title">Routine details</div>
+        <div class="card-title routine-label">Routine details</div>
 
         <form id="createRoutineForm">
             <div class="form-group">
-                <label class="form-label" for="day_of_week">Day of week</label>
+                <label class="form-label routine-label" for="day_of_week">Day of week</label>
                 <select class="form-select" id="day_of_week" required>
                     <option value="">Select a day</option>
                     <option>Monday</option>
@@ -367,7 +408,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="description">Description</label>
+                <label class="form-label routine-label" for="description">Description</label>
                 <textarea class="form-textarea" id="description" placeholder="Optional description for this day’s routine."></textarea>
             </div>
 
@@ -379,7 +420,7 @@
     </div>
 
     <div class="builder-card">
-        <div class="card-title">Add exercises</div>
+        <div class="card-title routine-label">Add exercises</div>
 
         <div class="search-row">
             <input class="form-input" type="text" id="exerciseSearch" placeholder="Search exercises...">
@@ -391,14 +432,14 @@
             <span>Fetching exercises...</span>
         </div>
 
-        <div class="card-title" style="margin-bottom: 0.7rem;">Search results</div>
+        <div class="card-title routine-label" style="margin-bottom: 0.7rem;">Search results</div>
         <div class="exercise-results" id="exerciseResults">
-            <div class="empty-box">Search for Exercises to add them to this routine.</div>
+            <div class="empty-box routine-label">Search for Exercises to add them to this routine.</div>
         </div>
 
-        <div class="card-title" style="margin-top: 1rem; margin-bottom: 0.7rem;">Selected exercises</div>
+        <div class="card-title routine-label" style="margin-top: 1rem; margin-bottom: 0.7rem;">Selected exercises</div>
         <div class="selected-exercises" id="selectedExercises">
-            <div class="empty-box">No Exercises selected yet.</div>
+            <div class="empty-box routine-label">No Exercises selected yet.</div>
         </div>
     </div>
 
@@ -739,7 +780,7 @@
 
         exerciseSearch.addEventListener("input", function () {
             if (!this.value.trim()) {
-                exerciseResults.innerHTML = `<div class="empty-box">Search for exercises to add them to this routine.</div>`;
+                exerciseResults.innerHTML = `<div class="empty-box routine-label">Search for exercises to add them to this routine.</div>`;
                 return;
             }
 

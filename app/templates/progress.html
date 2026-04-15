@@ -16,41 +16,53 @@
 
 {% block additional_styles %}
 <style>
-    .pg-title {
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-        color: var(--text-primary);
-        margin-bottom: 4px;
+    .page-header {
+        margin-bottom: 1.5rem;
     }
 
-    .pg-sub {
-        font-size: 13.5px;
-        color: var(--text-muted);
-        margin-bottom: 1.5rem;
+    .page-header-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 0.95rem 1.15rem;
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        color: #fff;
+        line-height: 1.2;
+    }
+
+    .page-subtitle {
+        font-size: 15px;
+        color: white;
+        margin-top: 3px;
     }
 
     .page-tabs {
         display: flex;
-        gap: 4px;
-        background: var(--bg-card);
+        gap: 16px;
+        background: rgba(17, 17, 17, 0.96);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 4px;
         margin-bottom: 1.5rem;
         width: fit-content;
     }
 
     .page-tab {
         height: 32px;
-        padding: 0 16px;
         border-radius: 8px;
         border: none;
         background: none;
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
         font-size: 13px;
         font-family: var(--font);
-        cursor: pointer;
         transition: background 0.15s, color 0.15s;
         display: flex;
         align-items: center;
@@ -59,7 +71,6 @@
 
     .page-tab svg {
         width: 13px;
-        height: 13px;
         stroke: currentColor;
         fill: none;
         stroke-width: 2;
@@ -67,13 +78,9 @@
         stroke-linejoin: round;
     }
 
-    .page-tab:hover {
-        color: var(--text-primary);
-    }
-
     .page-tab.active {
-        background: var(--bg-surface);
-        color: var(--text-primary);
+        background: rgba(34,197,94,0.12);
+        color: #22c55e;
     }
 
     .stats-row {
@@ -95,7 +102,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-bottom: 8px;
         font-family: var(--font-mono);
     }
@@ -104,7 +111,7 @@
         font-size: 26px;
         font-weight: 600;
         letter-spacing: -0.04em;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         line-height: 1;
     }
@@ -112,13 +119,13 @@
     .stat-suffix {
         font-size: 14px;
         font-weight: 400;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-left: 2px;
     }
 
     .stat-footer {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-top: 6px;
     }
 
@@ -153,7 +160,7 @@
         padding: 0 13px;
         border-radius: 20px;
         border: 1px solid var(--border);
-        background: none;
+        background: rgba(17, 17, 17, 0.486);
         color: var(--text-secondary);
         font-size: 12px;
         font-family: var(--font);
@@ -167,9 +174,9 @@
     }
 
     .period-chip.active {
-        background: var(--accent-muted);
+        background: rgba(34, 197, 94, 0.3);
         border-color: rgba(34, 197, 94, 0.3);
-        color: var(--accent);
+        color:rgb(9, 107, 6);
     }
 
     .charts-grid {
@@ -192,7 +199,7 @@
         border-radius: 14px;
         padding: 1.1rem 1.2rem;
     }
-
+    
     .chart-head {
         display: flex;
         align-items: center;
@@ -203,12 +210,12 @@
     .chart-title {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
     }
 
     .chart-sub {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -245,7 +252,7 @@
 
     .freq-bar-label {
         font-size: 10px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -268,7 +275,7 @@
         align-items: center;
         gap: 7px;
         font-size: 11.5px;
-        color: var(--text-secondary);
+        color: #29ca64;
     }
 
     .legend-dot {
@@ -282,7 +289,7 @@
         margin-left: auto;
         font-family: var(--font-mono);
         font-size: 11.5px;
-        color: var(--text-primary);
+        color: rgb(27, 126, 40);
     }
 
     .pr-table {
@@ -295,7 +302,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         padding: 0 0 10px;
         text-align: left;
@@ -428,7 +435,8 @@
     }
 
     .day-btn {
-        background: var(--bg-card);
+        color: black;
+        background:grey;
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 0.75rem 0.5rem;
@@ -439,12 +447,12 @@
     }
 
     .day-btn:hover {
-        border-color: var(--border-hover);
+        border-color: var(--accent);
         transform: translateY(-2px);
     }
 
     .day-btn.active {
-        background: var(--accent-muted);
+        background: rgba(34, 197, 94, 0.089);
         border-color: rgba(34, 197, 94, 0.4);
     }
 
@@ -453,7 +461,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-bottom: 5px;
         font-family: var(--font-mono);
     }
@@ -468,7 +476,7 @@
     }
 
     .day-btn.active .day-num {
-        color: var(--accent);
+        color: var(--text-primary)
     }
 
     .day-dot-wrap {
@@ -493,7 +501,7 @@
 
     .day-label {
         font-size: 10px;
-        color: var(--text-muted);
+        color: var(--text-primary);
         margin-top: 4px;
         white-space: nowrap;
         overflow: hidden;
@@ -539,17 +547,17 @@
     }
 
     .prog-pill.done {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
+        background: #4ade80c2;
+        color: #fff;
     }
 
     .prog-pill.skip {
-        background: rgba(239, 68, 68, 0.1);
-        color: #f87171;
+        background: #475569;
+        color: #fff;
     }
 
     .prog-pill.pend {
-        background: rgba(148, 163, 184, 0.1);
+        background: rgba(148, 163, 184, 0.575);
         color: var(--text-muted);
     }
 
@@ -614,13 +622,13 @@
     .ex-name {
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         margin-bottom: 2px;
     }
 
     .ex-planned {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
     }
 
@@ -634,12 +642,12 @@
     }
 
     .badge-pending {
-        background: rgba(148, 163, 184, 0.1);
-        color: var(--text-muted);
+        background: rgba(189, 200, 216, 0.1);
+        color: white;
     }
 
     .badge-completed {
-        background: rgba(34, 197, 94, 0.12);
+        background: rgba(23, 173, 78, 0.12);
         color: #4ade80;
     }
 
@@ -687,7 +695,6 @@
         padding: 0 14px;
         border-radius: 20px;
         border: 1px solid var(--border);
-        background: none;
         font-size: 12px;
         font-family: var(--font);
         cursor: pointer;
@@ -695,7 +702,6 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        color: var(--text-secondary);
     }
 
     .status-tab svg {
@@ -728,7 +734,7 @@
     .status-tab.tab-skipped.active {
         background: rgba(148, 163, 184, 0.08);
         border-color: rgba(148, 163, 184, 0.2);
-        color: var(--text-secondary);
+        color: white;
     }
 
     .log-fields {
@@ -751,7 +757,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         padding: 0 0 8px;
         text-align: left;
@@ -767,7 +773,7 @@
 
     .set-num {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         text-align: center;
         padding-top: 6px;
@@ -775,10 +781,10 @@
 
     .log-input {
         width: 100%;
-        background: var(--bg-surface);
+        background: white;
         border: 1px solid var(--border);
         border-radius: 7px;
-        color: var(--text-primary);
+        color: black;
         font-family: var(--font-mono);
         font-size: 13px;
         height: 32px;
@@ -789,11 +795,12 @@
     }
 
     .log-input:focus {
-        border-color: rgba(34, 197, 94, 0.4);
+        border-color: rgba(34, 197, 94, 0.678);
+        border-width: 2.5px;
     }
 
     .log-input::placeholder {
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-size: 11px;
     }
 
@@ -801,7 +808,7 @@
         background: none;
         border: 1px dashed var(--border);
         border-radius: 8px;
-        color: var(--text-muted);
+        color:var(--text-thirdary);
         font-size: 12px;
         font-family: var(--font);
         height: 30px;
@@ -825,7 +832,7 @@
 
     .time-label {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         white-space: nowrap;
     }
@@ -836,7 +843,7 @@
         background: var(--bg-surface);
         border: 1px solid var(--border);
         border-radius: 7px;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         font-size: 13px;
         height: 32px;
@@ -851,11 +858,12 @@
 
     .skip-note {
         font-size: 12.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         padding: 0.5rem 0;
     }
 
     .no-routine {
+        color: var(--text-thirdary);
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 14px;
@@ -866,7 +874,7 @@
     .no-routine svg {
         width: 36px;
         height: 36px;
-        stroke: var(--text-muted);
+        stroke: var(--text-accent);
         fill: none;
         stroke-width: 1.5;
         stroke-linecap: round;
@@ -876,7 +884,7 @@
 
     .no-routine p {
         font-size: 14px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         margin-bottom: 1rem;
     }
 
@@ -884,6 +892,33 @@
         font-size: 13px;
         color: var(--accent);
         text-decoration: none;
+    }
+
+
+    #panel-log .day-abbr,
+    #panel-log .day-num,
+    #panel-log .day-label,
+    #panel-log .routine-meta-line,
+    #panel-log .routine-name,
+    #panel-log .ex-name,
+    #panel-log .ex-planned,
+    #panel-log .ex-status-badge,
+    #panel-log .sets-table th,
+    #panel-log .set-num,
+    #panel-log .time-label,
+    #panel-log .skip-note {
+        color: white;
+    }
+
+    #panel-log .day-label,
+    #panel-log .routine-meta-line,
+    #panel-log .ex-planned,
+    #panel-log .skip-note {
+        color: white;
+    }
+
+    #panel-log .no-routine svg {
+        stroke: #fff;
     }
 
     .toast {
@@ -955,8 +990,10 @@
 
 {% block subpage_content %}
 
-<div class="pg-title">Progress</div>
-<div class="pg-sub">Track your stats and log your daily workouts</div>
+<div class="page-header page-header-card">
+    <div class="page-title">Progress</div>
+    <div class="page-subtitle">Track your stats and log your daily workouts</div>
+</div>
 
 <div class="page-tabs">
     <button class="page-tab active" id="tab-overview" onclick="switchTab('overview')">
@@ -990,17 +1027,17 @@
         <div class="stat-card">
             <div class="stat-label">Workouts</div>
             <div class="stat-value" id="stat-workouts">5</div>
-            <div class="stat-footer"><span class="stat-up">↑ 2</span> vs last period</div>
+            <div class="stat-footer"><span class="stat-up">↑ #</span> vs last period</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Total volume</div>
             <div class="stat-value" id="stat-volume">12,400<span class="stat-suffix">lbs</span></div>
-            <div class="stat-footer"><span class="stat-up">↑ 8%</span> vs last period</div>
+            <div class="stat-footer"><span class="stat-up">↑ #%</span> vs last period</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Avg session</div>
             <div class="stat-value" id="stat-avg">48<span class="stat-suffix">min</span></div>
-            <div class="stat-footer">across 5 sessions</div>
+            <div class="stat-footer">across # sessions</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Streak</div>
@@ -1015,7 +1052,7 @@
         <div class="chart-card">
             <div class="chart-head">
                 <span class="chart-title">Workout frequency</span>
-                <span class="chart-sub" id="freq-period-label">Mon – Sun</span>
+                <span class="chart-sub" id="freq-period-label">Mon – Sun</span><span class="chart-sub" id="freq-period-label">Mon – Sun</span>
             </div>
             <div class="freq-bars" id="freq-bars"></div>
         </div>

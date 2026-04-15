@@ -3,35 +3,52 @@
 :root {
 	--sidebar-w: 230px;
 	--topbar-h: 60px;
-	--bg-base: #0a0e1a;  
-	--bg-sidebar: #0d1120;
-	--bg-card: linear-gradient(135deg, #0a1f44, #1c1c1c);
-	--bg-card-hover: #1c1c1c;
-	--bg-surface: #1a2235;
+	--bg-base: #0d0e1118;  
+	--bg-sidebar: rgba(17, 17, 17, 0.96);
+	--bg-card:rgba(17, 17, 17, 0.96);
+	--bg-card-hover:rgba(17, 17, 17, 0.96);
+	--bg-surface : rgba(17, 17, 17, 0.96);
 	--accent: #22c55e;
 	--accent-dim: #1eb355f6;
 	--accent-glow: rgba(34,197,94,0.12);
 	--accent-muted: rgba(34,197,94,0.08);
-	--text-primary: #f0f0f0;
-	--text-secondary: #94a3b8;
-	--text-muted: #465b71;
-	--border: rgba(255,255,255,0.06);
-	--border-hover: rgba(255, 255, 255, 0.1);
-	--font: 'DM Sans', sans-serif;
-	--font-mono: 'DM Mono', monospace;
+	--text-primary: #000000;
+	--text-secondary: #000000;
+	--text-muted: #000000;
+	--text-thirdary: #ffffff;
+	--border: rgba(17, 16, 16, 0.06);
+	--border-hover: rgba(15, 15, 15, 0.1);
+	--font: 'Poppins', 'Quicksand', sans-serif;
+	--font-mono: 'Poppins', 'Quicksand', monospace;
 	--radius: 11px;
 	--radius-lg: 15px;
 }
 
-html, body {
+html {
+	height: 100%;
+	background: var(--bg-base);
+}
+
+body {
 	height: 100%;
 	font-family: var(--font);
-	background: var(--bg-base);
+	background: transparent;
 	color: var(--text-primary);
 	overflow-x: hidden;
 	font-size: 14px;
 	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background: var(--bg-base) url('../img/Background_image.jpg') no-repeat center center / cover;
+	filter: blur(10px);
+	opacity: 0.92;
+	z-index: -1;
 }
 
 #app-shell {
@@ -42,7 +59,7 @@ html, body {
 #sidebar {
 	width: var(--sidebar-w);
 	min-height: 100vh;
-	background: linear-gradient(135deg, #2f2a52, #08203c, #000000);/*var(--bg-sidebar);*/
+	background: linear-gradient(135deg, #ffffff, #edf5ff, #000000);/*var(--bg-sidebar);*/
 	background-size: 400% 400%;
     animation: sidebarGradientShift 6s ease infinite;
 	border-right: 1.25px solid var(--border);
@@ -74,33 +91,30 @@ html, body {
   100% { background-position: 0% 50%; }
 }
 
+
 .brand-logo {
 	width: 35px;
 	height: 35px;
-	background: linear-gradient(135deg,
-    #2ecc71 0%,
-    #7f8c8d 100%); /*linear-gradient(135deg, #2ecc71, #7f8c8d);var(--accent);*/
-	border-radius: 9px;
+	border: 2px solid #000000;
+	border-radius: 30px;
+	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex-shrink: 0;
 }
 
-.brand-logo svg {
-	width: 20px;
-	height: 16px;
-	stroke: #2f7aeb;
-	fill: none;
-	stroke-width: 2.2;
-	stroke-linecap: round;
-	stroke-linejoin: round;
+.brand-logo-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 }
+
 
 .brand-text {
 	font-size: 15px;
 	font-weight: 600;
-	color: var(--text-primary);
+	color: var(--text-muted);
 	letter-spacing: -0.02em;
 }
 
@@ -216,19 +230,19 @@ html, body {
 	text-decoration: none;
 }
 
-.user-row:hover { background: rgba(255,255,255,0.04); }
+.user-row:hover { background: rgba(0, 0, 0, 0.04); }
 
 .user-avatar {
+	background: var(--accent) url('../img/profile.svg') no-repeat center center / cover;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background: var(--accent);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 12px;
 	font-weight: 600;
-	color: #497efa;
+	color: #00000000;
 	flex-shrink: 0;
 	font-family: var(--font-mono);
 }
@@ -253,6 +267,7 @@ html, body {
 }
 
 #main {
+	background: transparent;
 	margin-left: var(--sidebar-w);
 	flex: 1;
 	display: flex;
@@ -265,7 +280,7 @@ html, body {
 
 #topbar {
 	height: var(--topbar-h);
-	background: var(--bg-sidebar);
+	background: #000;
 	border-bottom: 1px solid var(--border);
 	display: flex;
 	align-items: center;
@@ -280,7 +295,7 @@ html, body {
 	background: none;
 	border: 1px solid var(--border);
 	border-radius: 8px;
-	color: var(--text-secondary);
+	color: var(--text-thirdary);
 	width: 34px;
 	height: 34px;
 	display: flex;
@@ -308,7 +323,7 @@ html, body {
 .topbar-title {
 	font-size: 15px;
 	font-weight: 500;
-	color: var(--text-primary);
+	color: var(--text-thirdary);
 	letter-spacing: -0.01em;
 }
 
@@ -323,7 +338,7 @@ html, body {
 	background: none;
 	border: 1px solid var(--border);
 	border-radius: 8px;
-	color: var(--text-secondary);
+	color: var(--text-thirdary);
 	height: 34px;
 	padding: 0 12px;
 	font-size: 13px;
@@ -366,7 +381,7 @@ html, body {
 #page-content {
 	flex: 1;
 	padding: 1.5rem;
-	background: var(--bg-base);
+	background: transparent;
 }
 
 .flash-wrap { margin-bottom: 1rem; }
