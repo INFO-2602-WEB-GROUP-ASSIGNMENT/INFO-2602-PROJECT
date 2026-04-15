@@ -35,13 +35,13 @@
         font-size: 30px;
         font-weight: 600;
         letter-spacing: -0.03em;
-        color: #fff;
+        color: var(--text-thirdary);
         line-height: 1.2;
     }
 
     .page-subtitle {
         font-size: 15px;
-        color: white;
+        color: var(--text-thirdary);
         margin-top: 3px;
     }
 
@@ -161,7 +161,7 @@
         border-radius: 20px;
         border: 1px solid var(--border);
         background: rgba(17, 17, 17, 0.486);
-        color: var(--text-secondary);
+        color: var(--text-thirdary);
         font-size: 12px;
         font-family: var(--font);
         cursor: pointer;
@@ -329,6 +329,7 @@
 
     .pr-name {
         font-weight: 500;
+        color: var(--text-thirdary);
     }
 
     .pr-badge {
@@ -403,19 +404,19 @@
     .recent-name {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text-thirdary);
     }
 
     .recent-meta {
         font-size: 11.5px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         margin-top: 1px;
     }
 
     .recent-date {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--text-thirdary);
         font-family: var(--font-mono);
         white-space: nowrap;
     }
@@ -643,7 +644,7 @@
 
     .badge-pending {
         background: rgba(189, 200, 216, 0.1);
-        color: white;
+        color: var(--text-thirdary);
     }
 
     .badge-completed {
@@ -734,7 +735,7 @@
     .status-tab.tab-skipped.active {
         background: rgba(148, 163, 184, 0.08);
         border-color: rgba(148, 163, 184, 0.2);
-        color: white;
+        color: var(--text-thirdary);
     }
 
     .log-fields {
@@ -781,7 +782,7 @@
 
     .log-input {
         width: 100%;
-        background: white;
+        background: var(--text-thirdary);
         border: 1px solid var(--border);
         border-radius: 7px;
         color: black;
@@ -1297,6 +1298,14 @@
             return streak;
         }
 
+        function getLastPeriodKey(period) {
+            if (period === 'week') return 'last_week';
+            if (period === 'month') return 'last_month';
+            if (period === '6months') return 'last_6months';
+            if (period === 'year') return 'last_year';
+            return null;
+        }
+
         function renderOverview() {
             const base = PERIOD_STATS[activePeriod];
             const s = { ...base };
@@ -1306,9 +1315,29 @@
                 s.streakPct = Math.min(100, Math.round((currentStreak / 7) * 100));
             }
 
+            // Compute last period stats for comparison
+            let lastStats = PERIOD_STATS[getLastPeriodKey(activePeriod)] || {};
+            // Workouts diff
+            let workoutsDiff = s.workouts - (lastStats.workouts || 0);
+            let workoutsSign = workoutsDiff > 0 ? '↑' : (workoutsDiff < 0 ? '↓' : '→');
+            let workoutsDiffText = `${workoutsSign} ${Math.abs(workoutsDiff)}`;
+            // Volume diff
+            let volumeDiff = s.volume - (lastStats.volume || 0);
+            let volumePct = (lastStats.volume && lastStats.volume > 0) ? Math.round((volumeDiff / lastStats.volume) * 100) : 0;
+            let volumeSign = volumePct > 0 ? '↑' : (volumePct < 0 ? '↓' : '→');
+            let volumePctText = `${volumeSign} ${Math.abs(volumePct)}%`;
+            // Avg session footer
+            let avgFooter = `across ${s.workouts} sessions`;
+
             document.getElementById('stat-workouts').textContent = s.workouts;
+            document.querySelector('#stat-workouts').parentElement.querySelector('.stat-footer').innerHTML = `<span class="stat-up">${workoutsDiffText}</span> vs last period`;
+
             document.getElementById('stat-volume').innerHTML = s.volume + '<span class="stat-suffix">lbs</span>';
+            document.querySelector('#stat-volume').parentElement.querySelector('.stat-footer').innerHTML = `<span class="stat-up">${volumePctText}</span> vs last period`;
+
             document.getElementById('stat-avg').innerHTML = s.avg + '<span class="stat-suffix">min</span>';
+            document.querySelector('#stat-avg').parentElement.querySelector('.stat-footer').textContent = avgFooter;
+
             document.getElementById('stat-streak').innerHTML = s.streak + '<span class="stat-suffix">d</span>';
             document.getElementById('streak-bar').style.width = s.streakPct + '%';
 
@@ -1383,7 +1412,7 @@
             document.getElementById('pr-tbody').innerHTML = PERSONAL_RECORDS.map(p => `
         <tr>
             <td><span class="pr-name">${p.name}</span>${p.isNew ? '<span class="pr-badge">PR</span>' : ''}</td>
-            <td>${p.pr}</td>
+            <td style="color:white">${p.pr}</td>
             <td><span class="pr-up">${p.change}</span></td>
         </tr>`).join('');
         }

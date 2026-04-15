@@ -380,11 +380,26 @@ async def progress_view(request: Request, user: AuthDep, db: SessionDep):
 
         return labels, values
 
+
+    # Calculate last period ranges
+    last_week_start = week_start - timedelta(days=7)
+    last_week_end = week_start - timedelta(days=1)
+    last_month_start = today - timedelta(days=59)
+    last_month_end = today - timedelta(days=30)
+    last_6months_start = today - timedelta(days=359)
+    last_6months_end = today - timedelta(days=180)
+    last_year_start = today - timedelta(days=729)
+    last_year_end = today - timedelta(days=365)
+
     period_stats = {
         "week": compute_period_stats(all_progress_entries, week_start, today),
+        "last_week": compute_period_stats(all_progress_entries, last_week_start, last_week_end),
         "month": compute_period_stats(all_progress_entries, today - timedelta(days=29), today),
+        "last_month": compute_period_stats(all_progress_entries, last_month_start, last_month_end),
         "6months": compute_period_stats(all_progress_entries, today - timedelta(days=179), today),
+        "last_6months": compute_period_stats(all_progress_entries, last_6months_start, last_6months_end),
         "year": compute_period_stats(all_progress_entries, today - timedelta(days=364), today),
+        "last_year": compute_period_stats(all_progress_entries, last_year_start, last_year_end),
     }
 
     week_freq = build_week_labels_and_values(all_progress_entries, week_start, today)
@@ -416,6 +431,7 @@ async def progress_view(request: Request, user: AuthDep, db: SessionDep):
     personal_records = build_personal_records(all_progress_entries)
     recent_workouts = build_recent_workouts(all_progress_entries)
 
+    print("PERIOD_STATS:", period_stats)
     return templates.TemplateResponse(
         request=request,
         name="progress.html",
