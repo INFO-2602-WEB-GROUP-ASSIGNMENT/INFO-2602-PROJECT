@@ -718,23 +718,7 @@
         <div class="routine-modal-title" id="routine-modalTitle">Add to Routine</div>
         <div class="routine-modal-subtitle" id="routine-modalSubtitle">Choose where to add this exercise.</div>
 
-        <div id="existingRoutineSection">
-            <div class="routine-modal-group">
-                <label class="routine-modal-label" for="routineSelect">Routine</label>
-                <select class="routine-modal-select" id="routineSelect"></select>
-            </div>
-
-            <div class="routine-modal-row">
-                <div class="routine-modal-group">
-                    <label class="routine-modal-label" for="setsInput">Sets</label>
-                    <input class="routine-modal-input" type="number" id="setsInput" min="1" value="3">
-                </div>
-                <div class="routine-modal-group">
-                    <label class="routine-modal-label" for="repsInput">Reps</label>
-                    <input class="routine-modal-input" type="number" id="repsInput" min="1" value="10">
-                </div>
-            </div>
-        </div>
+        <div id="existingRoutineSection" class="hidden"></div>
 
         <div id="newRoutineSection" class="hidden">
             <div class="routine-modal-group">
@@ -1162,46 +1146,9 @@
         return found || '';
     }
 
-    function fillRoutineSelect(routines) {
-        const existingOptions = routines.map(routine => {
-            const label = routine.day_of_week || routine.name;
-            return `<option value="${routine.id}">${label}</option>`;
-        });
+    // fillRoutineSelect removed since Routine select is no longer needed for creation
 
-        const usedDays = new Set(
-            routines
-                .map(routine => normalizeDayName(routine.day_of_week || routine.name))
-                .filter(Boolean)
-        );
-
-        const createOptions = DAYS_OF_WEEK
-            .filter(day => !usedDays.has(day))
-            .map(day => `<option value="new:${day}">+ Create new routine for ${day}</option>`);
-
-        routineSelect.innerHTML = [...existingOptions, ...createOptions].join('');
-    }
-
-    function updateRoutineSelectionMode() {
-        const selectedValue = String(routineSelect.value || '');
-        const isCreateOption = selectedValue.startsWith('new:');
-
-        if (isCreateOption) {
-            const selectedDay = selectedValue.slice(4);
-            modalTitle.textContent = 'Create routine';
-            modalSubtitle.textContent = `Create a routine for ${selectedDay} and add ${selectedExerciseName}.`;
-            newRoutineSection.classList.remove('hidden');
-            document.getElementById('daySelect').value = selectedDay;
-            modalSubmitBtn.textContent = 'Create & Add';
-            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
-            return;
-        }
-
-        modalTitle.textContent = 'Add to routine';
-        modalSubtitle.textContent = `Add ${selectedExerciseName} to one of your routines.`;
-        newRoutineSection.classList.add('hidden');
-        modalSubmitBtn.textContent = 'Add';
-        modalSubmitBtn.onclick = submitAddToExistingRoutine;
-    }
+    // updateRoutineSelectionMode removed since Routine select is no longer needed for creation
 
     async function openAddToRoutineModal(exerciseId, exerciseName) {
         selectedExerciseId = exerciseId;
@@ -1214,70 +1161,20 @@
             return;
         }
 
-        if (availableRoutines.length) {
-            modalTitle.textContent = 'Add to routine';
-            modalSubtitle.textContent = `Add ${exerciseName} to one of your routines.`;
-            existingRoutineSection.classList.remove('hidden');
-            newRoutineSection.classList.add('hidden');
-            fillRoutineSelect(availableRoutines);
-            routineSelect.onchange = updateRoutineSelectionMode;
-            updateRoutineSelectionMode();
-
-        } else {
-            modalTitle.textContent = 'Create routine';
-            modalSubtitle.textContent = `You have no routines yet. Create one and add ${exerciseName}.`;
-            existingRoutineSection.classList.add('hidden');
-            newRoutineSection.classList.remove('hidden');
-            modalSubmitBtn.textContent = 'Create & Add';
-            modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
-        }
+        // Always show create routine modal (no Routine select)
+        modalTitle.textContent = 'Create routine';
+        modalSubtitle.textContent = `Create a routine for a day and add ${exerciseName}.`;
+        existingRoutineSection.classList.add('hidden');
+        newRoutineSection.classList.remove('hidden');
+        modalSubmitBtn.textContent = 'Create & Add';
+        modalSubmitBtn.onclick = submitCreateRoutineAndAdd;
 
         openModal();
     }
 
     window.openAddToRoutineModal = openAddToRoutineModal;
 
-    async function submitAddToExistingRoutine() {
-        if (isSubmittingRoutine) return;
-
-        const routineSelect = document.getElementById("routineSelect");
-        const routineId = routineSelect.value;
-        if (String(routineId).startsWith('new:')) {
-            await submitCreateRoutineAndAdd();
-            return;
-        }
-        const routineName = routineSelect.options[routineSelect.selectedIndex].text;
-        const exerciseName = selectedExerciseName;
-        const sets = Number(document.getElementById('setsInput').value) || 3;
-        const reps = Number(document.getElementById('repsInput').value) || 10;
-
-        setRoutineModalBusy(true, 'Adding...', 'Add');
-        try {
-            const response = await fetch(`/api/routines/${routineId}/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    exercise_id: selectedExerciseId,
-                    sets,
-                    reps
-                })
-            });
-
-            const data = await response.json().catch(() => null);
-
-            if (!response.ok) {
-                alert(data?.detail || 'Could not add exercise.');
-                return;
-            }
-
-            closeRoutineModal();
-            alert(`${exerciseName} added to ${routineName} routine.`);
-        } finally {
-            setRoutineModalBusy(false, 'Adding...', 'Add');
-        }
-    }
+    // submitAddToExistingRoutine removed since Routine select is no longer needed for creation
 
     async function submitCreateRoutineAndAdd() {
         if (isSubmittingRoutine) return;
