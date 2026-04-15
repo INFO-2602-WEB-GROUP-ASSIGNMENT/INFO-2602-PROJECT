@@ -470,7 +470,23 @@ async def save_progress(progress_data: ProgressSaveRequest, db: SessionDep, user
         except ValueError:
             continue
 
-        routine_id = day_log.get("__routine_id")
+        raw_routine_id = day_log.get("__routine_id")
+        routine_id = None
+        if raw_routine_id is not None:
+            try:
+                raw_routine_id = int(raw_routine_id)
+            except (TypeError, ValueError):
+                raw_routine_id = None
+            if raw_routine_id is not None:
+                exists = db.exec(
+                    select(Routine).where(
+                        Routine.id == raw_routine_id,
+                        Routine.user_id == user.id,
+                    )
+                ).first()
+                if exists:
+                    routine_id = raw_routine_id
+
         payload_copy = {k: v for k, v in day_log.items() if not k.startswith("__")}
         payload_text = json.dumps(payload_copy)
 
